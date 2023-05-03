@@ -1,5 +1,12 @@
 {
-    "semi": false,
-    "singleQuote": true
-  }
-  
+  "semi": true,
+  "singleQuote": true,
+  "trailingComma": "es5",
+  "extends": [
+    "eslint:recommended",
+    "plugin:prettier/recommended"
+  ],
+  "plugins": [
+    "prettier"
+  ]
+}
