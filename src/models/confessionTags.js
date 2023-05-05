@@ -2,7 +2,7 @@
 import { DataTypes } from 'sequelize';
 import dbConfig from '../Config/DBConfig';
 
-const confession_tags = dbConfig.define('confession_tags', {
+const confessionTags = dbConfig.define('confession_tags', {
   confession_id: {
     type: DataTypes.INTEGER,
     allowNull: false
@@ -16,4 +16,4 @@ const confession_tags = dbConfig.define('confession_tags', {
   updatedAt: 'updated_at'
 });
 
-export default confession_tags;
+export default confessionTags;

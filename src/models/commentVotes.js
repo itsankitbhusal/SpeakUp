@@ -2,7 +2,7 @@
 import { DataTypes } from 'sequelize';
 import dbConfig from '../Config/DBConfig';
 
-const comment_votes = dbConfig.define('comment_votes', {
+const commentVotes = dbConfig.define('comment_votes', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -29,4 +29,4 @@ const comment_votes = dbConfig.define('comment_votes', {
   updatedAt: 'updated_at'
 });
 
-export default comment_votes;
+export default commentVotes;
