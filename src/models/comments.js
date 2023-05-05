@@ -33,4 +33,5 @@ const comments = dbConfig.define('comments', {
   updatedAt: 'updated_at'
 });
 
+
 export default comments;

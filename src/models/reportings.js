@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { DataTypes } from 'sequelize';
 import dbConfig from '../Config/DBConfig';
 

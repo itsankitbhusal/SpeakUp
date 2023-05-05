@@ -42,4 +42,6 @@ const confessions = dbConfig.define('confessions', {
   updatedAt: 'updated_at'
 });
 
+
+
 export default confessions;
