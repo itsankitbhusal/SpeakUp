@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import { DataTypes } from 'sequelize';
-import dbConfig from '../Config/DBConfig';
+import dbConfig from '../config/dbConfig.js';
 
 const comments = dbConfig.define('comments', {
   id: {

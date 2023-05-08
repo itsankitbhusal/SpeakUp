@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import dbConfig from '../config/db_config';
+import dbConfig from '../config/dbConfig.js';
 
 const tags =  dbConfig.define('tags', {
   id: {
