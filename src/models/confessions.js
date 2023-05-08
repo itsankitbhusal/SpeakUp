@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import { DataTypes } from 'sequelize';
-import dbConfig from '../Config/DBConfig';
+import dbConfig from '../config/dbConfig.js';
 
 const confessions = dbConfig.define('confessions', {
   id: {
@@ -15,10 +15,6 @@ const confessions = dbConfig.define('confessions', {
   body: {
     type: DataTypes.TEXT,
     required: true
-  },
-  tags: {
-    type: DataTypes.ARRAY(DataTypes.STRING),
-    defaultValue: []
   },
   user_id: {
     type: DataTypes.INTEGER,

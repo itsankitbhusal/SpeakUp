@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import { DataTypes } from 'sequelize';
-import dbConfig from '../config/db_config';
+import dbConfig from '../config/dbConfig.js';
 
 const views = dbConfig.define('views', {
   id: {
