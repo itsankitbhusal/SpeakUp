@@ -20,6 +20,7 @@ const users = dbConfig.define('users', {
   role: {
     type: DataTypes.ENUM('admin', 'user'),
     required: true,
+    defaultValue: 'user',
     validate: {
       isIn: [['admin', 'user']]
     }
