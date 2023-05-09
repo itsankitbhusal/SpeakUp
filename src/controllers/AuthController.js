@@ -20,18 +20,31 @@ class AuthController{
         }
       }
       password = await bcrypt.hash(password, 10);
-      // generate jwt token
-      const token = jwt.sign({ handle, email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+      // generate jwt refresh and access token
+      const refreshToken = jwt.sign({ handle }, process.env.JWT_SECRET, {
+        expiresIn: '7d'
+      });
+      const accessToken = jwt.sign({ handle }, process.env.JWT_SECRET, {
+        expiresIn: '15min'
+      });
 
       const user = await models.users.create({ handle, password });
+
+      // token for email verification only
+      const token = jwt.sign({ handle, email }, process.env.JWT_SECRET, {
+        expiresIn: '1d'
+      });
 
       // send verification email
       this.sendMail(email, token);
       delete user.dataValues.password;
-      user.dataValues.token = token;
 
       if (user) {
-        return res.send(message.success(user));
+        return res.send(message.success({
+          user,
+          accessToken,
+          refreshToken
+        }));
       }
       
     } catch (error) {
@@ -78,6 +91,9 @@ class AuthController{
     try {
       // check token validity and verify user
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      if (!decoded) {
+        return res.send(message.error('Invalid token'));
+      }
       const { handle, email } = decoded;
       const user = await models.users.findOne({ where: { handle } });
       const forEmail = await models.emails.findOne({ where: { email } });
@@ -93,6 +109,37 @@ class AuthController{
       return res.send(message.success('User verified'));
     }
     catch (error) {
+      return res.send(message.error(error.message));
+    }
+  };
+  loginUser = async (req, res) => {
+    const { handle, password } = req.body;
+    if (!handle || !password) {
+      return res.send(message.error('Please provide a handle and password'));
+    }
+    try {
+      const user = await models.users.findOne({ where: { handle } });
+      if (!user) {
+        return res.send(message.error('User not found'));
+      }
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return res.send(message.error('Incorrect password'));
+      }
+      // generate jwt refresh and access token
+      const refreshToken = jwt.sign({ handle }, process.env.JWT_SECRET, {
+        expiresIn: '7d'
+      });
+      const accessToken = jwt.sign({ handle }, process.env.JWT_SECRET, {
+        expiresIn: '15min'
+      });
+      delete user.dataValues.password;
+      return res.send(message.success({
+        user,
+        accessToken,
+        refreshToken
+      }));
+    } catch (error) {
       return res.send(message.error(error.message));
     }
   };
