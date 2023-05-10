@@ -1,1 +1,0 @@
-// authentication middleware goes here
