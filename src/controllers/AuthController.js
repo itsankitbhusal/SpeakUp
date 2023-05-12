@@ -5,6 +5,7 @@ import models from '../models/index.js';
 import message from '../utils/message.js';
 
 class AuthController{
+  // create user and send verification email
   addUser = async (req, res) => {
     try {
       const { handle, email } = req.body;
@@ -16,15 +17,15 @@ class AuthController{
         // check if email is already verified in emails table
         const forEmail = await models.emails.findOne({ where: { email } });
         if (forEmail && forEmail.is_verified) {
-          return res.send(message.error('Email already verified'));
+          return res.send(message.error('You cannot register with this email'));
         }
       }
       password = await bcrypt.hash(password, 10);
       // generate jwt refresh and access token
-      const refreshToken = jwt.sign({ handle }, process.env.JWT_SECRET, {
+      const refreshToken = jwt.sign({ handle }, process.env.JWT_SECRET_REFRESH, {
         expiresIn: '7d'
       });
-      const accessToken = jwt.sign({ handle }, process.env.JWT_SECRET, {
+      const accessToken = jwt.sign({ handle }, process.env.JWT_SECRET_ACCESS, {
         expiresIn: '15min'
       });
 
@@ -51,6 +52,7 @@ class AuthController{
       return res.send(message.error(error.message));
     }
   };
+  // send verification email to user
   sendMail = async (email, token) => {
     const port = process.env.PORT || 3000;
     // verify user using nodemailer and send verification link and jwt token
@@ -82,6 +84,8 @@ class AuthController{
     }
 
   };
+  // verify created user with email and insert in emails table
+  // also set is_verified to true in users and emails table
   verifyUser = async (req, res) => {
     const { token } = req.params;
     // console.log(token);
@@ -112,6 +116,7 @@ class AuthController{
       return res.send(message.error(error.message));
     }
   };
+  // check user login and return jwt refresh and access token
   loginUser = async (req, res) => {
     const { handle, password } = req.body;
     if (!handle || !password) {
@@ -127,10 +132,10 @@ class AuthController{
         return res.send(message.error('Incorrect password'));
       }
       // generate jwt refresh and access token
-      const refreshToken = jwt.sign({ handle }, process.env.JWT_SECRET, {
+      const refreshToken = jwt.sign({ handle }, process.env.JWT_SECRET_REFRESH, {
         expiresIn: '7d'
       });
-      const accessToken = jwt.sign({ handle }, process.env.JWT_SECRET, {
+      const accessToken = jwt.sign({ handle }, process.env.JWT_SECRET_ACCESS, {
         expiresIn: '15min'
       });
       delete user.dataValues.password;
