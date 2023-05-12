@@ -86,7 +86,7 @@ class AuthController {
   };
   // verify created user with email and insert in emails table
   // also set is_verified to true in users and emails table
-  verifyUser = async (req, res) => {
+  emailVerification = async (req, res) => {
     const { token } = req.params;
     // console.log(token);
     if (!token) {
