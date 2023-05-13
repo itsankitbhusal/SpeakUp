@@ -11,7 +11,7 @@ const signEmailVerificationToken = (handle, email) => jwt.sign({ handle, email }
 
 // sign access token
 const signAccessToken = handle => jwt.sign({ handle }, process.env.JWT_SECRET_ACCESS, {
-  expiresIn: '15min'
+  expiresIn: '30s'
 });
 
 // sign refresh token
