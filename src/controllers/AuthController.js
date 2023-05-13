@@ -1,8 +1,8 @@
 import bcrypt from 'bcryptjs';
-import nodemailer from 'nodemailer';
 import jwt from 'jsonwebtoken';
 import models from '../models/index.js';
 import message from '../utils/message.js';
+import { signEmailVerificationToken, signAccessToken, signRefreshToken, sendMail } from '../utils/authUtils.js';
 
 class AuthController {
   // create user and send verification email
@@ -22,22 +22,17 @@ class AuthController {
       }
       passwordHash = await bcrypt.hash(passwordHash, 10);
       // generate jwt refresh and access token
-      const refreshToken = jwt.sign({ handle }, process.env.JWT_SECRET_REFRESH, {
-        expiresIn: '7d'
-      });
-      const accessToken = jwt.sign({ handle }, process.env.JWT_SECRET_ACCESS, {
-        expiresIn: '15min'
-      });
+      const refreshToken = signRefreshToken(handle);
+      const accessToken = signAccessToken(handle);
 
       const createdUser = await models.users.create({ handle, password: passwordHash });
 
       // token for email verification only
-      const tokenForEmailVerification = jwt.sign({ handle, email }, process.env.JWT_SECRET, {
-        expiresIn: '1d'
-      });
+      const tokenForEmailVerification = signEmailVerificationToken(handle, email);
 
       // send verification email
-      this.sendMail(email, tokenForEmailVerification);
+      sendMail(email, tokenForEmailVerification);
+
       delete createdUser.dataValues.password;
 
       if (createdUser) {
@@ -52,38 +47,7 @@ class AuthController {
       return res.send(message.error(error.message));
     }
   };
-  // send verification email to user
-  sendMail = async (email, token) => {
-    const port = process.env.PORT || 3000;
-    // verify user using nodemailer and send verification link and jwt token
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      host: 'smtp.gmail.com',
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.EMAIL,
-        pass: process.env.EMAIL_PASSWORD
-      },
-      authMethod: 'PLAIN'
-    });
-    const mailOptions = {
-      from: process.env.EMAIL,
-      to: email,
-      subject: 'Verify your email',
-      html: `<p>Click <a href="http://localhost:${ port }/auth/verify/${ token }">here</a> to verify your email</p>`
-    };
 
-    try {
-      const info = await transporter.sendMail(mailOptions);
-      console.log(`Email sent: ${ info.response }`);
-      return message.success('Email sent');
-    } catch (error) {
-      console.log(error);
-      throw new Error('Error sending email');
-    }
-
-  };
   // verify created user with email and insert in emails table
   // also set is_verified to true in users and emails table
   emailVerification = async (req, res) => {
@@ -96,7 +60,7 @@ class AuthController {
     const updateUser = async handle => {
       // verify user in users table
       await models.users.update({ is_verified: true }, { where: { handle } });
-      return res.send(message.success('User verified'));
+      return message.success('User verified');
     };
     try {
       // check token validity and verify user
@@ -141,12 +105,8 @@ class AuthController {
         return res.send(message.error('Incorrect password'));
       }
       // generate jwt refresh and access token
-      const refreshToken = jwt.sign({ handle }, process.env.JWT_SECRET_REFRESH, {
-        expiresIn: '7d'
-      });
-      const accessToken = jwt.sign({ handle }, process.env.JWT_SECRET_ACCESS, {
-        expiresIn: '15min'
-      });
+      const refreshToken = signRefreshToken(handle);
+      const accessToken = signAccessToken(handle);
       delete foundUser.dataValues.password;
       return res.send(message.success({
         user: foundUser,
