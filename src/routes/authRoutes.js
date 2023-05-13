@@ -9,9 +9,9 @@ router.get('/verify/:token', authController.emailVerification);
 router.post('/login', authController.loginUser);
 router.post('/token', authController.getNewAccessToken);
 
-router.post('/test', verifyAccessToken, (req, res) => {
-  res.send('protected route');
-});
+// router.post('/test', verifyAccessToken, (req, res) => {
+//   res.send('protected route');
+// });
 
 
 export default router;
