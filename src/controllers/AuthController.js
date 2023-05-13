@@ -117,6 +117,25 @@ class AuthController {
       return res.send(message.error(error.message));
     }
   };
+
+  // get new access token using refresh token
+  getNewAccessToken = async (req, res) => { 
+    const { token } = req.body;
+    if (!token) {
+      return res.send(message.error('Token not provided'));
+    }
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET_REFRESH);
+      if (!decoded) {
+        return res.send(message.error('Invalid token'));
+      }
+      const { handle } = decoded;
+      const accessToken = signAccessToken(handle);
+      return res.send(message.success({ accessToken }));
+    } catch (error) {
+      return res.send(error.message);
+    }
+  };
 }
 
 export default AuthController;
