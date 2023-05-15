@@ -3,7 +3,6 @@ import 'dotenv/config.js';
 import dbConfig from './config/dbConfig.js';
 import routes from './routes/index.js';
 
-
 const app = express();
 app.use(express.json());
 
@@ -12,7 +11,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/auth', routes.authRoutes);
-// middlewares to protected routes
+
 app.use('/tag', routes.tagsRoutes);
 app.use('/confession', routes.confessionRoutes);
 
