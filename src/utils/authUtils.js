@@ -11,7 +11,7 @@ const signEmailVerificationToken = (handle, email) => jwt.sign({ handle, email }
 
 // sign access token
 const signAccessToken = handle => jwt.sign({ handle }, process.env.JWT_SECRET_ACCESS, {
-  expiresIn: '15min'
+  expiresIn: '7d'
 });
 
 // sign refresh token
@@ -42,11 +42,9 @@ const sendMail = async(email, token) => {
   };
 
   try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log(`Email sent: ${ info.response }`);
+    await transporter.sendMail(mailOptions);
     return message.success('Email sent');
   } catch (error) {
-    console.log(error);
     throw new Error('Error sending email');
   }
 
