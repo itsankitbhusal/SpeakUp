@@ -1,7 +1,7 @@
 import models from '../models/index.js';
 import message from '../utils/message.js';
-class TagsController{
 
+class TagsController{
   // get all the tags from the database
   getAllTags = async (req, res) => {
     try {
@@ -74,7 +74,6 @@ class TagsController{
     if (!id) {
       return res.send(message.error('Please provide an id'));
     }
-
     try {
       const tag = await models.tags.findOne({ where: { id } });
       if (!tag) {
