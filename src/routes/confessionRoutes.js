@@ -10,5 +10,8 @@ router.post('/', verifyAccessToken,confessionController.createConfession);
 router.get('/:id', verifyAccessToken, confessionController.getConfessionById);
 router.put('/:id', verifyAccessToken, confessionController.updateConfessionById);
 router.delete('/:id', verifyAccessToken, confessionController.deleteConfessionById);
+router.post('/pending', verifyAccessToken, confessionController.getAllPendingConfessions);
+router.put('/:id/approve', verifyAccessToken, confessionController.approveConfessionById);
+
 
 export default router;

@@ -120,48 +120,12 @@ class ConfessionController {
       return res.send(message.error('Missing id!'));
     }
     try {
-      const approvedConfession = await models.confessions.update({ approved: true }, { where: { id } });
+      const approvedConfession = await models.confessions.update({ is_approved: true }, { where: { id } });
       return res.send(message.success(approvedConfession));
     } catch (err) {
       return res.send(message.error(err.message));
     }
-  };
-
-  // update confession upvote by id
-  updateConfessionUpvoteById = async (req, res) => {
-    const { id } = req.params;
-    if (!id) {
-      return res.send(message.error('Missing id!'));
-    }
-    try {
-      const confession = await models.confessions.findByPk(id);
-      const updatedConfession = await models.confessions.update({ upvote: confession.upvote + 1 }, { where: { id } });
-      return res.send(message.success(updatedConfession));
-    } catch (err) {
-      return res.send(message.error(err.message));
-    }
-  };
-
-  // update confession downvote by id
-  updateConfessionDownvoteById = async (req, res) => {
-    const { id } = req.params;
-    if (!id) {
-      return res.send(message.error('Missing id!'));
-    }
-    try {
-      const confession = await models.confessions.findByPk(id);
-      const updatedConfession = await models.confessions.update(
-        {
-          upvote: confession.upvote - 1
-        }, {
-          where: { id }
-        });
-      return res.send(message.success(updatedConfession));
-    } catch (err) {
-      return res.send(message.error(err.message));
-    }
-  };
-
+  }; 
   // get all approved confessions with pagination
   getAllApprovedConfessions = async (req, res) => {
     // parse query params page and limit
@@ -174,6 +138,38 @@ class ConfessionController {
     try {
       const confessions = await models.confessions.findAll({
         where: { is_approved: true },
+        limit: limitPerPage,
+        offset,
+        attributes: { exclude: ['user_id'] },
+        include: [{
+          model: models.users,
+          attributes: ['handle']
+        }]
+      });
+      
+      // include pagination info to response
+      const response = {
+        confessions,
+        page,
+        limit
+      };
+      return res.send(message.success(response));
+    } catch (err) {
+      return res.send(message.error(err.message));
+    }
+  };
+  // get all pending confessions with pagination
+  getAllPendingConfessions = async (req, res) => {
+    // parse query params page and limit
+    let { page = 0, limit = 10 } = req.query;
+    page = parseInt(page);
+    limit = parseInt(limit);
+
+    const offset = page * limit;
+    const limitPerPage = parseInt(limit);
+    try {
+      const confessions = await models.confessions.findAll({
+        where: { is_approved: false },
         limit: limitPerPage,
         offset,
         attributes: { exclude: ['user_id'] },
