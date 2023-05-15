@@ -10,7 +10,7 @@ const signEmailVerificationToken = (handle, email) => jwt.sign({ handle, email }
 });
 
 // sign access token
-const signAccessToken = handle => jwt.sign({ handle }, process.env.JWT_SECRET_ACCESS, {
+const signAccessToken = (handle, role='user') => jwt.sign({ handle, role }, process.env.JWT_SECRET_ACCESS, {
   expiresIn: '7d'
 });
 
