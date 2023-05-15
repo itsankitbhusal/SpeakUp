@@ -11,6 +11,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/auth', routes.authRoutes);
+app.use('/tags', routes.tagsRoutes);
 
 app.listen(process.env.PORT, () => {
   dbConfig.authenticate();

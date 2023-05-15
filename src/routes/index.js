@@ -1,3 +1,4 @@
 import authRoutes from './authRoutes.js';
+import tagsRoutes from './tagsRoutes.js';
 
-export default { authRoutes };
+export default { authRoutes, tagsRoutes };

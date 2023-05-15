@@ -10,13 +10,7 @@ const tags =  dbConfig.define('tags', {
   name: {
     type: new DataTypes.STRING,
     allowNull: false,
-    unique: true,
-    validate: {
-      notEmpty: true,
-      notContains: '  ',
-      isLowercase: true,
-      isNumeric: false
-    }
+    unique: true 
   }
 }, {
   createdAt: 'created_at',
