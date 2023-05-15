@@ -30,9 +30,11 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "dompurify": "^3.0.3",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "graphql": "^16.6.0",
+    "jsdom": "^22.0.0",
     "jsonwebtoken": "^9.0.0",
     "mysql2": "^3.2.4",
     "nodemailer": "^6.9.1",

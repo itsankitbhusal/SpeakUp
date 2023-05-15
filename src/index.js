@@ -11,10 +11,12 @@ app.get('/', (req, res) => {
 });
 
 app.use('/auth', routes.authRoutes);
-app.use('/tags', routes.tagsRoutes);
+
+app.use('/tag', routes.tagsRoutes);
+app.use('/confession', routes.confessionRoutes);
 
 app.listen(process.env.PORT, () => {
   dbConfig.authenticate();
-  // dbConfig.sync({ force: true });
+  dbConfig.sync();
   console.log(`Server is running on port ${ process.env.PORT }`);
 });

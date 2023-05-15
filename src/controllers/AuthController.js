@@ -106,7 +106,7 @@ class AuthController {
       }
       // generate jwt refresh and access token
       const refreshToken = signRefreshToken(handle);
-      const accessToken = signAccessToken(handle);
+      const accessToken = signAccessToken(handle, foundUser.dataValues.role);
       delete foundUser.dataValues.password;
       return res.send(message.success({
         user: foundUser,
@@ -130,7 +130,8 @@ class AuthController {
         return res.send(message.error('Invalid token'));
       }
       const { handle } = decoded;
-      const accessToken = signAccessToken(handle);
+      const foundUser = await models.users.findOne({ where: { handle } });
+      const accessToken = signAccessToken(handle, foundUser.dataValues.role);
       return res.send(message.success({ accessToken }));
     } catch (error) {
       return res.send(error.message);

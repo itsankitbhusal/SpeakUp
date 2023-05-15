@@ -34,6 +34,7 @@ users.belongsToMany(reportings, { through: 'user_reportings_assoc', foreignKey: 
 comments.belongsToMany(commentVotes, { through: 'comment_votes_assoc', foreignKey: 'comment_id' });
 
 // confessions relations
+confessions.belongsTo(users, { foreignKey: 'user_id' });
 confessions.hasMany(comments, { foreignKey: 'confession_id' });
 confessions.belongsToMany(tags, { through: 'confession_tags_assoc', foreignKey: 'confession_id' });
 confessions.belongsToMany(confessionVotes, { through: 'confession_votes_assoc', foreignKey: 'confession_id' });
