@@ -17,6 +17,6 @@ app.use('/confession', routes.confessionRoutes);
 
 app.listen(process.env.PORT, () => {
   dbConfig.authenticate();
-  dbConfig.sync();
+  dbConfig.sync({ alter: true });
   console.log(`Server is running on port ${ process.env.PORT }`);
 });
