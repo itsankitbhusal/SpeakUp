@@ -20,10 +20,6 @@ const reportings = dbConfig.define('reportings', {
     type: DataTypes.ENUM('confession', 'comment'),
     allowNull: false
   },
-  reported_object_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false
-  },
   description: {
     type: DataTypes.TEXT,
     required: true
