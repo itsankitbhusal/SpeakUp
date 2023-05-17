@@ -137,6 +137,102 @@ class AuthController {
       return res.send(error.message);
     }
   };
+
+  // 
+  // users controllers
+  //
+
+  // get all users
+  getAllUsers = async (req, res) => {
+    try {
+      const users = await models.users.findAll({
+        attributes: { exclude: ['password'] }
+      });
+      return res.send(message.success(users));
+    } catch (error) {
+      return res.send(message.error(error.message));
+    }
+  };
+
+  // get single user by id
+  getSingleUser = async (req, res) => { 
+    const { id } = req.params;
+    if (!id) {
+      return res.send(message.error('Please provide an id'));
+    }
+    try {
+      const user = await models.users.findOne({ where: { id } });
+      delete user?.dataValues.password;
+      if (!user) {
+        return res.send(message.success('User not available'));
+      }
+      return res.send(message.success(user));
+    }
+    catch (error) {
+      return res.send(message.error(error.message));
+    }
+  };
+
+  // get logged in user
+  getMe = async (req, res) => {
+    const { handle } = req.user;
+    if (!handle) {
+      return res.send(message.error('Please provide a handle'));
+    }
+    try {
+      const user = await models.users.findOne({ where: { handle } });
+      delete user?.dataValues.password;
+      return res.send(message.success(user));
+    }
+    catch (error) {
+      return res.send(message.error(error.message));
+    }
+  };
+  
+  // delete user by id
+  deleteUser = async (req, res) => { 
+    const { id } = req.params;
+    // get handle from middleware user
+    const { role } = req.user;
+    if (!id) {
+      return res.send(message.error('Please provide an id'));
+    }
+    if (role !== 'admin') {
+      return res.send(message.error('You are not authorized'));
+    }
+    try {
+      const deletedUser = await models.users.destroy({ where: { id } });
+      return res.send(message.success(deletedUser));
+    }
+    catch (error) {
+      return res.send(message.error(error.message));
+    }
+  };
+
+  // reset password
+  resetPassword = async(req, res) => {
+    const { handle, role } = req.user;
+    const { oldPassword, newPassword } = req.body;
+    if (!handle || !role) {
+      res.send(message.error('Not authorized'));
+    }
+    if (!oldPassword || !newPassword) {
+      res.send(message.error('Please provide password to change')); 
+    }
+    try {
+      const foundUser = await models.users.findOne({ where: { handle } }); 
+      const isPasswordMatched = await bcrypt.compare(oldPassword, foundUser.password);
+      if (!isPasswordMatched) {
+        return res.send(message.error('Password didn\'t match'));
+      } else {
+        const passwordHash = await bcrypt.hash(newPassword, 10);
+        await models.users.update({ password: passwordHash }, { where: { handle } });
+        return res.send(message.success('Password changed'));
+      }
+    } catch (error) {
+      return res.send(message.error(error.message));
+    }
+  };
 }
 
 export default AuthController;
