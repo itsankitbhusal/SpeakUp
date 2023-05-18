@@ -36,7 +36,7 @@ class ConfessionVotesController{
       }
     }
     catch (error) {
-      return res.status(500).json({ message: error.message });
+      return res.send(message.error(error.message));
     }
   };
     
@@ -74,7 +74,7 @@ class ConfessionVotesController{
       }
     }
     catch (error) {
-      return res.status(500).json({ message: error.message });
+      return res.send(message.error(error.message));
     }
   };
   // update a confession up vote
