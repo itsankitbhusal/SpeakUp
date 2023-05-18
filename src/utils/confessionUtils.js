@@ -6,8 +6,6 @@ const purify = DOMPurify(window);
 
 const sanitizeInput = async input => {
   input = await input.toString();
-  // remove html tags
-  input = await purify.sanitize(input);
   // remove leading and trailing spaces
   input = await input.trim();
   // remove extra spaces between words
