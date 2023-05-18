@@ -1,7 +1,7 @@
 import models from '../models/index.js';
 import {  message } from '../utils/index.js';
 
-class ConfessionVotesController{
+class ConfessionVoteController{
   // create a confession vote
   createConfessionUpVote = async (req, res) => { 
     const { confessionId } = req.body;
@@ -291,4 +291,4 @@ class ConfessionVotesController{
 
 }
 
-export default ConfessionVotesController;
+export default ConfessionVoteController;
