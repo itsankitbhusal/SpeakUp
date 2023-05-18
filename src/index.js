@@ -14,6 +14,7 @@ app.use('/auth', routes.authRoutes);
 app.use('/tag', routes.tagsRoutes);
 app.use('/confession', routes.confessionRoutes);
 app.use('/confession-vote', routes.confessionVoteRoutes);
+app.use('/comment', routes.commentRoutes);
 
 app.listen(process.env.PORT, () => {
   dbConfig.authenticate();
