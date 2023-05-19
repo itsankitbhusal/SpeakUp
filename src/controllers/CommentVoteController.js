@@ -2,7 +2,7 @@ import models from '../models/index.js';
 import {  message } from '../utils/index.js';
 
 class CommentVoteController{
-  // create a confession vote
+  // create a comment vote
   createCommentUpVote = async (req, res) => { 
     const { commentId } = req.body;
     const voteType = 'up';
@@ -40,7 +40,7 @@ class CommentVoteController{
     }
   };
     
-  // create a confession down vote
+  // create a comment down vote
   createCommentDownVote = async (req, res) => {
     const { commentId } = req.body;
     const voteType = 'down';
@@ -78,7 +78,7 @@ class CommentVoteController{
     }
    
   };
-  // update a confession up vote
+  // update a comment up vote
   updateCommentUpVote = async (req, res) => {
     const { commentId } = req.body;
     const voteType = 'up';
@@ -123,7 +123,7 @@ class CommentVoteController{
     }
   };
 
-  // update a confession down vote
+  // update a comment down vote
   updateCommentDownVote = async (req, res) => { 
     const { commentId } = req.body;
     const voteType = 'down';
@@ -167,7 +167,7 @@ class CommentVoteController{
     }
   };
 
-  // delete a confession up vote
+  // delete a comment up vote
   deleteCommentUpVote = async (req, res) => {
     const { commentId } = req.body;
     const voteType = 'up';
@@ -210,7 +210,7 @@ class CommentVoteController{
     }  
   };
 
-  // delete a confession down vote
+  // delete a comment down vote
   deleteCommentDownVote = async (req, res) => {
     const { commentId } = req.body;
     const voteType = 'down';
@@ -297,7 +297,7 @@ class CommentVoteController{
     }
   };
 
-  // helper function on delete confession vote
+  // helper function on delete comment vote
   deleteCommentVote = async (commentId, voteType) => {
     try {
       const comment = await models.comments.findOne({
