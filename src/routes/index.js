@@ -4,5 +4,6 @@ import confessionRoutes from './confessionRoutes.js';
 import confessionVoteRoutes from './confessionVoteRoutes.js';
 import commentRoutes from './commentRoutes.js';
 import commentVoteRoutes from './commentVoteRoutes.js';
+import confessionTagRoutes from './confessionTagRoutes.js';
 
-export default { authRoutes, tagsRoutes, confessionRoutes, confessionVoteRoutes, commentRoutes, commentVoteRoutes };
+export default { authRoutes, tagsRoutes, confessionRoutes, confessionVoteRoutes, commentRoutes, commentVoteRoutes, confessionTagRoutes };
