@@ -15,6 +15,10 @@ const notifications = dbConfig.define('notifications', {
   message: {
     type: new DataTypes.STRING,
     allowNull: false
+  },
+  is_viewed:{
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
   }
 }, {
   createdAt: 'created_at',
