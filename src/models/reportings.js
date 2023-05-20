@@ -12,13 +12,17 @@ const reportings = dbConfig.define('reportings', {
     type: DataTypes.INTEGER,
     required: true
   },
-  reported_id: {
-    type: DataTypes.INTEGER,
-    required: true
-  },
   reported_object_type: {
     type: DataTypes.ENUM('confession', 'comment'),
     allowNull: false
+  },
+  comment_id: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
+  confession_id: {
+    type: DataTypes.INTEGER,
+    allowNull: true
   },
   description: {
     type: DataTypes.TEXT,

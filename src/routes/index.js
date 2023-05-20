@@ -7,6 +7,7 @@ import commentVoteRoutes from './commentVoteRoutes.js';
 import confessionTagRoutes from './confessionTagRoutes.js';
 import notificationRoutes from './notificationRoutes.js';
 import viewRoutes from './viewRoutes.js';
+import reportingRoutes from './reportingRoutes.js';
 
 export default {
   authRoutes,
@@ -17,5 +18,6 @@ export default {
   commentVoteRoutes,
   confessionTagRoutes,
   notificationRoutes,
-  viewRoutes
+  viewRoutes,
+  reportingRoutes
 };

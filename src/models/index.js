@@ -30,13 +30,13 @@ users.hasMany(commentVotes, { foreignKey: 'user_id' });
 users.hasMany(confessionVotes, { foreignKey: 'user_id' });
 users.hasMany(notifications, { foreignKey: 'user_id' });
 users.hasMany(reportings, { foreignKey: 'reporter_id' });
-users.hasMany(reportings, { foreignKey: 'reported_id' });
 users.hasMany(views, { foreignKey: 'user_id' });
 
 // comments relations
 comments.belongsTo(users, { foreignKey: 'user_id' });
 comments.belongsTo(confessions, { foreignKey: 'confession_id' });
 comments.hasMany(commentVotes, { foreignKey: 'comment_id' });
+comments.hasMany(reportings, { foreignKey: 'comment_id' });
 
 // confessions relations
 confessions.belongsTo(users, { foreignKey: 'user_id' });
@@ -44,6 +44,7 @@ confessions.hasMany(comments, { foreignKey: 'confession_id' });
 confessions.hasMany(confessionVotes, { foreignKey: 'confession_id' });
 confessions.hasMany(views, { foreignKey: 'confession_id' });
 confessions.belongsToMany(tags, { through: confessionTags, foreignKey: 'confession_id' });
+confessions.hasMany(reportings, { foreignKey: 'confession_id' });
 
 // confession tags relations
 confessionTags.belongsTo(tags, { foreignKey: 'tag_id' });
