@@ -18,6 +18,7 @@ app.use('/comment', routes.commentRoutes);
 app.use('/comment-vote', routes.commentVoteRoutes);
 app.use('/confession-tag', routes.confessionTagRoutes);
 app.use('/notification', routes.notificationRoutes);
+app.use('/view', routes.viewRoutes);
 
 app.listen(process.env.PORT, () => {
   dbConfig.authenticate();
