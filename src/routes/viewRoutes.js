@@ -5,10 +5,10 @@ import ViewController from '../controllers/ViewController.js';
 const router = Router();
 const viewController = new ViewController();
 
-router.post('/', middlewares.verifyAccessToken, viewController.createView);
-router.get('/:id', middlewares.verifyAccessToken, viewController.getViewsByConfessionId);
-router.get('/count/:id', middlewares.verifyAccessToken, viewController.getTotalViewsByConfessionId);
-router.get('/user/:id', middlewares.verifyAccessToken, viewController.getViewsByUserId);
-router.delete('/:id', middlewares.verifyAccessToken, viewController.deleteView);
+router.post('/', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, viewController.createView);
+router.get('/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, viewController.getViewsByConfessionId);
+router.get('/count/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, viewController.getTotalViewsByConfessionId);
+router.get('/user/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, viewController.getViewsByUserId);
+router.delete('/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, viewController.deleteView);
 
 export default router;

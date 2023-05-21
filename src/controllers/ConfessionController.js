@@ -17,13 +17,8 @@ class ConfessionController {
   createConfession = async (req, res) => {
     let { title, body } = req.body;
 
-    // get handle from access token and find id in db
-    const { handle } = req.user;
-    const user = await models.users.findOne({ where: { handle } });
-    if (!user) {
-      return res.send(message.error('User not found!'));
-    }
-    const { id } = user;
+    // get handle from access token 
+    const { id:userId } = req.user;
 
     // validate inputs
     title = await sanitizeInput(title);
@@ -37,7 +32,7 @@ class ConfessionController {
       return res.send(message.error('Missing title or body!'));
     }
     try {
-      const confession = await models.confessions.create({ title,body,user_id: id });
+      const confession = await models.confessions.create({ title,body,user_id: userId });
       return res.send(message.success(confession));
     } catch (err) {
       return res.send(message.error(err.message));

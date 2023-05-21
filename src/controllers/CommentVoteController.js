@@ -6,16 +6,15 @@ class CommentVoteController{
   createCommentUpVote = async (req, res) => { 
     const { commentId } = req.body;
     const voteType = 'up';
-    //   get user id from the access token handle
-    const { handle } = req.user;
-    const { id } = await models.users.findOne({ where: { handle } });
+    //   get user id from the access token 
+    const { id:userId } = req.user;
     if (!commentId ) {
       return res.send(message.error('Please provide comment id'));
     }
     try {
       const commentVote = await models.commentVotes.findOne({
         where: {
-          user_id: id,
+          user_id: userId,
           comment_id: commentId
         }
       });
@@ -44,16 +43,15 @@ class CommentVoteController{
   createCommentDownVote = async (req, res) => {
     const { commentId } = req.body;
     const voteType = 'down';
-    //   get user id from the access token handle
-    const { handle } = req.user;
-    const { id } = await models.users.findOne({ where: { handle } });
+    //   get user id from the access token 
+    const { id:userId } = req.user;
     if (!commentId ) {
       return res.send(message.error('Please provide comment id'));
     }
     try {
       const commentVote = await models.commentVotes.findOne({
         where: {
-          user_id: id,
+          user_id: userId,
           comment_id: commentId
         }
       });
@@ -83,15 +81,15 @@ class CommentVoteController{
     const { commentId } = req.body;
     const voteType = 'up';
     //   get user id from the access token handle
-    const { handle } = req.user;
-    const { id } = await models.users.findOne({ where: { handle } });
+    const { id: userId } = req.user;
+    
     if (!commentId) {
       return res.send(message.error('Please provide comment id'));
     }
     try {
       const commentVote = await models.commentVotes.findOne({
         where: {
-          user_id: id,
+          user_id: userId,
           comment_id: commentId
         }
       });
@@ -127,16 +125,15 @@ class CommentVoteController{
   updateCommentDownVote = async (req, res) => { 
     const { commentId } = req.body;
     const voteType = 'down';
-    //   get user id from the access token handle
-    const { handle } = req.user;
-    const { id } = await models.users.findOne({ where: { handle } });
+    //   get user id from the access token 
+    const { id:userId } = req.user;
     if (!commentId) {
       return res.send(message.error('Please provide comment id'));
     }
     try {
       const commentVote = await models.commentVotes.findOne({
         where: {
-          user_id: id,
+          user_id: userId,
           comment_id: commentId
         }
       });
@@ -172,15 +169,15 @@ class CommentVoteController{
     const { commentId } = req.body;
     const voteType = 'up';
     //   get user id from the access token handle
-    const { handle } = req.user;
-    const { id } = await models.users.findOne({ where: { handle } });
+    const { id: userId } = req.user;
+    
     if (!commentId) {
       return res.send(message.error('Please provide comment id'));
     }
     try {
       const commentVote = await models.commentVotes.findOne({
         where: {
-          user_id: id,
+          user_id: userId,
           comment_id: commentId
         }
       });
@@ -214,16 +211,15 @@ class CommentVoteController{
   deleteCommentDownVote = async (req, res) => {
     const { commentId } = req.body;
     const voteType = 'down';
-    //   get user id from the access token handle
-    const { handle } = req.user;
-    const { id } = await models.users.findOne({ where: { handle } });
+    //   get user id from the access token 
+    const { id:userId } = req.user;
     if (!commentId) {
       return res.send(message.error('Please provide comment id'));
     }
     try {
       const commentVote = await models.commentVotes.findOne({
         where: {
-          user_id: id,
+          user_id: userId,
           comment_id: commentId
         }
       });

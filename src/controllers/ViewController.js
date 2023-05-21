@@ -5,18 +5,11 @@ class ViewController{
   // create view
   createView = async (req, res) => {
     const { confessionId } = req.body;
-    const { handle } = req.user;
+    const { id:userId } = req.user;
     if (!confessionId) {
       return res.send(message.error('Confession id is required'));
     }
-    try {
-      // get user id from handle
-      const user = await models.users.findOne({ where: { handle } });
-      if (!user) {
-        return res.send(message.error('User not found'));
-      }
-      const userId = user.id;
-      // check if view exists
+    try {  
       const view = await models.views.findOne({ where: { user_id: userId, confession_id: confessionId } });
       if (view) {
         return res.send(message.error('View already exists'));

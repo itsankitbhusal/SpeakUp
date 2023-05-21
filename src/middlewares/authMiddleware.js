@@ -8,7 +8,7 @@ const verifyAccessToken = (req, res, next) => {
   if (!token) {return res.sendStatus(401);}
   jwt.verify(token, process.env.JWT_SECRET_ACCESS, (err, user) => {
     if (err) {return res.sendStatus(403);}
-    req.user = user;
+    req.user = { ...user };
     next();
   }
   );
@@ -16,11 +16,11 @@ const verifyAccessToken = (req, res, next) => {
 
 // verify refresh token
 const verifyRefreshToken = (req, res, next) => {
-  const refreshToken = req.body.token;
+  const refreshToken = req.headers.refresh;
   if (!refreshToken) {return res.sendStatus(401);}
   jwt.verify(refreshToken, process.env.JWT_SECRET_REFRESH, (err, user) => {
     if (err) {return res.sendStatus(403);}
-    req.user = user;
+    req.user = { ...req.user, handle: user.handle };
     next();
   }
   );

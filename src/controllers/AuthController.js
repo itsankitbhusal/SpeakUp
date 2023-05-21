@@ -23,8 +23,7 @@ class AuthController {
       passwordHash = await bcrypt.hash(passwordHash, 10);
       // generate jwt refresh and access token
       const refreshToken = signRefreshToken(handle);
-      const accessToken = signAccessToken(handle);
-
+      
       const createdUser = await models.users.create({ handle, password: passwordHash });
 
       // token for email verification only
@@ -106,7 +105,7 @@ class AuthController {
       }
       // generate jwt refresh and access token
       const refreshToken = signRefreshToken(handle);
-      const accessToken = signAccessToken(handle, foundUser.dataValues.role);
+      const accessToken = signAccessToken(foundUser.dataValues.id, handle, foundUser.dataValues.role);
       delete foundUser.dataValues.password;
       return res.send(message.success({
         user: foundUser,
@@ -131,7 +130,10 @@ class AuthController {
       }
       const { handle } = decoded;
       const foundUser = await models.users.findOne({ where: { handle } });
-      const accessToken = signAccessToken(handle, foundUser.dataValues.role);
+      if (!foundUser) {
+        return res.send(message.error('User not found'));
+      }
+      const accessToken = signAccessToken(foundUser.dataValues.id,handle, foundUser.dataValues.role);
       return res.send(message.success({ accessToken }));
     } catch (error) {
       return res.send(error.message);
