@@ -9,10 +9,10 @@ router.get('/verify/:token', authController.emailVerification);
 router.post('/login', authController.loginUser);
 router.post('/token', authController.getNewAccessToken);
 
-router.get('/users', middlewares.verifyAccessToken,authController.getAllUsers);
-router.get('/user/:id', middlewares.verifyAccessToken,authController.getSingleUser);
-router.get('/me', middlewares.verifyAccessToken,authController.getMe);
-router.delete('/user/:id',middlewares.verifyAccessToken, authController.deleteUser);
-router.post('/user/reset', middlewares.verifyAccessToken, authController.resetPassword);
+router.get('/users', middlewares.verifyAccessToken,middlewares.verifyRefreshToken, authController.getAllUsers);
+router.get('/user/:id', middlewares.verifyAccessToken,middlewares.verifyRefreshToken, authController.getSingleUser);
+router.get('/me', middlewares.verifyAccessToken,middlewares.verifyRefreshToken, authController.getMe);
+router.delete('/user/:id',middlewares.verifyAccessToken, middlewares.verifyRefreshToken, authController.deleteUser);
+router.post('/user/reset', middlewares.verifyAccessToken,middlewares.verifyRefreshToken, authController.resetPassword);
 
 export default router;

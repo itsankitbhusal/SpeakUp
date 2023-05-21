@@ -14,11 +14,9 @@ class ReportingController{
       return res.send(message.error('Missing required fields'));
     }
     try {
-      // get reporterId from req.user handle
-      const { handle } = req.user;
-      const reporter = await models.users.findOne({ where: { handle } });
-      const reporterId = reporter.id;
-      if (!reporterId) {
+      // get userId from access token
+      const { id:userId } = req.user;
+      if (!userId) {
         return res.send(message.error('Reporter not found'));
       }
       // first sanitize the input
@@ -47,7 +45,7 @@ class ReportingController{
       // check if the reporter has already reported the same object
       const existingReporting = await models.reportings.findOne({
         where: {
-          reporter_id: reporterId,
+          reporter_id: userId,
           reported_object_type: reportType,
           confession_id: confessionId,
           comment_id: commentId

@@ -3,14 +3,13 @@ import  jwt  from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
 import message from './message.js';
 
-
 // sign email verification token
 const signEmailVerificationToken = (handle, email) => jwt.sign({ handle, email }, process.env.JWT_SECRET, {
   expiresIn: '1d'
 });
 
 // sign access token
-const signAccessToken = (handle, role='user') => jwt.sign({ handle, role }, process.env.JWT_SECRET_ACCESS, {
+const signAccessToken = (id, handle, role='user') => jwt.sign({ id, handle, role }, process.env.JWT_SECRET_ACCESS, {
   expiresIn: '7d'
 });
 
@@ -22,6 +21,7 @@ const signRefreshToken = handle => jwt.sign({ handle }, process.env.JWT_SECRET_R
 // send mail
 const sendMail = async(email, token) => {
   const port = process.env.PORT || 3000;
+  const host = process.env.URL || 'http://localhost';
   // verify user using nodemailer and send verification link and jwt token
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -38,7 +38,7 @@ const sendMail = async(email, token) => {
     from: process.env.EMAIL,
     to: email,
     subject: 'Verify your email',
-    html: `<p>Click <a href="http://localhost:${ port }/auth/verify/${ token }">here</a> to verify your email</p>`
+    html: `<p>Click <a href="${ host }:${ port }/auth/verify/${ token }">here</a> to verify your email</p>`
   };
 
   try {

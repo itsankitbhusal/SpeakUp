@@ -5,11 +5,11 @@ import middlewares  from '../middlewares/index.js';
 const router = Router();
 const commentVoteController = new CommentVoteController();
 
-router.post('/up', middlewares.verifyAccessToken, commentVoteController.createCommentUpVote);
-router.post('/down', middlewares.verifyAccessToken, commentVoteController.createCommentDownVote);
-router.put('/up', middlewares.verifyAccessToken, commentVoteController.updateCommentUpVote);
-router.put('/down', middlewares.verifyAccessToken, commentVoteController.updateCommentDownVote);
-router.delete('/up', middlewares.verifyAccessToken, commentVoteController.deleteCommentUpVote);
-router.delete('/down', middlewares.verifyAccessToken, commentVoteController.deleteCommentDownVote);
+router.post('/up', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, commentVoteController.createCommentUpVote);
+router.post('/down', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, commentVoteController.createCommentDownVote);
+router.put('/up', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, commentVoteController.updateCommentUpVote);
+router.put('/down', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, commentVoteController.updateCommentDownVote);
+router.delete('/up', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, commentVoteController.deleteCommentUpVote);
+router.delete('/down', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, commentVoteController.deleteCommentDownVote);
 
 export default router;

@@ -6,16 +6,15 @@ class ConfessionVoteController{
   createConfessionUpVote = async (req, res) => { 
     const { confessionId } = req.body;
     const voteType = 'up';
-    //   get user id from the access token handle
-    const { handle } = req.user;
-    const { id } = await models.users.findOne({ where: { handle } });
+    //   get user id from the access token 
+    const { id:userId } = req.user;
     if (!confessionId ) {
       return res.send(message.error('Please provide confession id'));
     }
     try {
       const confessionVote = await models.confessionVotes.findOne({
         where: {
-          user_id: id,
+          user_id: userId,
           confession_id: confessionId
         }
       });
@@ -44,16 +43,16 @@ class ConfessionVoteController{
   createConfessionDownVote = async (req, res) => { 
     const { confessionId } = req.body;
     const voteType = 'down';
-    //   get user id from the access token handle
-    const { handle } = req.user;
-    const { id } = await models.users.findOne({ where: { handle } });
+    //   get user id from the access token
+    const { id: userId } = req.user;
+    
     if (!confessionId ) {
       return res.send(message.error('Please provide all the required fields.'));
     }
     try {
       const confessionVote = await models.confessionVotes.findOne({
         where: {
-          user_id: id,
+          user_id: userId,
           confession_id: confessionId
         }
       });
@@ -81,15 +80,14 @@ class ConfessionVoteController{
   updateConfessionUpVote = async (req, res) => {
     const { confessionId } = req.body;
     const voteType = 'up';
-    //   get user id from the access token handle
-    const { handle } = req.user;
-    const { id } = await models.users.findOne({ where: { handle } });
+    //   get user id from the access token 
+    const { id:userId } = req.user;
     if (!confessionId || !voteType) {
       return res.send(message.error('Please provide all the required fields.'));
     }
     try {
       const confessionVote = await models.confessionVotes.findOne({
-        where: { user_id: id, confession_id: confessionId }
+        where: { user_id: userId, confession_id: confessionId }
       });
       // check if up vote already exists
       if (confessionVote.vote_types === voteType) {
@@ -120,15 +118,14 @@ class ConfessionVoteController{
   updateConfessionDownVote = async (req, res) => { 
     const { confessionId } = req.body;
     const voteType = 'down';
-    //   get user id from the access token handle
-    const { handle } = req.user;
-    const { id } = await models.users.findOne({ where: { handle } });
+    //   get user id from the access token
+    const { id:userId } = req.user;
     if (!confessionId || !voteType) {
       return res.send(message.error('Please provide all the required fields.'));
     }
     try {
       const confessionVote = await models.confessionVotes.findOne({
-        where: { user_id: id, confession_id: confessionId }
+        where: { user_id: userId, confession_id: confessionId }
       });
       if (!confessionVote) {
         return res.send(message.error('You have not voted for this confession.'));
@@ -159,15 +156,14 @@ class ConfessionVoteController{
   deleteConfessionUpVote = async (req, res) => {
     const { confessionId } = req.body;
     const voteType = 'up';
-    //   get user id from the access token handle
-    const { handle } = req.user;
-    const { id } = await models.users.findOne({ where: { handle } });
+    //   get user id from the access token 
+    const { id:userId } = req.user;
     if (!confessionId) {
       return res.send(message.error('Please provide all the required fields.'));
     }
     try {
       const confessionVote = await models.confessionVotes.findOne({
-        where: { user_id: id, confession_id: confessionId }
+        where: { user_id: userId, confession_id: confessionId }
       });
       if (!confessionVote) {
         return res.send(message.error('You have not voted for this confession.'));
@@ -194,15 +190,14 @@ class ConfessionVoteController{
   deleteConfessionDownVote = async (req, res) => { 
     const { confessionId } = req.body;
     const voteType = 'down';
-    //   get user id from the access token handle
-    const { handle } = req.user;
-    const { id } = await models.users.findOne({ where: { handle } });
+    //   get user id from the access token
+    const { id:userId } = req.user;
     if (!confessionId) {
       return res.send(message.error('Please provide all the required fields.'));
     }
     try {
       const confessionVote = await models.confessionVotes.findOne({
-        where: { user_id: id, confession_id: confessionId }
+        where: { user_id: userId, confession_id: confessionId }
       });
       if (!confessionVote) {
         return res.send(message.error('You have not voted for this confession.'));

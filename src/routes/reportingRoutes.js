@@ -5,14 +5,14 @@ import ReportingController from '../controllers/ReportingController.js';
 const router = Router();
 const reportingController = new ReportingController();
 
-router.get('/', middlewares.verifyAccessToken, reportingController.getAllReportings);
-router.get('/:id', middlewares.verifyAccessToken, reportingController.getReportingById);
-router.post('/', middlewares.verifyAccessToken, reportingController.createReporting);
-router.put('/:id', middlewares.verifyAccessToken, reportingController.updateReporting);
-router.delete('/:id', middlewares.verifyAccessToken, reportingController.deleteReporting);
+router.get('/', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, reportingController.getAllReportings);
+router.get('/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, reportingController.getReportingById);
+router.post('/', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, reportingController.createReporting);
+router.put('/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, reportingController.updateReporting);
+router.delete('/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, reportingController.deleteReporting);
 
-router.get('/user/:id', middlewares.verifyAccessToken, reportingController.getAllReportingsByReporterId);
-router.get('/object/:id', middlewares.verifyAccessToken, reportingController.getAllReportingsByReportedObjectType);
-router.get('/resolved/:id', middlewares.verifyAccessToken, reportingController.getAllReportingsByResolvedStatus);
+router.get('/user/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, reportingController.getAllReportingsByReporterId);
+router.get('/object/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, reportingController.getAllReportingsByReportedObjectType);
+router.get('/resolved/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, reportingController.getAllReportingsByResolvedStatus);
 
 export default router;

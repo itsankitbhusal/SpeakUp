@@ -11,11 +11,7 @@ class CommentController {
     body = await sanitizeInput(body);
     //   limit body to 300 characters
     body = await body.substring(0, 300);
-    //   get userId from req.user handle 
-    const { handle } = req.user;
-    const user = await models.users.findOne({ where: { handle } });
-    const userId = user.id;
-      
+    const { id:userId } = req.user;
     if (!body || !userId || !confessionId) {
       return res.send(message.error('Please fill all fields'));
     }
@@ -59,9 +55,7 @@ class CommentController {
     let { body } = req.body;
       
     //   first of all check if the comment id and user id match
-    const { handle } = req.user;
-    const user = await models.users.findOne({ where: { handle } });
-    const userId = user?.id;
+    const { id:userId } = req.user;
     const comment = await models.comments.findOne({ where: { id } });
     if (comment?.user_id !== userId) {
       return res.send(message.error('You are not authorized to update this comment'));
@@ -88,9 +82,8 @@ class CommentController {
   deleteComment = async (req, res) => {
     const { id } = req.params;
     //   first of all check if the comment id and user id match
-    const { handle } = req.user;
-    const user = await models.users.findOne({ where: { handle } });
-    const userId = user?.id;
+    const { id: userId } = req.user;
+    
     const comment = await models.comments.findOne({ where: { id } });
     if (comment?.user_id !== userId) {
       return res.send(message.error('You are not authorized to delete this comment'));
