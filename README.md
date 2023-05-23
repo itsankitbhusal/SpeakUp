@@ -28,6 +28,18 @@
     "password": "admin"
 }
 ```
+## **Get new access token**
+#### Method | **POST**
+`{{url}}/auth/login`
+### Body (**raw**)
+
+```json
+{
+    "handle": "itsankitbhusal",
+    "password": "admin"
+}
+```
+
 
 
 
