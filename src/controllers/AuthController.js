@@ -37,7 +37,6 @@ class AuthController {
       if (createdUser) {
         return res.send(message.success({
           user: createdUser,
-          accessToken,
           refreshToken
         }));
       }
@@ -119,7 +118,8 @@ class AuthController {
 
   // get new access token using refresh token
   getNewAccessToken = async (req, res) => { 
-    const { token } = req.body;
+    // get token from header refresh token
+    const token = req.headers.refresh;
     if (!token) {
       return res.send(message.error('Token not provided'));
     }
