@@ -22,7 +22,7 @@ class ConfessionVoteController{
         return res.send(message.error('You have already voted for this confession.'));
       }
       const newConfessionVote = await models.confessionVotes.create({
-        user_id: id,
+        user_id: userId,
         confession_id: confessionId,
         vote_types: voteType
       });
@@ -60,7 +60,7 @@ class ConfessionVoteController{
         return res.send(message.error('You have already voted for this confession.'));
       }
       const newConfessionVote = await models.confessionVotes.create({
-        user_id: id,
+        user_id: userId,
         confession_id: confessionId,
         vote_types: voteType
       });
@@ -99,7 +99,7 @@ class ConfessionVoteController{
       const updatedConfessionVote = await models.confessionVotes.update({
         vote_types: voteType
       }, {
-        where: { user_id: id, confession_id: confessionId }
+        where: { user_id: userId, confession_id: confessionId }
       });
       if (updatedConfessionVote) {
         const result = await this.updateConfessionVoteCountOnUpdate(confessionId, voteType);
@@ -137,7 +137,7 @@ class ConfessionVoteController{
       const updatedConfessionVote = await models.confessionVotes.update({
         vote_types: voteType
       }, {
-        where: { user_id: id, confession_id: confessionId }
+        where: { user_id: userId, confession_id: confessionId }
       });
       if (updatedConfessionVote) {
         const result = await this.updateConfessionVoteCountOnUpdate(confessionId, voteType);
@@ -172,7 +172,7 @@ class ConfessionVoteController{
         return res.send(message.error('You need to pass valid vote type'));
       }
       const deletedConfessionVote = await models.confessionVotes.destroy({
-        where: { user_id: id, confession_id: confessionId }
+        where: { user_id: userId, confession_id: confessionId }
       });
       if (deletedConfessionVote) {
         const result = await this.deleteConfessionVote(confessionId, 'up');
@@ -206,7 +206,7 @@ class ConfessionVoteController{
         return res.send(message.error('You need to pass valid vote type'));
       }
       const deletedConfessionVote = await models.confessionVotes.destroy({
-        where: { user_id: id, confession_id: confessionId }
+        where: { user_id: userId, confession_id: confessionId }
       });
       if (deletedConfessionVote) {
         const result = await this.deleteConfessionVote(confessionId, voteType);
