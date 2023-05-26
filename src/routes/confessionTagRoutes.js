@@ -5,9 +5,9 @@ import middlewares from '../middlewares/index.js';
 const router = Router();
 const confessionTagController = new ConfessionTagController();
 
-router.post('/', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionTagController.createConfessionTag);
-router.delete('/', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionTagController.deleteConfessionTag);
-router.get('/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionTagController.getTagsByConfessionId);
-router.get('/tag/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionTagController.getConfessionsByTagId);
+router.post('/:confessionId/:tagId', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionTagController.createConfessionTag);
+router.delete('/:confessionId/:tagId', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionTagController.deleteConfessionTag);
+router.get('/:confessionId', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionTagController.getTagsByConfessionId);
+router.get('/tag/:tagId', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionTagController.getConfessionsByTagId);
 
 export default router;

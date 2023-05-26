@@ -4,7 +4,7 @@ import message from '../utils/message.js';
 class ViewController{
   // create view
   createView = async (req, res) => {
-    const { confessionId } = req.body;
+    const { confessionId } = req.params;
     const { id:userId } = req.user;
     if (!confessionId) {
       return res.send(message.error('Confession id is required'));

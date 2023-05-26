@@ -4,7 +4,7 @@ import {  message } from '../utils/index.js';
 class CommentVoteController{
   // create a comment vote
   createCommentUpVote = async (req, res) => { 
-    const { commentId } = req.body;
+    const { id: commentId } = req.params;
     const voteType = 'up';
     //   get user id from the access token 
     const { id:userId } = req.user;
@@ -41,7 +41,7 @@ class CommentVoteController{
     
   // create a comment down vote
   createCommentDownVote = async (req, res) => {
-    const { commentId } = req.body;
+    const { id: commentId } = req.params;
     const voteType = 'down';
     //   get user id from the access token 
     const { id:userId } = req.user;
@@ -78,7 +78,7 @@ class CommentVoteController{
   };
   // update a comment up vote
   updateCommentUpVote = async (req, res) => {
-    const { commentId } = req.body;
+    const { id: commentId } = req.params;
     const voteType = 'up';
     //   get user id from the access token handle
     const { id: userId } = req.user;
@@ -123,7 +123,7 @@ class CommentVoteController{
 
   // update a comment down vote
   updateCommentDownVote = async (req, res) => { 
-    const { commentId } = req.body;
+    const { id: commentId } = req.params;
     const voteType = 'down';
     //   get user id from the access token 
     const { id:userId } = req.user;
@@ -166,9 +166,9 @@ class CommentVoteController{
 
   // delete a comment up vote
   deleteCommentUpVote = async (req, res) => {
-    const { commentId } = req.body;
+    const { id: commentId } = req.params;
     const voteType = 'up';
-    //   get user id from the access token handle
+    //   get user id from the access token 
     const { id: userId } = req.user;
     
     if (!commentId) {
@@ -209,7 +209,7 @@ class CommentVoteController{
 
   // delete a comment down vote
   deleteCommentDownVote = async (req, res) => {
-    const { commentId } = req.body;
+    const { id: commentId } = req.params;
     const voteType = 'down';
     //   get user id from the access token 
     const { id:userId } = req.user;

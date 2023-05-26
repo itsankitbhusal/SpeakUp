@@ -1,12 +1,17 @@
 import models from '../models/index.js';
 import { message } from '../utils/index.js';
+import { sanitizeInput } from '../utils/confessionUtils.js';
 class NotificationController{
 // create a new notification
   createNotification = async (req, res) => {
-    const { notificationMessage, userId } = req.body;
+    const { userId } = req.body;
+    let { notificationMessage } = req.body;
     if (!userId || !notificationMessage) {
       return res.send(message.error('Missing required fields'));
     }
+    notificationMessage = await sanitizeInput(notificationMessage);
+    // limit notification message to 150 characters
+    notificationMessage = await notificationMessage.substring(0, 150);
     try {
       // check if user exists
       const foundUser = await models.users.findByPk(userId);

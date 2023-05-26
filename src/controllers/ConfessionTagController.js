@@ -4,7 +4,7 @@ import { message } from '../utils/index.js';
 class ConfessionTagController{
   // create confession tag
   createConfessionTag = async (req, res) => { 
-    const { confessionId, tagId } = req.body;
+    const { confessionId, tagId } = req.params;
     if (!confessionId || !tagId) {
       return res.send(message.error('Missing required fields'));
     }
@@ -21,7 +21,7 @@ class ConfessionTagController{
     
   // delete confession tag
   deleteConfessionTag = async (req, res) => { 
-    const { confessionId, tagId } = req.body;
+    const { confessionId, tagId } = req.params;
     if (!confessionId || !tagId) {
       return res.send(message.error('Missing required fields'));
     }
@@ -43,7 +43,7 @@ class ConfessionTagController{
   };
   // get tags by confession id
   getTagsByConfessionId = async (req, res) => {
-    const { id: confessionId } = req.params;
+    const {  confessionId } = req.params;
     if (!confessionId) {
       return res.send(message.error('Missing required fields'));
     }
@@ -67,7 +67,7 @@ class ConfessionTagController{
   };
   // get all confessions associated with a tag
   getConfessionsByTagId = async (req, res) => {
-    const { id: tagId } = req.params;
+    const { tagId } = req.params;
     if (!tagId) {
       return res.send(message.error('Missing required fields'));
     }

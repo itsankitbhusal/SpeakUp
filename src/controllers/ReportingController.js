@@ -5,7 +5,8 @@ import { sanitizeInput } from '../utils/index.js';
 class ReportingController{
   // create reporting
   createReporting = async (req, res) => {
-    let { reportType, confessionId, commentId, description } = req.body;
+    const { reportType, description } = req.body;
+    let {  confessionId, commentId } = req.body;
     if (!reportType || !description) {
       return res.send(message.error('Missing required fields'));
     }

@@ -4,7 +4,7 @@ import {  message } from '../utils/index.js';
 class ConfessionVoteController{
   // create a confession vote
   createConfessionUpVote = async (req, res) => { 
-    const { confessionId } = req.body;
+    const { id: confessionId } = req.params;
     const voteType = 'up';
     //   get user id from the access token 
     const { id:userId } = req.user;
@@ -41,7 +41,7 @@ class ConfessionVoteController{
     
   // create a confession down vote
   createConfessionDownVote = async (req, res) => { 
-    const { confessionId } = req.body;
+    const { id: confessionId } = req.params;
     const voteType = 'down';
     //   get user id from the access token
     const { id: userId } = req.user;
@@ -78,7 +78,7 @@ class ConfessionVoteController{
   };
   // update a confession up vote
   updateConfessionUpVote = async (req, res) => {
-    const { confessionId } = req.body;
+    const { id: confessionId } = req.params;
     const voteType = 'up';
     //   get user id from the access token 
     const { id:userId } = req.user;
@@ -116,7 +116,7 @@ class ConfessionVoteController{
 
   // update a confession down vote
   updateConfessionDownVote = async (req, res) => { 
-    const { confessionId } = req.body;
+    const { id: confessionId } = req.params;
     const voteType = 'down';
     //   get user id from the access token
     const { id:userId } = req.user;
@@ -154,7 +154,7 @@ class ConfessionVoteController{
 
   // delete a confession up vote
   deleteConfessionUpVote = async (req, res) => {
-    const { confessionId } = req.body;
+    const { id: confessionId } = req.params;
     const voteType = 'up';
     //   get user id from the access token 
     const { id:userId } = req.user;
@@ -188,7 +188,7 @@ class ConfessionVoteController{
 
   // delete a confession down vote
   deleteConfessionDownVote = async (req, res) => { 
-    const { confessionId } = req.body;
+    const { id: confessionId } = req.params;
     const voteType = 'down';
     //   get user id from the access token
     const { id:userId } = req.user;

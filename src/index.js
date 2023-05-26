@@ -21,8 +21,8 @@ app.use('/notification', routes.notificationRoutes);
 app.use('/view', routes.viewRoutes);
 app.use('/reporting', routes.reportingRoutes);
 
-app.listen(process.env.PORT, () => {
-  dbConfig.authenticate();
-  dbConfig.sync();
+app.listen(process.env.PORT, async() => {
+  await dbConfig.authenticate();
+  await dbConfig.sync();
   console.log(`Server is running on port ${ process.env.PORT }`);
 });
