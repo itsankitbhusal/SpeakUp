@@ -10,7 +10,7 @@ router.post('/', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, 
 router.get('/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionController.getConfessionById);
 router.put('/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionController.updateConfessionById);
 router.delete('/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionController.deleteConfessionById);
-router.post('/pending', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionController.getAllPendingConfessions);
+router.get('/pending', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionController.getAllPendingConfessions);
 router.put('/:id/approve', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionController.approveConfessionById);
 
 

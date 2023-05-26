@@ -5,7 +5,7 @@ import { sanitizeInput } from '../utils/index.js';
 class CommentController {
   // create comment
   createComment = async (req, res) => { 
-    const { confessionId } = req.body;
+    const { confessionId } = req.params;
     let { body } = req.body;
     // sanitize input
     body = await sanitizeInput(body);

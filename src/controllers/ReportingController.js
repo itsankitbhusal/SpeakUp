@@ -5,7 +5,8 @@ import { sanitizeInput } from '../utils/index.js';
 class ReportingController{
   // create reporting
   createReporting = async (req, res) => {
-    let { reportType, confessionId, commentId, description } = req.body;
+    const { reportType, description } = req.body;
+    let {  confessionId, commentId } = req.body;
     if (!reportType || !description) {
       return res.send(message.error('Missing required fields'));
     }
@@ -55,7 +56,7 @@ class ReportingController{
         return res.send(message.error('You have already reported this object'));
       }
       const reporting = await models.reportings.create({
-        reporter_id: reporterId,
+        reporter_id: userId,
         reported_object_type: reportType,
         confession_id: confessionId,
         comment_id: commentId,

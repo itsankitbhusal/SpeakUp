@@ -7,12 +7,12 @@ const authController = new AuthController();
 router.post('/register', authController.addUser);
 router.get('/verify/:token', authController.emailVerification);
 router.post('/login', authController.loginUser);
-router.post('/token', authController.getNewAccessToken);
+router.get('/token', authController.getNewAccessToken);
 
 router.get('/users', middlewares.verifyAccessToken,middlewares.verifyRefreshToken, authController.getAllUsers);
 router.get('/user/:id', middlewares.verifyAccessToken,middlewares.verifyRefreshToken, authController.getSingleUser);
-router.get('/me', middlewares.verifyAccessToken,middlewares.verifyRefreshToken, authController.getMe);
+router.get('/user/me', middlewares.verifyAccessToken,middlewares.verifyRefreshToken, authController.getMe);
 router.delete('/user/:id',middlewares.verifyAccessToken, middlewares.verifyRefreshToken, authController.deleteUser);
-router.post('/user/reset', middlewares.verifyAccessToken,middlewares.verifyRefreshToken, authController.resetPassword);
+router.put('/user/reset', middlewares.verifyAccessToken,middlewares.verifyRefreshToken, authController.resetPassword);
 
 export default router;
