@@ -56,7 +56,7 @@ class ReportingController{
         return res.send(message.error('You have already reported this object'));
       }
       const reporting = await models.reportings.create({
-        reporter_id: reporterId,
+        reporter_id: userId,
         reported_object_type: reportType,
         confession_id: confessionId,
         comment_id: commentId,
