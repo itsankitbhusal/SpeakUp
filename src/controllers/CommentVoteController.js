@@ -7,7 +7,7 @@ class CommentVoteController{
     const { id: commentId } = req.params;
     const voteType = 'up';
     //   get user id from the access token 
-    const { id:userId } = req.user;
+    const { id: userId } = req.user;
     if (!commentId ) {
       return res.send(message.error('Please provide comment id'));
     }
@@ -22,7 +22,7 @@ class CommentVoteController{
         return res.send(message.error('You have already voted for this comment.'));
       }
       const newCommentVote = await models.commentVotes.create({
-        user_id: id,
+        user_id: userId,
         comment_id: commentId,
         vote_type: voteType
       });
@@ -44,7 +44,7 @@ class CommentVoteController{
     const { id: commentId } = req.params;
     const voteType = 'down';
     //   get user id from the access token 
-    const { id:userId } = req.user;
+    const { id: userId } = req.user;
     if (!commentId ) {
       return res.send(message.error('Please provide comment id'));
     }
@@ -59,7 +59,7 @@ class CommentVoteController{
         return res.send(message.error('You have already voted for this comment.'));
       }
       const newCommentVote = await models.commentVotes.create({
-        user_id: id,
+        user_id: userId,
         comment_id: commentId,
         vote_type: voteType
       });
@@ -104,7 +104,7 @@ class CommentVoteController{
         vote_type: voteType
       }, {
         where: {
-          user_id: id,
+          user_id: userId,
           comment_id: commentId
         }
       });
@@ -148,7 +148,7 @@ class CommentVoteController{
         vote_type: voteType
       }, {
         where: {
-          user_id: id,
+          user_id: userId,
           comment_id: commentId
         }
       });
@@ -190,7 +190,7 @@ class CommentVoteController{
       }
       const deletedCommentVote = await models.commentVotes.destroy({
         where: {
-          user_id: id,
+          user_id: userId,
           comment_id: commentId
         }
       });
@@ -232,7 +232,7 @@ class CommentVoteController{
       }
       const deletedCommentVote = await models.commentVotes.destroy({
         where: {
-          user_id: id,
+          user_id: userId,
           comment_id: commentId
         }
       });
