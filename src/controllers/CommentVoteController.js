@@ -93,12 +93,12 @@ class CommentVoteController{
           comment_id: commentId
         }
       });
+      if (!commentVote) {
+        return res.send(message.error('You have not voted for this comment.'));
+      }
       // check if up vote already exists
       if (commentVote.vote_type === voteType) {
         return res.send(message.error('You have already voted for this comment.'));
-      }
-      if (!commentVote) {
-        return res.send(message.error('You have not voted for this comment.'));
       }
       const updatedCommentVote = await models.commentVotes.update({
         vote_type: voteType
