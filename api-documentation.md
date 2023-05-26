@@ -2,7 +2,7 @@
 REST API documentation for **SpeakUp**: An anonymous confession platform for students of Lumbini ICT Campus.
 
 - [**API documentation**](#api-documentation)
-  - [**Auth**](#auth)
+  - [**Auth Routes**](#auth-routes)
     - [**Register**](#register)
     - [**Login**](#login)
     - [**Get access token**](#get-access-token)
@@ -30,25 +30,25 @@ REST API documentation for **SpeakUp**: An anonymous confession platform for stu
     - [**Delete confession**](#delete-confession)
     - [**Approve confession**](#approve-confession)
     - [**Get pending confessions**](#get-pending-confessions)
-  - [ **Confession Tag Routes** ](#-confession-tag-routes-)
+  - [**Confession Tag Routes**](#confession-tag-routes)
     - [**Create confession tag**](#create-confession-tag)
     - [**Get confession tag by id**](#get-confession-tag-by-id)
     - [**Delete confession tag**](#delete-confession-tag)
     - [**Get confession related to tags**](#get-confession-related-to-tags)
-  - [ **Confession Vote Routes** ](#-confession-vote-routes-)
+  - [**Confession Vote Routes**](#confession-vote-routes)
     - [**Confession up vote**](#confession-up-vote)
     - [**Confession down vote**](#confession-down-vote)
     - [**Update confession up vote**](#update-confession-up-vote)
     - [**Update confession down vote**](#update-confession-down-vote)
     - [**Delete confession up vote**](#delete-confession-up-vote)
     - [**Delete confession down vote**](#delete-confession-down-vote)
-  - [ **Notification Routes** ](#-notification-routes-)
+  - [**Notification Routes**](#notification-routes)
     - [**Create notification**](#create-notification)
     - [**Get notification by user id**](#get-notification-by-user-id)
     - [**Get notification by id**](#get-notification-by-id)
     - [**Update notification status**](#update-notification-status)
     - [**Delete notification**](#delete-notification)
-  - [ **Reporting Routes** ](#-reporting-routes-)
+  - [**Reporting Routes**](#reporting-routes)
     - [**Create reporting**](#create-reporting)
     - [**Get all reportings**](#get-all-reportings)
     - [**Get report by id**](#get-report-by-id)
@@ -57,13 +57,13 @@ REST API documentation for **SpeakUp**: An anonymous confession platform for stu
     - [**Get reporting by user**](#get-reporting-by-user)
     - [**Get reporting by object type**](#get-reporting-by-object-type)
     - [**Get reporting by resolved status**](#get-reporting-by-resolved-status)
-  - [ **Tag Routes** ](#-tag-routes-)
+  - [**Tag Routes**](#tag-routes)
     - [**Get all tag**](#get-all-tag)
     - [**Create tag**](#create-tag)
     - [**Get tag with id**](#get-tag-with-id)
     - [**Update tag**](#update-tag)
     - [**Delete tag**](#delete-tag)
-  - [ **View Routes** ](#-view-routes-)
+  - [**View Routes**](#view-routes)
     - [**Create view**](#create-view)
     - [**Get view by confession id**](#get-view-by-confession-id)
     - [**Get total view count by confession**](#get-total-view-count-by-confession)
@@ -71,7 +71,7 @@ REST API documentation for **SpeakUp**: An anonymous confession platform for stu
     - [**Delete view by id**](#delete-view-by-id)
 
 ---
-## <a id="auth">**Auth**</a>
+## <a id="auth"></a>**Auth Routes**
 ### **Register**
  Method | **POST**
 `{{url}}/auth/register`
@@ -122,7 +122,7 @@ required refresh token in **header** named `refresh`
 ```
 ---
 
-## <a id="comment-routes">**Comment Routes**</a>
+## <a id="comment-routes"></a>**Comment Routes**
 ### **Create comment**
  Method | **POST**
 `{{url}}/comment/:id`
@@ -151,7 +151,7 @@ required refresh token in **header** named `refresh`
 
 ---
 
-## <a id="comment-vote-routes">**Comment Votes Routes**</a>
+## <a id="comment-vote-routes"></a>**Comment Votes Routes**
 ### **Create comment upvote**
  Method | **POST**
 `{{url}}/comment-vote/up/:id`
@@ -176,7 +176,7 @@ required refresh token in **header** named `refresh`
 
 ---
 
-## <a id="confession-routes">**Confession Routes**</a>
+## <a id="confession-routes"></a>**Confession Routes**
 ### **Get all confessions**
  Method | **GET**
 `{{url}}/confession`
@@ -220,7 +220,7 @@ is_approved - `boolean`
 
 ---
 
-## <a id="confession-tag-routes"> **Confession Tag Routes** </a>
+## <a id="confession-tag-routes"></a>**Confession Tag Routes**
 ### **Create confession tag**
  Method | **POST**
 `{{url}}/confession-tag/:confessionId/:tagId`
@@ -238,7 +238,7 @@ is_approved - `boolean`
 
 ---
 
-## <a id="confession-vote-routes"> **Confession Vote Routes** </a>
+## <a id="confession-vote-routes"></a>**Confession Vote Routes**
 ### **Confession up vote**
  Method | **POST**
 `{{url}}/confession-vote/up/:confessionId`
@@ -263,7 +263,7 @@ is_approved - `boolean`
 
 ---
 
-## <a id="notification-routes"> **Notification Routes** </a>
+## <a id="notification-routes"></a>**Notification Routes**
 ### **Create notification**
  Method | **POST**
 `{{url}}/notification`
@@ -292,7 +292,7 @@ is_approved - `boolean`
 
 ---
 
-## <a id="reporting-routes"> **Reporting Routes** </a>
+## <a id="reporting-routes"></a>**Reporting Routes**
 
 ### **Create reporting**
  Method | **POST**
@@ -338,7 +338,7 @@ is_resolved: `boolean`
 
 ---
 
-## <a id="tag-routes"> **Tag Routes** </a>
+## <a id="tag-routes"></a>**Tag Routes**
 ### **Get all tag**
  Method | **GET**
 `{{url}}/tag`
@@ -371,7 +371,7 @@ is_resolved: `boolean`
 
 ---
 
-## <a id="view-routes"> **View Routes** </a>
+## <a id="view-routes"></a>**View Routes**
 ### **Create view**
  Method | **POST**
 `{{url}}/view/:confessionId`
