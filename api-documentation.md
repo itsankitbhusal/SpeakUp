@@ -1,9 +1,7 @@
 # **API documentation**
 REST API documentation for **SpeakUp**: An anonymous confession platform for students of Lumbini ICT Campus.
 
-## **Index**
 - [**API documentation**](#api-documentation)
-  - [**Index**](#index)
   - [**Auth**](#auth)
     - [**Register**](#register)
       - [Method | **POST**](#method--post)
