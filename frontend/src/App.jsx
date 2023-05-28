@@ -1,8 +1,11 @@
-import Button from './ui/atoms/Button';
+import Header from './ui/molecules/Header';
 
 const App = () => (
-  <div className=' min-h-screen grid place-items-center'>
-    <Button > Submit</Button>
+  <div className=' grid place-items-center'>
+    {/* <div className=' outline w-screen'> */}
+    <p>hello</p>
+    <Header />
+    {/* </div> */}
   </div>
 );
 
