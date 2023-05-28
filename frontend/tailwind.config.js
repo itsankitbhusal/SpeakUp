@@ -18,7 +18,7 @@ export default {
         warning: '#FFC107'
       },
       fontFamily: {
-        sans: ['inter', 'sans-serif']
+        sans: ['Inter', 'sans-serif']
       },
       fontSize: {
         'xs': '0.512rem',
