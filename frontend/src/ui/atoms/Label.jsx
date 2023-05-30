@@ -1,5 +1,5 @@
 const Label = ({ children, htmlFor }) => (
-  <label htmlFor={htmlFor} className="text-sm text-secondaryLight">
+  <label htmlFor={htmlFor} className="text-[.9rem] text-secondaryLight">
     {children}
   </label>
 );

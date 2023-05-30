@@ -12,11 +12,24 @@ export default {
         secondaryDark: '#1e1e1e',
         secondaryLight: '#4f4f4f',
         accent: '#bfa5d0',
+        accentDark: '#9984a6',
+        accentLight: '#ccb7d9',
         danger: '#FF4136',
+        dangerDark: '#cc342b',
+        dangerLight: '#ff675e',
         success: '#4CAF50',
+        successDark: '#3d8c40',
+        successLight: '#70bf73',
         info: '#2196F3',
-        warning: '#FFC107'
+        infoDark: '#1a78c2',
+        infoLight: '#4dabf5',
+        warning: '#FFC107',
+        warningDark: '#cc9a06',
+        warningLight: '#ffcd39',
+        cwhite: '#F7F7F7',
+        cblack: '#1e1e1e'
       },
+      
       fontFamily: {
         sans: ['Inter', 'sans-serif']
       },

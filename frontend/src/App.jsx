@@ -1,11 +1,8 @@
-import Header from './ui/molecules/Header';
+import FormField from './ui/molecules/FormField';
 
 const App = () => (
-  <div className=' grid place-items-center'>
-    {/* <div className=' outline w-screen'> */}
-    <p>hello</p>
-    <Header />
-    {/* </div> */}
+  <div className='grid place-items-center min-h-screen'>
+    <FormField label="Name" placeholder="Enter you name" id="uname" />
   </div>
 );
 
