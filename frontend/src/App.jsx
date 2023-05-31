@@ -1,8 +1,12 @@
-import FormField from './ui/molecules/FormField';
+import SidebarLinks from './ui/molecules/SidebarLinks';
+import HomePage from './ui/templates/HomePage';
 
 const App = () => (
-  <div className='grid place-items-center min-h-screen'>
-    <FormField label="Name" placeholder="Enter you name" id="uname" />
+  <div className='flex min-h-screen justify-center gap-8'>
+    <div className=' w-[20vw] bg-cwhite min-h-screen mt-32'>
+      <SidebarLinks />
+    </div>
+    <HomePage />
   </div>
 );
 

@@ -4,7 +4,6 @@ import Line from '../atoms/Line';
 import Text from '../atoms/Text';
 import VotesBtn from './VotesBtn';
 import { FaCommentAlt } from 'react-icons/fa';
-import WriteComment from './WriteComment';
 
 const ConfessionPost = ({ handle, date, views,title, body }) => (
   <div >
@@ -21,7 +20,6 @@ const ConfessionPost = ({ handle, date, views,title, body }) => (
         <Text className=" text-justify text-[.9rem]" >{ body}</Text>
       </div>
     </div>
-    <WriteComment />
   </div>
 );
 

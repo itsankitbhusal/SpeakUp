@@ -5,7 +5,7 @@ import { RxMagnifyingGlass } from 'react-icons/rx';
 
 const Header = () => (
   <>
-    <header className='w-[60vw] shadow-[rgba(0,_0,_0,_0.25)_0px_25px_50px_-12px]'>
+    <header className='shadow-[rgba(0,_0,_0,_0.25)_0px_25px_50px_-12px] '>
       <div className='flex justify-between items-center gap-4 outline rounded-sm outline-primary outline-[1.5px]'>
         <Logo width="150px" wide className=' ml-8' />
         <Input placeholder="Search..." className="bg-transparent outline-none py-0 border-none mr-2  w-[32vw]" />
