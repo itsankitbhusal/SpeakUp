@@ -1,13 +1,8 @@
-import SidebarLinks from './ui/molecules/SidebarLinks';
-import HomePage from './ui/templates/HomePage';
+import React from 'react';
+import Home from  './ui/pages/Home.jsx';
 
 const App = () => (
-  <div className='flex min-h-screen justify-center gap-8'>
-    <div className=' w-[20vw] bg-cwhite min-h-screen mt-32'>
-      <SidebarLinks />
-    </div>
-    <HomePage />
-  </div>
+  <Home />
 );
 
 export default App;

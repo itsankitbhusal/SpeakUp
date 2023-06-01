@@ -1,10 +1,11 @@
 import Header from '../molecules/Header';
 
-const Navbar = () => (
+const Navbar = ({ className }) => (
   <>
-    <div className='fixed top-0 w-full h-8 bg-white opacity-90'></div>
-    <div className='fixed top-8 z-10 bg-cwhite'>
-      <Header />
+    <div className={` bg-white w-full opacity-95 pt-8 fixed top-0 mx-auto ${ className }`}>
+      <div className='  max-w-[60vw] mx-auto'>
+        <Header />
+      </div>
     </div>
   </>
 );
