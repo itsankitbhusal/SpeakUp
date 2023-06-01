@@ -1,9 +1,8 @@
-import FormField from './ui/molecules/FormField';
+import React from 'react';
+import Home from  './ui/pages/Home.jsx';
 
 const App = () => (
-  <div className='grid place-items-center min-h-screen'>
-    <FormField label="Name" placeholder="Enter you name" id="uname" />
-  </div>
+  <Home />
 );
 
 export default App;

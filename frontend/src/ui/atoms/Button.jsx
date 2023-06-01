@@ -24,7 +24,9 @@ const Button = ({ children, onClick, className, variant }) => {
   case 'info':
     buttonClassName += ` bg-info text-white  hover:bg-infoDark ${ className }`;
     break;
-  
+  case 'user':
+    buttonClassName += ` bg-user text-primary outline outline-1 px-8 rounded-3xl font-semibold hover:bg-cwhite ${ className }`;
+    break;
   case 'outline-primary':
     buttonClassName += ` bg-transparent text-primary border border-primary  hover:bg-primaryLight hover:text-white hover:border-primaryLight ${ className }`;
     break;
