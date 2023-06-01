@@ -1,8 +1,12 @@
-import React from 'react';
-import Home from  './ui/pages/Home.jsx';
+import CreateConfessionModal from './ui/organisms/CreateConfessionModal';
+import Home from './ui/pages/Home.jsx';
+import { MyContext } from './context/MyContext';
 
 const App = () => (
-  <Home />
+  <MyContext.Provider value={{}}>
+    <Home />
+    <CreateConfessionModal />
+  </MyContext.Provider>
 );
 
 export default App;
