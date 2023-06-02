@@ -1,17 +1,14 @@
-import CreateConfessionModal from './ui/organisms/CreateConfessionModal';
-import Home from './ui/pages/Home.jsx';
+import { useRoutes } from 'react-router-dom';
 import { MyContext } from './context/MyContext';
-import Register from './ui/pages/Register';
-import Login from './ui/pages/Login';
+import routes from './routes/routes';
 
-const App = () => (
-  <MyContext.Provider value={{}}>
-    {/* <Home />
-    <CreateConfessionModal /> */}
-    <Register />
-    <Login />
-
-  </MyContext.Provider>
-);
+const App = () => {
+  const routing = useRoutes(routes);
+  return(
+    <MyContext.Provider value={{}}>
+      {routing}
+    </MyContext.Provider>
+  );
+};
 
 export default App;
