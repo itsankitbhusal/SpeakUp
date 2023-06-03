@@ -1,30 +1,19 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import RegisterTemp from '../templates/RegisterTemp';
-import { useState, useEffect } from 'react';
-
-import { register } from '../../services/auth';
-import { UserContext } from '../../context/UserContext';
 
 const Register = () => {
-  const [userData, setUserData] = useState(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        if (userData) {
-          const user = await register();
-          setUserData(user);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchUser();
+    const refresh = localStorage.getItem('refresh');
+    if (refresh) {
+      navigate('/');
+    }
   }, []);
-  
-  return(
-    <UserContext.Provider value={{ userData, setUserData }}  >
+  return (
+    <>
       <RegisterTemp />
-    </UserContext.Provider>
+    </>
   );
 };
 

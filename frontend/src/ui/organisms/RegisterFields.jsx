@@ -21,13 +21,8 @@ const RegisterFields = () => {
     },
     validationSchema: registerValidationSchema,
     onSubmit: async values => {
-      console.log(values);
-
       const response = await register(values);
-      console.log('response: ', response);
-
       if (response.success) {
-        console.log(response.data);
         // set the refresh in local storage
         localStorage.setItem('refresh', response.data.refreshToken);
 
