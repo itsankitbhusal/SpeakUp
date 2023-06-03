@@ -15,7 +15,6 @@
       "camelcase": "error",
       "comma-dangle": ["error", "never"],
       "indent": ["error", 2],
-      "max-len": ["error", { "code": 120 }],
       "no-console": "warn",
       "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
       "object-curly-spacing": ["error", "always"],
