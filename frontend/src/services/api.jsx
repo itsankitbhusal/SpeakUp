@@ -23,7 +23,7 @@ api.interceptors.response.use(async response => {
   if (response.status === 403) {
     try {
       const newAccessToken = await api.post('/auth/token', {}, { headers: { 'refresh': response.headers.refresh } });
-      localStorage.setItem('token', newAccessToken.data.accessToken);
+      localStorage.setItem('access', newAccessToken.data.accessToken);
      
       const originalRequest = response.config;
       originalRequest.headers['Authorization'] = `Bearer ${ newAccessToken.data.accessToken }`;
