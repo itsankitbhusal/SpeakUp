@@ -21,3 +21,17 @@ export const register = async userData => {
     throw new Error(error);
   }
 };
+
+export const getNewToken = async refreshToken => {
+  try {
+    const headers = {
+      'Content-Type': 'application/json',
+      'refresh': refreshToken
+    };
+    const response = await api.get('/auth/token', { headers });
+    return response.data.accessToken; 
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
