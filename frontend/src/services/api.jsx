@@ -1,45 +1,34 @@
 import axios from 'axios';
+import decode from 'jwt-decode';
 import { BASE_URL } from '../constants/constant';
+
+let accessToken = localStorage.getItem('access') ? localStorage.getItem('access') : null;
+let refreshToken = localStorage.getItem('refresh') ?localStorage.getItem('refresh') : null;
 
 const api = axios.create({
   baseURL: BASE_URL,
   headers: {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    'Authorization': accessToken ? `Bearer ${ accessToken }` : null,
+    'refresh': refreshToken ? refreshToken : null
   }
 });
 
-api.interceptors.request.use(config => {
-  if (config.url === '/auth/login' || config.url === '/auth/register') {
-    return config;
+api.interceptors.request.use(async req => {
+  if (!accessToken || !refreshToken) {
+    accessToken = localStorage.getItem('access') ? localStorage.getItem('access') : null;
+    refreshToken = localStorage.getItem('refresh') ? localStorage.getItem('refresh') : null;
+    req.headers.Authorization = `Bearer ${ accessToken }`;
   }
-  const token = localStorage.getItem('token');
-  config.headers.Authorization = token ? `Bearer ${ token }` : '';
-  config.headers['refresh'] = token ? `${ token }` : '';
-  return config;
+  const user = decode(accessToken);
+  const isExpired = user.exp < Date.now() / 1000;
+  if (isExpired) {return req;}
+
+  const response = await axios.get(`${ BASE_URL }/auth/token`, { headers: { 'refresh': refreshToken } });
+  localStorage.setItem('access', response.data.accessToken);
+
+  req.headers.Authorization = `Bearer ${ response.data.accessToken }`;
+  return req;
 });
-
-// interceptor to get new access token from refresh token if access token is expired
-api.interceptors.response.use(async response => {
-  if (response.status === 403) {
-    try {
-      const newAccessToken = await api.post('/auth/token', {}, { headers: { 'refresh': response.headers.refresh } });
-      localStorage.setItem('access', newAccessToken.data.accessToken);
-     
-      const originalRequest = response.config;
-      originalRequest.headers['Authorization'] = `Bearer ${ newAccessToken.data.accessToken }`;
-      
-      return await api(originalRequest);
-      
-    } catch (error) {
-      return Promise.reject(error);
-    }
-  }
-  return response;
-},
-error => Promise.reject(error)
-);
-
-
-
 
 export default api;
