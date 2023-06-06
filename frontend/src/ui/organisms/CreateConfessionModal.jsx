@@ -6,32 +6,66 @@ import Modal from '../molecules/Modal';
 import Text from '../atoms/Text';
 import { createConfession } from '../../services/confessions';
 import { showToast } from '../../utils/toast';
+import { useFormik } from 'formik';
+import { createConfessionValidationSchema } from '../../validationSchemas/createConfessionValidationSchema';
+
+import FormField from '../molecules/FormField';
 
 const CreateConfessionModal = () => {
-  const { handleInputConfession, confession, CloseModal } = useContext(ModalContext);
+  // context data to close modal
+  const { CloseModal } = useContext(ModalContext);
 
-  const handleSubmit = async e => {
-    e.preventDefault();
-    const response = await createConfession(confession);
-    console.log(response);
+  // initial values
+  const initialValues = {
+    title: '',
+    body: ''
+  };
+  // validation schema for confession title and body
+  const validationSchema = createConfessionValidationSchema;
+
+  // on submit function to handle form submission
+  const onSubmit = async (values, { resetForm }) => {
+    const response = await createConfession(values);
     if (response.success) {
-      // reset confession state
-      handleInputConfession({ target: { name: 'title', value: '' } });
+      resetForm({ values: initialValues });
       showToast('Confession created successfully', 'success');
-
-      // close modal as the confession is created
       CloseModal();
     }
-
   };
+
+  // using formik for form validation and submission
+  const formik = useFormik({
+    initialValues,
+    validationSchema,
+    onSubmit
+  });
+
   return (
-    <form onSubmit={handleSubmit}>
-      <Modal title="Create Confession" showSaveButton showCancelButton >
+    <form onSubmit={formik.handleSubmit}>
+      <Modal title="Create Confession" showSaveButton showCancelButton>
         <div className=" p-4 flex flex-col gap-2 ">
-          <Text className=" font-semibold text-[.8rem]">Confession Title</Text>
-          <Input placeholder="Enter Confession Title" name="title" onChange={handleInputConfession} className="w-full" />
-          <Text className=" font-semibold text-[.8rem]">Confession Body</Text>
-          <TextArea placeholder="Enter Confession" name="body" onChange={handleInputConfession} />
+          <FormField
+            id="confessionTitle"
+            label="Confession Title"
+            placeholder="Enter Confession Title"
+            name="title"
+            onChange={formik.handleChange}
+            value={formik.values.title}
+            className="w-full"
+            error={formik?.errors?.title}
+          />
+
+          <FormField
+            textArea
+            id="confessionBody"
+            label="Confession Body"
+            placeholder="Enter Confession Body"
+            name="body"
+            onChange={formik.handleChange}
+            value={formik.values.body}
+            className="w-full"
+            error={formik?.errors?.body}
+          />
         </div>
       </Modal>
     </form>
