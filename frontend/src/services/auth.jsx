@@ -21,4 +21,3 @@ export const register = async userData => {
     throw new Error(error);
   }
 };
-
