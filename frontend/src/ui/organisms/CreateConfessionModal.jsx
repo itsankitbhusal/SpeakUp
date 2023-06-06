@@ -5,15 +5,23 @@ import TextArea from '../atoms/TextArea';
 import Modal from '../molecules/Modal';
 import Text from '../atoms/Text';
 import { createConfession } from '../../services/confessions';
+import { showToast } from '../../utils/toast';
 
 const CreateConfessionModal = () => {
-  const { handleInputConfession, confession } = useContext(ModalContext);
+  const { handleInputConfession, confession, CloseModal } = useContext(ModalContext);
 
   const handleSubmit = async e => {
     e.preventDefault();
-    console.log('confession data: ', confession);
     const response = await createConfession(confession);
     console.log(response);
+    if (response.success) {
+      // reset confession state
+      handleInputConfession({ target: { name: 'title', value: '' } });
+      showToast('Confession created successfully', 'success');
+
+      // close modal as the confession is created
+      CloseModal();
+    }
 
   };
   return (
