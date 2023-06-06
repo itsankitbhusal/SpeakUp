@@ -4,6 +4,9 @@ const route = '/confession';
 
 // create confession
 export const createConfession = async confessionData => {
+  if (!confessionData) {
+    throw new Error('Confession data is required');
+  }
   try {
     const response = await api.post(route, {
       ...confessionData
