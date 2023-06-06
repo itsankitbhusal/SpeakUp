@@ -1,5 +1,17 @@
 import axios from 'axios';
+import decode from 'jwt-decode';
 import { BASE_URL } from '../constants/constant';
+
+const getNewAccessToken = async () => {
+  const refreshToken = localStorage.getItem('refresh');
+  if (refreshToken === undefined || refreshToken === null || refreshToken === '') {
+    return;
+  }
+  const response = await axios.get(`${ BASE_URL }/auth/token`, { headers: { 'refresh': refreshToken } });
+  const newAccessToken = await response.data.data.accessToken;
+  localStorage.setItem('access', newAccessToken);
+  return newAccessToken;
+};
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -8,38 +20,36 @@ const api = axios.create({
   }
 });
 
-api.interceptors.request.use(config => {
-  if (config.url === '/auth/login' || config.url === '/auth/register') {
+// axios interceptor to to get new access token when it expires and error 401
+api.interceptors.request.use(async config => {
+  const accessToken = localStorage.getItem('access');
+  const refreshToken = localStorage.getItem('refresh');
+  if (!accessToken || !refreshToken) {
+    console.log('not found token');
+  }
+  config.headers['refresh'] = refreshToken;
+  if (accessToken === undefined || accessToken === null || accessToken === '') {
+    localStorage.removeItem('access');
     return config;
   }
-  const token = localStorage.getItem('token');
-  config.headers.Authorization = token ? `Bearer ${ token }` : '';
-  config.headers['refresh'] = token ? `${ token }` : '';
-  return config;
-});
-
-// interceptor to get new access token from refresh token if access token is expired
-api.interceptors.response.use(async response => {
-  if (response.status === 403) {
-    try {
-      const newAccessToken = await api.post('/auth/token', {}, { headers: { 'refresh': response.headers.refresh } });
-      localStorage.setItem('access', newAccessToken.data.accessToken);
-     
-      const originalRequest = response.config;
-      originalRequest.headers['Authorization'] = `Bearer ${ newAccessToken.data.accessToken }`;
-      
-      return await api(originalRequest);
-      
-    } catch (error) {
-      return Promise.reject(error);
-    }
+  const decoded = decode(accessToken);
+  if (decoded.exp < Date.now() / 1000) {
+    const newAccessToken = await getNewAccessToken();
+    config.headers['authorization'] = `Bearer ${ newAccessToken }`;
+  } else {
+    config.headers['authorization'] = `Bearer ${ accessToken }`;
   }
-  return response;
-},
-error => Promise.reject(error)
-);
-
-
-
+  return config;
+}, error => Promise.reject(error));
+api.interceptors.response.use(response => response, async error => {
+  if (error?.response?.status === 401) {
+    const newAccessToken = await getNewAccessToken();
+    const { config } = error;
+    config.headers['authorization'] = `Bearer ${ newAccessToken }`;
+    return await axios.request(config);
+  } else {
+    return Promise.reject(error);
+  }
+});
 
 export default api;

@@ -7,7 +7,7 @@ import Heading from '../atoms/Heading';
 import { IoMdClose } from 'react-icons/io';
 
 
-const Modal = ({ children, title, showSaveButton, showCancelButton, className }) => {
+const Modal = ({ children, title, showSaveButton, showCancelButton  }) => {
 
   const modalRef = useRef();
 
@@ -50,7 +50,7 @@ const Modal = ({ children, title, showSaveButton, showCancelButton, className })
                 )
               }
               {showSaveButton && (
-                <Button variant="primary">Save</Button>
+                <Button type="submit" variant="primary">Save</Button>
               )}
             </div>
           </div>

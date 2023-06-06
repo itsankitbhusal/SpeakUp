@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import FormField from '../molecules/FormField';
 import Button from '../atoms/Button';
-import { showToast, ToastContainer } from '../../utils/toast';
+import { showToast } from '../../utils/toast';
 import { loginValidationSchema } from '../../validationSchemas/loginValidationSchema';
 import { login } from '../../services/auth';
 
@@ -21,12 +21,12 @@ const LoginFields = () => {
         localStorage.setItem('refresh', response.data.refreshToken);
         // set access token in local storage
         localStorage.setItem('access', response.data.accessToken);
-        // redirect
-        setTimeout(() => {
-          navigate('/');
-        }, 2000);
+        
         // show toast
         showToast('Logged in successfully', 'success');
+
+        // navigate to home page
+        navigate('/');
       }
       if (!response.success) {
         showToast(response.message, 'error');
@@ -35,7 +35,6 @@ const LoginFields = () => {
   });
   return (
     <form onSubmit={formik.handleSubmit}>
-      <ToastContainer />
       <div className=" grid place-items-center gap-4 ">
         <FormField
           id="handle"

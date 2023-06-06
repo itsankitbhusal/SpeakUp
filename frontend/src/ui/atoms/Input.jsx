@@ -1,7 +1,8 @@
-const Input = ({ type, placeholder, value, onChange, id, className }) => 
+const Input = ({ type, placeholder, value, onChange, id, className, name }) => 
   // code
   (
     <input
+      name={name}
       id={id}
       type={type}
       placeholder={placeholder}

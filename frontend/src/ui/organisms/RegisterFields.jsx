@@ -7,7 +7,7 @@ import Button from '../atoms/Button';
 import { registerValidationSchema } from '../../validationSchemas/registerValidationSchema';
 import { register } from '../../services/auth';
 
-import {  showToast, ToastContainer } from '../../utils/toast';
+import {  showToast } from '../../utils/toast';
 
 const RegisterFields = () => {
   const navigate = useNavigate();
@@ -26,12 +26,11 @@ const RegisterFields = () => {
         // set the refresh in local storage
         localStorage.setItem('refresh', response.data.refreshToken);
 
-        // redirect
-        setTimeout(() => {
-          navigate('/');
-        }, 2000);
         // show toast
         showToast('Registered successfully', 'success');
+
+        // redirect
+        navigate('/');
       }
       if (!response.success) {
         showToast(response.message, 'error');
@@ -46,7 +45,6 @@ const RegisterFields = () => {
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <ToastContainer />
       <div className="grid place-items-center gap-4">
         <FormField
           id="handle"
