@@ -7,7 +7,7 @@ import Button from '../atoms/Button';
 import { registerValidationSchema } from '../../validationSchemas/registerValidationSchema';
 import { register } from '../../services/auth';
 
-import {  showToast } from '../../utils/toast';
+import { showToast } from '../../utils/toast';
 
 const RegisterFields = () => {
   const navigate = useNavigate();
@@ -41,7 +41,6 @@ const RegisterFields = () => {
     const { checked } = event.target;
     formik.setFieldValue('terms', checked);
   };
-  
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -89,7 +88,6 @@ const RegisterFields = () => {
             onBlur={formik.handleBlur}
             error={formik.touched.terms && formik.errors.terms}
           />
-          
         </div>
         <div className="mt-4 mb-8 w-full flex justify-end">
           <Button type="submit" variant="primary" className="w-2/3 py-3">
