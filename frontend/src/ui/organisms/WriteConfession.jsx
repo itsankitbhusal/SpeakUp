@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useState, useContext } from 'react';
 import { ModalContext } from '../../context/ModalContext';
 import CreateConfession from '../atoms/CreateConfession';
 import CreateConfessionModal from './CreateConfessionModal';
@@ -6,6 +6,10 @@ import CreateConfessionModal from './CreateConfessionModal';
 
 const WriteConfession = () => {
   const { showModal, OpenModal } = useContext(ModalContext);
+  const [preserveData, setPreserveData] = useState({
+    title: '',
+    body: ''
+  });
   
   const handleCreateConfessionClick = () => {
     OpenModal();
@@ -15,7 +19,7 @@ const WriteConfession = () => {
       <div className='mt-32 mb-8 w-full ' onClick={handleCreateConfessionClick} >
         <CreateConfession />
       </div>
-      {showModal && <CreateConfessionModal />}
+      {showModal && <CreateConfessionModal preserveData={preserveData} setPreserveData={setPreserveData} />}
     </>
   );
 };
