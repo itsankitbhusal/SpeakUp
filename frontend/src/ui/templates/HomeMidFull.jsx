@@ -3,6 +3,7 @@ import { ModalProvider } from '../../context/ModalContext';
 import { ConfessionContext } from '../../context/ConfessionContext';
 import Confession from '../organisms/Confession';
 import WriteConfession from '../organisms/WriteConfession';
+import { dateConverter } from '../../utils/dateConverter';
 
 const HomeMidFull = ({ className }) => {
   const { confessions, handleLimitChange, handlePageChange } =
@@ -17,7 +18,7 @@ const HomeMidFull = ({ className }) => {
           <Confession
             key={confession.id}
             handle={confession.user.handle}
-            date={confession.created_at}
+            date={dateConverter(confession.created_at)}
             views={confession.views_count}
             title={confession.title}
             body={confession.body}

@@ -5,15 +5,15 @@ import Text from '../atoms/Text';
 const UserDetail = ({ handle, date, views }) => (
   <div className='flex justify-between items-center w-full'>
     <div className=' flex justify-between items-center gap-1'>
-      <Text>{handle}</Text>
+      <Text className=" text-primary text-[.7rem] transition-all hover:cursor-pointer hover:underline">{handle}</Text>
       <div className=' w-1 h-1 bg-secondary rounded-full my-2'></div>
-      <Text>{date}</Text>
+      <Text className="text-sm">{date}</Text>
     </div>
     <div className='flex justify-between items-center gap-1'>
       {views >=0 && (
         <>
           <AiFillEye />
-          <Text>{views}</Text>
+          <Text className="text-sm">{views}</Text>
         </>
       )}
     </div>
