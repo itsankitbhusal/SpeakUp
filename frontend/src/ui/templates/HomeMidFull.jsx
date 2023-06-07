@@ -1,23 +1,31 @@
-import React from 'react';
+import { useContext } from 'react';
 import { ModalProvider } from '../../context/ModalContext';
+import { ConfessionContext } from '../../context/ConfessionContext';
 import Confession from '../organisms/Confession';
 import WriteConfession from '../organisms/WriteConfession';
-const body = 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Saepe, fuga culpa numquam nam dolorum deserunt minima repudiandae ad quos! Sint pariatur voluptatem laborum quo omnis, enim quia molestiae iure! Ipsam! Lorem ipsum, dolor sit amet consectetur adipisicing elit. Saepe, fuga culpa numquam nam dolorum deserunt minima repudiandae ad quos! Sint pariatur voluptatem laborum quo omnis, enim quia molestiae iure! Ipsam!Lorem ipsum, dolor sit amet consectetur adipisicing elit.  Ipsam!Lorem ipsum, dolor sit amet consectetur adipisicing elit. Saepe, fuga culpa numquam nam dolorum deserunt minima repudiandae ad quos! Sint pariatur voluptatem laborum quo omnis, enim quia molestiae iure! Ipsam!Lorem ipsum, dolor sit amet consectetur adipisicing elit. Saepe, fuga culpa numquam nam dolorum deserunt minima repudiandae ad quos! Sint pariatur voluptatem laborum quo omnis, enim quia molestiae iure! Ipsam!Lorem ipsum, dolor sit amet consectetur adipisicing elit. Saepe, fuga culpa numquam nam dolorum deserunt minima repudiandae ad quos! Sint pariatur voluptatem laborum quo omnis, enim quia molestiae iure! Ipsam!';
 
-const HomeMidFull = ({ className }) => (
-  <div className={`grid place-items-center max-w-[40vw] ${ className }`} >
-    <ModalProvider>
-      <WriteConfession />
-    </ModalProvider>
-    <div >
-      <Confession handle={'itsankitbhusal'} date={'21 May 2023'} views={'589'} title={'Title'} body={body} />
-      <Confession handle={'itsankitbhusal'} date={'21 May 2023'} views={'589'} title={'Title'} body={body} />
-      <Confession handle={'itsankitbhusal'} date={'21 May 2023'} views={'589'} title={'Title'} body={body} />
-      <Confession handle={'itsankitbhusal'} date={'21 May 2023'} views={'589'} title={'Title'} body={body} />
-      <Confession handle={'itsankitbhusal'} date={'21 May 2023'} views={'589'} title={'Title'} body={body} />
-      <Confession handle={'itsankitbhusal'} date={'21 May 2023'} views={'589'} title={'Title'} body={'this is the short body'} />
+const HomeMidFull = ({ className }) => {
+  const { confessions, handleLimitChange, handlePageChange } =
+    useContext(ConfessionContext);
+  return (
+    <div className={`grid place-items-center max-w-[40vw] ${ className }`}>
+      <ModalProvider>
+        <WriteConfession />
+      </ModalProvider>
+      <div>
+        {confessions?.map(confession => (
+          <Confession
+            key={confession.id}
+            handle={confession.user.handle}
+            date={confession.created_at}
+            views={confession.views_count}
+            title={confession.title}
+            body={confession.body}
+          />
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default HomeMidFull;
