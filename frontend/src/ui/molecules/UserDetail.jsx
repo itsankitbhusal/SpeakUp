@@ -10,7 +10,7 @@ const UserDetail = ({ handle, date, views }) => (
       <Text>{date}</Text>
     </div>
     <div className='flex justify-between items-center gap-1'>
-      {views && (
+      {views >=0 && (
         <>
           <AiFillEye />
           <Text>{views}</Text>

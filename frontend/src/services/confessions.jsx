@@ -20,7 +20,7 @@ export const createConfession = async confessionData => {
 // get approved confessions with pagination limit and page
 export const getApprovedConfessions = async (limit, page) => {
   try {
-    const response = await api.get(`${ route }/approved?limit=${ limit }&page=${ page }`);
+    const response = await api.get(`${ route }/?limit=${ limit }&page=${ page }`);
     return await response.data;
   } catch (error) {
     throw new Error(error);

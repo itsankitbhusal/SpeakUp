@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import SidebarFull from '../templates/SidebarFull';
 import HomeMidFull from '../templates/HomeMidFull';
 import NavFull from '../templates/NavFull';
+import { ConfessionProvider } from '../../context/ConfessionContext';
 const Home = () => {
   const navigate = useNavigate();
   useEffect(() => {
@@ -25,7 +26,9 @@ const Home = () => {
               <SidebarFull />
             </div>
             <div className=' w-3/4 flex justify-end' >
-              <HomeMidFull />
+              <ConfessionProvider>
+                <HomeMidFull />
+              </ConfessionProvider>
             </div>
           </div>
         </div>
