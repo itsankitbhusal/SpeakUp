@@ -1,9 +1,6 @@
-import { useContext } from 'react';
+import { useState, useEffect,  useContext } from 'react';
 import { ModalContext } from '../../context/ModalContext';
-import Input from '../atoms/Input';
-import TextArea from '../atoms/TextArea';
 import Modal from '../molecules/Modal';
-import Text from '../atoms/Text';
 import { createConfession } from '../../services/confessions';
 import { showToast } from '../../utils/toast';
 import { useFormik } from 'formik';
@@ -11,10 +8,11 @@ import { createConfessionValidationSchema } from '../../validationSchemas/create
 
 import FormField from '../molecules/FormField';
 
-const CreateConfessionModal = () => {
+const CreateConfessionModal = ({ preserveData, setPreserveData }) => {
+  
   // context data to close modal
   const { CloseModal } = useContext(ModalContext);
-
+  
   // initial values
   const initialValues = {
     title: '',
@@ -30,15 +28,22 @@ const CreateConfessionModal = () => {
       resetForm({ values: initialValues });
       showToast('Confession created successfully', 'success');
       CloseModal();
+    } else {
+      showToast('Something went wrong', 'error');
     }
   };
 
   // using formik for form validation and submission
   const formik = useFormik({
-    initialValues,
+    initialValues: preserveData || initialValues ,
     validationSchema,
-    onSubmit
+    onSubmit,
+    enableReinitialize: true
   });
+  useEffect(() => {
+    // set title and body values to preserveData
+    setPreserveData(formik.values);
+  }, [formik.values]);
 
   return (
     <form onSubmit={formik.handleSubmit}>
