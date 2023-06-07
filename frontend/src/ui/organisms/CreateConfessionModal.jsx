@@ -1,4 +1,4 @@
-import { useState, useEffect,  useContext } from 'react';
+import { useEffect, useContext } from 'react';
 import { ModalContext } from '../../context/ModalContext';
 import Modal from '../molecules/Modal';
 import { createConfession } from '../../services/confessions';
@@ -9,10 +9,9 @@ import { createConfessionValidationSchema } from '../../validationSchemas/create
 import FormField from '../molecules/FormField';
 
 const CreateConfessionModal = ({ preserveData, setPreserveData }) => {
-  
   // context data to close modal
   const { CloseModal } = useContext(ModalContext);
-  
+
   // initial values
   const initialValues = {
     title: '',
@@ -35,7 +34,7 @@ const CreateConfessionModal = ({ preserveData, setPreserveData }) => {
 
   // using formik for form validation and submission
   const formik = useFormik({
-    initialValues: preserveData || initialValues ,
+    initialValues: preserveData || initialValues,
     validationSchema,
     onSubmit,
     enableReinitialize: true
