@@ -4,18 +4,24 @@ import DOMPurify from 'dompurify';
 const { window } = new JSDOM('');
 const purify = DOMPurify(window);
 
-const sanitizeInput = async input => {
-  input = await input.toString();
-  // remove leading and trailing spaces
-  input = await input.trim();
-  // remove extra spaces between words
-  input = await input.replace(/\s+/g, ' ');
-  input = purify.sanitize(input);
-  // limit to 1000 characters
-  if (input.length > 1000) {
-    input = await input.substring(0, 1000);
+function sanitizeInput(input) {
+  // Validate input type and length
+  if (typeof input !== 'string') {
+    throw new Error('Input must be a string');
   }
-  return input;
-};
+
+  if (input.length === 0) {
+    throw new Error('Input cannot be empty');
+  }
+
+  // Remove any HTML tags and attributes from the input
+  const sanitizedInput = purify.sanitize(input);
+
+  // Trim the input to a maximum of 3000 characters
+  const trimmedInput = sanitizedInput.substring(0, 3000);
+
+  return trimmedInput;
+}
+
 
 export { sanitizeInput };
