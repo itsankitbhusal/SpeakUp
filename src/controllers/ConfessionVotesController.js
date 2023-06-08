@@ -1,5 +1,5 @@
 import models from '../models/index.js';
-import {  message } from '../utils/index.js';
+import { message } from '../utils/index.js';
 
 class ConfessionVoteController{
   // create a confession vote
@@ -283,7 +283,100 @@ class ConfessionVoteController{
     }
   };
 
+  getAllConfessionVotes = async (req, res) => {
+    try {
+      const allConfessionVotes = await models.confessionVotes.findAll({
+        attributes: { exclude: ['user_id'] },
+        include: [{
+          model: models.users,
+          attributes: ['handle']
+        }]
+      });
+      if (allConfessionVotes) {
+        return res.send(message.success( allConfessionVotes));
+      } else {
+        return res.send(message.error('No confession votes found'));
+      }
+    } catch (error) {
+      return res.send(message.error(error.message));
+    }
+  };
+  getConfessionVoteByUserId = async (req, res) => {
+    let userId;
+    if (req.params.id) {
+      userId = req.params.id;
+    } else {
+      userId = req.user.id;
+    }
+    try {
+      const confessionVote = await models.confessionVotes.findAll({
+        where: { user_id: userId },
+        include: [{
+          model: models.users,
+          attributes: ['handle']
+        }]
+      });
+      if (confessionVote) {
+        return res.send(message.success( confessionVote));
+      } else {
+        return res.send(message.error('No confession vote found'));
+      }
+    } catch (error) {
+      return res.send(message.error(error.message));
+    }
+  };
+  getConfessionVoteByConfessionId = async (req, res) => {
+    const { id: confessionId } = req.params;
+    try {
+      const confessionVote = await models.confessionVotes.findAll({
+        where: { confession_id: confessionId, user_id: req.user.id },
+        include: [{
+          model: models.users,
+          attributes: ['handle']
+        }]
+      });
+      if (confessionVote) {
+        return res.send(message.success(confessionVote));
+      } else {
+        return res.send(message.error('No confession vote found'));
+      }
+    } catch (error) {
+      return res.send(message.error(error.message));
+    }
+  };
+  getConfessionVoteCountByConfessionId = async (req, res) => {
+    const { id: confessionId } = req.params;
+    try {
+      // get all up votes count
+      const upvoteCount = await models.confessionVotes.count({
+        where: {
+          confession_id: confessionId,
+          vote_types: 'up'
+        }
+      });
+      console.log('upvoteCount', upvoteCount);
+      
+      const downvoteCount = await models.confessionVotes.count({
+        where: {
+          confession_id: confessionId,
+          vote_types: 'down'
+        }
+      });
+      console.log('downvoteCount', downvoteCount);
 
+      const totalVoteCount = upvoteCount - downvoteCount;
+      console.log('totalVoteCount', totalVoteCount);
+      const result =  {
+        totalVoteCount,
+        downvoteCount,
+        upvoteCount
+      };
+      return res.send(message.success({ result }));
+    } catch (error) {
+      return res.send(message.error(error.message));
+    }
+  };
 }
+
 
 export default ConfessionVoteController;
