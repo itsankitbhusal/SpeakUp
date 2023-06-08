@@ -1,3 +1,4 @@
+import { literal } from 'sequelize';
 import models from '../models/index.js';
 import { sanitizeInput, message } from '../utils/index.js';
 
@@ -18,7 +19,7 @@ class ConfessionController {
     let { title, body } = req.body;
 
     // get handle from access token 
-    const { id:userId } = req.user;
+    const { id: userId } = req.user;
 
     // validate inputs
     title = await sanitizeInput(title);
@@ -26,13 +27,13 @@ class ConfessionController {
 
     // for title only limit to 150 characters
     if (title.length > 150) {
-      title = title.substr(0,150);
+      title = title.substr(0, 150);
     }
     if (!title || !body) {
       return res.send(message.error('Missing title or body!'));
     }
     try {
-      const confession = await models.confessions.create({ title,body,user_id: userId });
+      const confession = await models.confessions.create({ title, body, user_id: userId });
       return res.send(message.success(confession));
     } catch (err) {
       return res.send(message.error(err.message));
@@ -120,7 +121,7 @@ class ConfessionController {
     } catch (err) {
       return res.send(message.error(err.message));
     }
-  }; 
+  };
   // get all approved confessions with pagination
   getAllApprovedConfessions = async (req, res) => {
     // parse query params page and limit
@@ -135,13 +136,18 @@ class ConfessionController {
         where: { is_approved: true },
         limit: limitPerPage,
         offset,
-        attributes: { exclude: ['user_id'] },
+        attributes: {
+          include: [
+            [literal('(SELECT COUNT(DISTINCT views.id) FROM views WHERE views.confession_id = confessions.id)'), 'views_count']
+          ], exclude: ['user_id']
+        },
         include: [{
           model: models.users,
           attributes: ['handle']
-        }]
+        }],
+        order:[['id', 'DESC']]
       });
-      
+
       // include pagination info to response
       const response = {
         confessions,
@@ -173,7 +179,7 @@ class ConfessionController {
           attributes: ['handle']
         }]
       });
-      
+
       // include pagination info to response
       const response = {
         confessions,
