@@ -50,6 +50,9 @@ confessions.hasMany(reportings, { foreignKey: 'confession_id' });
 confessionTags.belongsTo(tags, { foreignKey: 'tag_id' });
 confessionTags.belongsTo(confessions, { foreignKey: 'confession_id' });
 
+// confession votes relation
+confessionVotes.belongsTo(users, { foreignKey: 'user_id' });
+
 // tags relations
 tags.belongsToMany(confessions, { through: confessionTags, foreignKey: 'tag_id' });
 
