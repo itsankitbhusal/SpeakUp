@@ -12,4 +12,12 @@ router.put('/down/:id', middlewares.verifyAccessToken, middlewares.verifyRefresh
 router.delete('/up/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionVoteController.deleteConfessionUpVote);
 router.delete('/down/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionVoteController.deleteConfessionDownVote);
 
+// get all confession votes
+router.get('/', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionVoteController.getAllConfessionVotes);
+// get confession by user id logged one
+router.get('/user/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionVoteController.getConfessionVoteByUserId);
+// get getConfessionVoteByConfessionId
+router.get('/confession/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionVoteController.getConfessionVoteByConfessionId);
+// get vote count by confession id
+router.get('/count/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionVoteController.getConfessionVoteCountByConfessionId);
 export default router;
