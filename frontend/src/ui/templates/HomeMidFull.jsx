@@ -17,6 +17,7 @@ const HomeMidFull = ({ className }) => {
         {confessions?.map(confession => (
           <Confession
             key={confession.id}
+            confessionId={confession.id}
             handle={confession.user.handle}
             date={dateConverter(confession.created_at)}
             views={confession.views_count}
