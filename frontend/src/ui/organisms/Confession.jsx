@@ -30,10 +30,16 @@ const Confession = ({ handle, date, views, title, body, confessionId }) => {
 
   // if the isVisible than create view in the backend
   useEffect(() => {
-    if (isVisible && !isAlreadyViewed) {
-      createView(confessionId);
-      console.log('view created for', confessionId);
-    }
+    const createViewAfterDelay = () => {
+      setTimeout(() => {
+        if (isVisible && !isAlreadyViewed) {
+          createView(confessionId);
+        }
+      }, 2000);
+    };
+    return () => {
+      createViewAfterDelay();
+    };
   }, [isVisible, isAlreadyViewed]);
 
   const options = {
@@ -61,7 +67,7 @@ const Confession = ({ handle, date, views, title, body, confessionId }) => {
         body={body}
       />
       <div className=" my-4">
-        <WriteComment />
+        <WriteComment confessionId={confessionId} />
       </div>
       <Line />
     </div>
