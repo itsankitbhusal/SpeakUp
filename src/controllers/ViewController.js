@@ -84,7 +84,27 @@ class ViewController{
       res.send(message.error(error.message));
     }
   };
-    // delete view by id
+  // find if user has viewed confession
+  getConfessionViewsByUserId = async (req, res) => {
+    const { cid } = req.params;
+    const { id: userId } = req.user;
+    if (!cid) {
+      return res.send(message.error('Confession id is required'));
+    }
+    try {
+      // check if user has created views
+      const views = await models.views.findOne({ where: { user_id: userId, confession_id: cid } });
+      if (!views) {
+        return res.send(message.error('Views not found'));
+      }
+      return res.send(message.success(views));
+    }
+    catch (error) {
+      res.send(message.error(error.message));
+    }
+  };
+  
+  // delete view by id
   deleteView = async (req, res) => {
     const { id } = req.params;
     if (!id) {
