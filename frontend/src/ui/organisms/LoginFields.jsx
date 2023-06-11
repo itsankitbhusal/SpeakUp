@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import FormField from '../molecules/FormField';
 import Button from '../atoms/Button';
@@ -52,10 +52,18 @@ const LoginFields = () => {
           {...formik.getFieldProps('password')}
           error={formik.touched.password && formik.errors.password}
         />
+      
         <div className=" mt-4 mb-8 w-full flex justify-end">
-          <Button variant="primary" className=" w-2/3 py-3">
+          <div className='w-full flex flex-col items-end'>
+            <Button type="submit" variant="primary" className=" w-full py-3">
             Login
-          </Button>
+            </Button>
+            <div className="w-full flex text-md justify-end mt-3">
+              <Link to="/register" className="text-primary hover:underline">
+         Don't have an account? <span className=' font-semibold'>Register here</span>
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </form>

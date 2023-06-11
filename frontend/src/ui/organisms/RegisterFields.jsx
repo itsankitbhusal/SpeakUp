@@ -1,5 +1,5 @@
 import { useFormik } from 'formik';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 import FormField from '../molecules/FormField';
 import Checkbox from '../molecules/Checkbox';
@@ -90,9 +90,16 @@ const RegisterFields = () => {
           />
         </div>
         <div className="mt-4 mb-8 w-full flex justify-end">
-          <Button type="submit" variant="primary" className="w-2/3 py-3">
+          <div className='w-full flex flex-col items-end'>
+            <Button type="submit" variant="primary" className="w-full py-3">
             Register
-          </Button>
+            </Button>
+            <div className="w-full flex text-md justify-end mt-3">
+              <Link to="/login" className="text-primary hover:underline">
+        Already have an account? <span className=' font-semibold'>Login here</span>
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </form>

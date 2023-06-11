@@ -22,11 +22,14 @@ const api = axios.create({
 
 // axios interceptor to to get new access token when it expires and error 401
 api.interceptors.request.use(async config => {
+  // check if its login or register route
+  if (config.url === '/auth/login' || config.url === '/auth/register') {
+    return config;
+  }
   const accessToken = localStorage.getItem('access');
   const refreshToken = localStorage.getItem('refresh');
-  if (!accessToken || !refreshToken) {
+  if (!accessToken && !refreshToken) {
     throw new Error('No token found');
-    return config;
   }
   config.headers['refresh'] = refreshToken;
   if (accessToken === undefined || accessToken === null || accessToken === '') {

@@ -36,8 +36,7 @@ const CreateConfessionModal = ({ preserveData, setPreserveData }) => {
   const formik = useFormik({
     initialValues: preserveData || initialValues,
     validationSchema,
-    onSubmit,
-    enableReinitialize: true
+    onSubmit
   });
   useEffect(() => {
     // set title and body values to preserveData
