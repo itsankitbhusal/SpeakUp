@@ -12,4 +12,9 @@ router.put('/down/:id', middlewares.verifyAccessToken, middlewares.verifyRefresh
 router.delete('/up/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, commentVoteController.deleteCommentUpVote);
 router.delete('/down/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, commentVoteController.deleteCommentDownVote);
 
+// get vote count by comment id
+router.get('/count/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, commentVoteController.getCommentVoteCountByCommentId);
+// get comment vote by user id logged one
+router.get('/comment/:commentId', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, commentVoteController.getCommentVoteByUserId);
+
 export default router;

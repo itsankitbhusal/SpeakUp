@@ -16,7 +16,7 @@ const confessionVotes= dbConfig.define('confession_votes', {
     type: DataTypes.INTEGER,
     required: true
   },
-  vote_types: {
+  vote_type: {
     type: DataTypes.ENUM('up', 'down'),
     required: true,
     validate: {

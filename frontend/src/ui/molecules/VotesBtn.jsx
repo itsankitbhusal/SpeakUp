@@ -10,8 +10,18 @@ import {
   getVotesByConfessionIdAndUserId,
   getVotes
 } from '../../services/confessionVotes';
+import {
+  createUpvoteComment,
+  createDownvoteComment,
+  updateUpvoteComment,
+  updateDownvoteComment,
+  deleteUpvoteComment,
+  deleteDownvoteComment,
+  getVotesByCommentIdAndUserIdComment,
+  getVotesComment
+} from '../../services/commentVotes';
 
-const VotesBtn = ({ className, small, confessionId }) => {
+const VotesBtn = ({ className, small, confessionId, commentId }) => {
   const [votes, setVotes] = useState({
     upvotes: 0,
     downvotes: 0,
@@ -20,134 +30,210 @@ const VotesBtn = ({ className, small, confessionId }) => {
   const [hasUpvoted, setHasUpvoted] = useState(false);
   const [hasDownvoted, setHasDownvoted] = useState(false);
 
-  const getVoteCount = async id => {
-    const voteCount = await getVotes(id);
+  const getVoteCount = async (id, isComment) => {
+    const voteCount = isComment ? await getVotesComment(id) : await getVotes(id);
     const data = voteCount.data.result;
     setVotes({
       upvotes: data.upvoteCount,
       downvotes: data.downvoteCount,
       totalVote: data.totalVoteCount
     });
-    return true;
   };
-  const getVotesByConfessionId = async id => {
-    const votesFromId = await getVotesByConfessionIdAndUserId(id);
-    if (votesFromId.success) {
-      const data = votesFromId?.data[0];
-      if (data?.vote_types === 'up') {
+
+  const getVotesByItemId = async (id, isComment) => {
+    const votesFromId = isComment
+      ? await getVotesByCommentIdAndUserIdComment(id)
+      : await getVotesByConfessionIdAndUserId(id);
+    if (votesFromId) {
+      const data = votesFromId?.data;
+      if (data?.vote_type === 'up') {
         setHasUpvoted(true);
-      } else if (data?.vote_types === 'down') {
+      } else if (data?.vote_type === 'down') {
         setHasDownvoted(true);
-      } else {
-        setHasUpvoted(false);
-        setHasDownvoted(false);
       }
-    } else {
-      throw new Error(
-        'Something went wrong while getting votes by confession id'
-      );
     }
   };
+  
+
   useEffect(() => {
-    getVoteCount(confessionId);
-    getVotesByConfessionId(confessionId);
-  }, [confessionId]);
+    if (confessionId) {
+      getVoteCount(confessionId, false);
+      getVotesByItemId(confessionId, false);
+    } else if (commentId) {
+      getVoteCount(commentId, true);
+      getVotesByItemId(commentId, true);
+    }
+  }, [confessionId, commentId]);
 
   const handleUpvote = async () => {
-    if (hasUpvoted) {
-      // delete upvote
-      const deletedUpvote = await deleteUpvote(confessionId);
-      if (deletedUpvote.success) {
+    if (confessionId) {
+      // Confession vote
+      if (hasUpvoted) {
+        // delete upvote
+        await deleteUpvote(confessionId);
         setHasUpvoted(false);
-        setVotes({
-          ...votes,
-          upvotes: votes.upvotes - 1,
-          totalVote: votes.totalVote - 1
-        });
-      } else {
-        throw new Error('Something went wrong while deleting upvote');
-      }
-    } else if (hasDownvoted) {
-      // update downvote to upvote
-      const updatedUpvote = await updateDownvote(confessionId);
-      if (updatedUpvote.success) {
+        setVotes(prevVotes => ({
+          ...prevVotes,
+          upvotes: prevVotes.upvotes - 1,
+          totalVote: prevVotes.totalVote - 1
+        }));
+      } else if (hasDownvoted) {
+        // update downvote to upvote
+        await updateDownvote(confessionId);
         setHasUpvoted(true);
         setHasDownvoted(false);
-        setVotes({
-          ...votes,
-          upvotes: votes.upvotes + 1,
-          downvotes: votes.downvotes - 1,
-          totalVote: votes.totalVote + 2
-        });
+        setVotes(prevVotes => ({
+          ...prevVotes,
+          upvotes: prevVotes.upvotes + 1,
+          downvotes: prevVotes.downvotes - 1,
+          totalVote: prevVotes.totalVote + 2
+        }));
       } else {
-        throw new Error(
-          'Something went wrong while updating downvote to upvote'
-        );
-      }
-    } else if (!hasDownvoted) {
-      // create upvote
-      const createdUpvote = await createUpvote(confessionId);
-      if (createdUpvote.success) {
+        // create upvote
+        await createUpvote(confessionId);
         setHasUpvoted(true);
-        setVotes({
-          ...votes,
-          upvotes: votes.upvotes + 1,
-          totalVote: votes.totalVote + 1
-        });
-      } else {
-        throw new Error('Something went wrong while creating upvote');
+        setVotes(prevVotes => ({
+          ...prevVotes,
+          upvotes: prevVotes.upvotes + 1,
+          totalVote: prevVotes.totalVote + 1
+        }));
       }
-    } else {
-      throw new Error('Something went wrong');
+    } else if (commentId) {
+      // Comment vote
+      if (hasUpvoted) {
+        // delete upvote
+        const response = await deleteUpvoteComment(commentId);
+        if (response.success) {
+          setHasUpvoted(false);
+          setVotes(prevVotes => ({
+            ...prevVotes,
+            upvotes: prevVotes.upvotes - 1,
+            totalVote: prevVotes.totalVote - 1
+          }));
+        } else {
+          console.error('Error while deleting upvote: ', response.message);
+        }
+      } else if (hasDownvoted) {
+        // update downvote to upvote
+        const response = await updateDownvoteComment(commentId);
+        if (response.success) {
+          setHasUpvoted(true);
+          setHasDownvoted(false);
+          setVotes(prevVotes => ({
+            ...prevVotes,
+            upvotes: prevVotes.upvotes + 1,
+            downvotes: prevVotes.downvotes - 1,
+            totalVote: prevVotes.totalVote + 2
+          }));
+        } else {
+          console.error('Error while updating downvote to upvote: ', response.message);
+        }
+      } else {
+        // create upvote
+        const response = await createUpvoteComment(commentId);
+        if (response.success) {
+          setHasUpvoted(true);
+          setVotes(prevVotes => ({
+            ...prevVotes,
+            upvotes: prevVotes.upvotes + 1,
+            totalVote: prevVotes.totalVote + 1
+          }));
+        } else {
+          console.error('Error while creating upvote: ', response.message);
+        }
+      }
     }
   };
 
   const handleDownvote = async () => {
-    if (hasDownvoted) {
-      // delete downvote
-      const deletedDownvote = await deleteDownvote(confessionId);
-      if (deletedDownvote.success) {
-        setHasDownvoted(false);
-        setVotes({
-          ...votes,
-          downvotes: votes.downvotes - 1,
-          totalVote: votes.totalVote + 1
-        });
+    if (confessionId) {
+      // Confession vote
+      if (hasDownvoted) {
+        // delete downvote
+        const response = await deleteDownvote(confessionId);
+        if (response.success) {
+          setHasDownvoted(false);
+          setVotes(prevVotes => ({
+            ...prevVotes,
+            downvotes: prevVotes.downvotes - 1,
+            totalVote: prevVotes.totalVote + 1
+          }));
+        } else {
+          console.error('Error while deleting downvote: ', response.message);
+        }
+      } else if (hasUpvoted) {
+        // update upvote to downvote
+        const response = await updateUpvote(confessionId);
+        if (response.success) {
+          setHasDownvoted(true);
+          setHasUpvoted(false);
+          setVotes(prevVotes => ({
+            ...prevVotes,
+            upvotes: prevVotes.upvotes - 1,
+            downvotes: prevVotes.downvotes + 1,
+            totalVote: prevVotes.totalVote - 2
+          }));
+        } else {
+          console.error('Error while updating upvote to downvote: ', response.message);
+        }
       } else {
-        throw new Error('Something went wrong while deleting downvote');
+        // create downvote
+        const response = await createDownvote(confessionId);
+        if (response.success) {
+          setHasDownvoted(true);
+          setVotes(prevVotes => ({
+            ...prevVotes,
+            downvotes: prevVotes.downvotes + 1,
+            totalVote: prevVotes.totalVote - 1
+          }));
+        } else {
+          console.error('Error while creating downvote: ', response.message);
+        }
       }
-    } else if (hasUpvoted) {
-      // update upvote to downvote
-      const updatedDownvote = await updateUpvote(confessionId);
-      if (updatedDownvote) {
-        setHasDownvoted(true);
-        setHasUpvoted(false);
-        setVotes({
-          ...votes,
-          upvotes: votes.upvotes - 1,
-          downvotes: votes.downvotes + 1,
-          totalVote: votes.totalVote - 2
-        });
+    } else if (commentId) {
+      // Comment vote
+      if (hasDownvoted) {
+        // delete downvote
+        const response = await deleteDownvoteComment(commentId);
+        if (response.success) {
+          setHasDownvoted(false);
+          setVotes(prevVotes => ({
+            ...prevVotes,
+            downvotes: prevVotes.downvotes - 1,
+            totalVote: prevVotes.totalVote + 1
+          }));
+        } else {
+          console.error('Error while deleting downvote: ', response.message);
+        }
+      } else if (hasUpvoted) {
+        // update upvote to downvote
+        const response = await updateUpvoteComment(commentId);
+        if (response.success) {
+          setHasDownvoted(true);
+          setHasUpvoted(false);
+          setVotes(prevVotes => ({
+            ...prevVotes,
+            upvotes: prevVotes.upvotes - 1,
+            downvotes: prevVotes.downvotes + 1,
+            totalVote: prevVotes.totalVote - 2
+          }));
+        } else {
+          console.error('Error while updating upvote to downvote: ', response.message);
+        }
       } else {
-        throw new Error(
-          'Something went wrong while updating upvote to downvote'
-        );
+        // create downvote
+        const response = await createDownvoteComment(commentId);
+        if (response.success) {
+          setHasDownvoted(true);
+          setVotes(prevVotes => ({
+            ...prevVotes,
+            downvotes: prevVotes.downvotes + 1,
+            totalVote: prevVotes.totalVote - 1
+          }));
+        } else {
+          console.error('Error while creating downvote: ', response.message);
+        }
       }
-    } else if (!hasUpvoted) {
-      // create downvote
-      const createdDownvote = await createDownvote(confessionId);
-      if (createdDownvote.success) {
-        setHasDownvoted(true);
-        setVotes({
-          ...votes,
-          downvotes: votes.downvotes + 1,
-          totalVote: votes.totalVote - 1
-        });
-      } else {
-        throw new Error('Something went wrong while creating downvote');
-      }
-    } else {
-      throw new Error('Something went wrong');
     }
   };
 
@@ -164,24 +250,18 @@ const VotesBtn = ({ className, small, confessionId }) => {
             className="hover:cursor-pointer hover:text-primaryDark transition-all"
           >
             <span
-              className={
-                hasUpvoted ? 'text-accent hover:text-accentDark' : null
-              }
+              className={hasUpvoted ? 'text-accent hover:text-accentDark' : null}
             >
               <GoTriangleUp />
             </span>
           </div>
-          <span className=" text-[.8rem] text-cblack px-2">
-            {votes.totalVote}
-          </span>
+          <span className="text-[.8rem] text-cblack px-2">{votes.totalVote}</span>
           <div
             onClick={handleDownvote}
             className="hover:cursor-pointer hover:text-primaryDark transition-all"
           >
             <span
-              className={
-                hasDownvoted ? 'text-accent hover:text-accentDark' : null
-              }
+              className={hasDownvoted ? 'text-accent hover:text-accentDark' : null}
             >
               <GoTriangleDown />
             </span>

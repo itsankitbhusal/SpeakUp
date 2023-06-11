@@ -24,7 +24,7 @@ class ConfessionVoteController{
       const newConfessionVote = await models.confessionVotes.create({
         user_id: userId,
         confession_id: confessionId,
-        vote_types: voteType
+        vote_type: voteType
       });
       if (newConfessionVote) {
         const result = await this.updateConfessionVoteCount(confessionId, voteType);
@@ -62,7 +62,7 @@ class ConfessionVoteController{
       const newConfessionVote = await models.confessionVotes.create({
         user_id: userId,
         confession_id: confessionId,
-        vote_types: voteType
+        vote_type: voteType
       });
       if (newConfessionVote) {
         const result = await this.updateConfessionVoteCount(confessionId, voteType);
@@ -90,14 +90,14 @@ class ConfessionVoteController{
         where: { user_id: userId, confession_id: confessionId }
       });
       // check if up vote already exists
-      if (confessionVote.vote_types === voteType) {
+      if (confessionVote.vote_type === voteType) {
         return res.send(message.error('You have already up voted for this confession.'));
       }
       if (!confessionVote) {
         return res.send(message.error('You have not voted for this confession.'));
       }
       const updatedConfessionVote = await models.confessionVotes.update({
-        vote_types: voteType
+        vote_type: voteType
       }, {
         where: { user_id: userId, confession_id: confessionId }
       });
@@ -131,11 +131,11 @@ class ConfessionVoteController{
         return res.send(message.error('You have not voted for this confession.'));
       }
       // check if down vote already exists
-      if (confessionVote.vote_types === voteType) {
+      if (confessionVote.vote_type === voteType) {
         return res.send(message.error('You have already down voted for this confession.'));
       }
       const updatedConfessionVote = await models.confessionVotes.update({
-        vote_types: voteType
+        vote_type: voteType
       }, {
         where: { user_id: userId, confession_id: confessionId }
       });
@@ -168,7 +168,7 @@ class ConfessionVoteController{
       if (!confessionVote) {
         return res.send(message.error('You have not voted for this confession.'));
       }
-      if (confessionVote.vote_types !== voteType) { 
+      if (confessionVote.vote_type !== voteType) { 
         return res.send(message.error('You need to pass valid vote type'));
       }
       const deletedConfessionVote = await models.confessionVotes.destroy({
@@ -202,7 +202,7 @@ class ConfessionVoteController{
       if (!confessionVote) {
         return res.send(message.error('You have not voted for this confession.'));
       }
-      if (confessionVote.vote_types !== voteType) { 
+      if (confessionVote.vote_type !== voteType) { 
         return res.send(message.error('You need to pass valid vote type'));
       }
       const deletedConfessionVote = await models.confessionVotes.destroy({
@@ -328,7 +328,7 @@ class ConfessionVoteController{
   getConfessionVoteByConfessionId = async (req, res) => {
     const { id: confessionId } = req.params;
     try {
-      const confessionVote = await models.confessionVotes.findAll({
+      const confessionVote = await models.confessionVotes.findOne({
         where: { confession_id: confessionId, user_id: req.user.id },
         include: [{
           model: models.users,
@@ -351,7 +351,7 @@ class ConfessionVoteController{
       const upvoteCount = await models.confessionVotes.count({
         where: {
           confession_id: confessionId,
-          vote_types: 'up'
+          vote_type: 'up'
         }
       });
       console.log('upvoteCount', upvoteCount);
@@ -359,13 +359,10 @@ class ConfessionVoteController{
       const downvoteCount = await models.confessionVotes.count({
         where: {
           confession_id: confessionId,
-          vote_types: 'down'
+          vote_type: 'down'
         }
       });
-      console.log('downvoteCount', downvoteCount);
-
       const totalVoteCount = upvoteCount - downvoteCount;
-      console.log('totalVoteCount', totalVoteCount);
       const result =  {
         totalVoteCount,
         downvoteCount,

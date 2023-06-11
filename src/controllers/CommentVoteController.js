@@ -312,8 +312,61 @@ class CommentVoteController{
       return error.message;
     }
   };
+  // get comment vote count by id
+  getCommentVoteCountByCommentId = async (req, res) => {
+    const { id: commentId } = req.params;
+    if (!commentId) {
+      return res.send(message.error('Please provide comment id'));
+    }
+    try {
+      const upvoteCount = await models.commentVotes.count({
+        where: {
+          comment_id: commentId,
+          vote_type: 'up'
+        }
+      });
+      const downvoteCount = await models.commentVotes.count({
+        where: {
+          comment_id: commentId,
+          vote_type: 'down'
+        }
+      });
+      const totalVoteCount = upvoteCount - downvoteCount;
+      const result = {
+        upvoteCount,
+        downvoteCount,
+        totalVoteCount
+      };
+      console.log(result);
+      return res.send(message.success({ result }));
+    }
+    catch (error) {
+      return res.send(message.error(error.message));
+    }
+  };
+  // get comment vote by user id
+  getCommentVoteByUserId = async (req, res) => {
+    const { commentId } = req.params;
+    const { id: userId } = req.user;
 
-
+    if (!userId) {
+      return res.send(message.error('Please provide user id'));
+    }
+    try {
+      // get comment vote by user id
+      const commentVote = await models.commentVotes.findOne({
+        where: { user_id: userId, comment_id: commentId },
+        include: [{
+          model: models.users,
+          attributes: ['handle']
+        }]
+      });
+      return res.send(message.success(commentVote));
+    }
+    catch (error) {
+      return res.send(message.error(error.message));
+    }
+  };
 }
 
 export default CommentVoteController;

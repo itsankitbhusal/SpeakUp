@@ -25,7 +25,8 @@ api.interceptors.request.use(async config => {
   const accessToken = localStorage.getItem('access');
   const refreshToken = localStorage.getItem('refresh');
   if (!accessToken || !refreshToken) {
-    console.log('not found token');
+    throw new Error('No token found');
+    return config;
   }
   config.headers['refresh'] = refreshToken;
   if (accessToken === undefined || accessToken === null || accessToken === '') {

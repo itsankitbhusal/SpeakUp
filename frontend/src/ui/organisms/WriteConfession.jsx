@@ -16,8 +16,10 @@ const WriteConfession = () => {
   };
   return (
     <>
-      <div className='mt-32 mb-8 w-full ' onClick={handleCreateConfessionClick} >
-        <CreateConfession />
+      <div className='mt-32 mb-8 w-full' onClick={handleCreateConfessionClick} >
+        <div title='Create Confession'>
+          <CreateConfession />
+        </div>
       </div>
       {showModal && <CreateConfessionModal preserveData={preserveData} setPreserveData={setPreserveData} />}
     </>

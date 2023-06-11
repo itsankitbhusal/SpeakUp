@@ -9,5 +9,8 @@ router.post('/:confessionId', middlewares.verifyAccessToken, middlewares.verifyR
 router.get('/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, commentController.getCommentById);
 router.put('/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, commentController.updateComment);
 router.delete('/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, commentController.deleteComment);
+// get comments by confession id, with pagination and sorting by date
+router.get('/confession/:confessionId', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, commentController.getCommentsByConfessionId);
+
 
 export default router;
