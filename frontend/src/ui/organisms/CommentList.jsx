@@ -34,7 +34,7 @@ const CommentList = ({ confessionId, showComments }) => {
       setComments(prevComments => [...prevComments, ...data.rows]);
       setShowMore(data.count > nextPage * size);
     } else {
-      console.log(response.message);
+      console.error(response.message);
     }
   };
 
@@ -49,7 +49,7 @@ const CommentList = ({ confessionId, showComments }) => {
       {showComments &&
         comments?.map(comment => (
           <div key={comment?.id || 0}>
-            <Comment commentId={comment.id} handle={comment?.user?.handle || 'you'} date={comment?.created_at || 'just now'} body={comment?.body} />
+            <Comment showComments={showComments} commentId={comment.id} handle={comment?.user?.handle || 'you'} date={comment?.created_at || 'just now'} body={comment?.body} />
           </div>
         ))}
       {showMore && (

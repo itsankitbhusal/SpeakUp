@@ -34,7 +34,6 @@ export const deleteDownvoteComment = async commentId => {
 
 export const getVotesComment = async commentId => {
   const response = await api.get(`${ route }/count/${ commentId }`);
-  console.log('count response', response.data);
   return response.data;
 };
 

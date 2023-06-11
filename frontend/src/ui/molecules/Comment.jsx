@@ -4,12 +4,12 @@ import UserDetail from '../molecules/UserDetail';
 import VotesBtn from '../molecules/VotesBtn';
 import { dateConverter } from '../../utils/dateConverter';
 
-const Comment = ({ body, handle, date, commentId }) => {
+const Comment = ({ body, handle, date, commentId, showComments }) => {
   const convertedDate = dateConverter(date);
   return(
     <>
-      <div className=' w-full flex gap-2 justify-start items-center' onClick={() => console.log('onclick',commentId)}>
-        <VotesBtn commentId={commentId} comment />
+      <div className=' w-full flex gap-2 justify-start items-center' >
+        <VotesBtn showComments={showComments} commentId={commentId} />
         <div>
           <UserDetail className="text-sm" handle={handle} date={convertedDate} />
           <Text div className="text-justify text-md flex flex-wrap">
