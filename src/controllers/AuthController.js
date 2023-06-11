@@ -30,7 +30,7 @@ class AuthController {
       const tokenForEmailVerification = signEmailVerificationToken(handle, email);
 
       // send verification email
-      sendMail(email, tokenForEmailVerification);
+      // sendMail(email, tokenForEmailVerification);
 
       delete createdUser.dataValues.password;
 
