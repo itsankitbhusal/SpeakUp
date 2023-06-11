@@ -14,7 +14,7 @@ const ConfessionProvider = ({ children }) => {
       const data = await response.data;
       setConfessions(data.confessions);
     } else {
-      console.log( response.message);
+      throw new Error(response.message);
     }
   };
   const handleLimitChange = event => {

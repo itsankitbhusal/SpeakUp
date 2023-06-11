@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import Line from '../atoms/Line';
 import ConfessionPost from '../molecules/ConfessionPost';
-import WriteComment from '../molecules/WriteComment';
 import { createView, getConfessionViewsByUserId } from '../../services/ConfessionView';
 
 const Confession = ({ handle, date, views, title, body, confessionId }) => {
@@ -57,7 +55,7 @@ const Confession = ({ handle, date, views, title, body, confessionId }) => {
   }, [confessionRef, options]);
   
   return (
-    <div ref={confessionRef} className=" my-8">
+    <div ref={confessionRef} className=" my-8 outline outline-1 px-4 py-2 rounded-sm  outline-gray-200  transition-shadow">
       <ConfessionPost
         confessionId={confessionId}
         handle={handle}
@@ -66,10 +64,6 @@ const Confession = ({ handle, date, views, title, body, confessionId }) => {
         title={title}
         body={body}
       />
-      <div className=" my-4">
-        <WriteComment confessionId={confessionId} />
-      </div>
-      <Line />
     </div>
   );
 };
