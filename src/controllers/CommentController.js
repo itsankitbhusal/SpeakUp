@@ -95,6 +95,31 @@ class CommentController {
       return res.send(message.error('Something went wrong'));
     }
   };
+  // get comments by confession id, with pagination and sorting by date desc
+  getCommentsByConfessionId = async (req, res) => {
+    const { confessionId } = req.params;
+    // pagination
+    const { page = 1, size = 5 } = req.query;
+    
+    const limit = parseInt(size, 10);
+    const offset = (page - 1) * size;
+    try {
+      const comments = await models.comments.findAndCountAll({
+        where: { confession_id: confessionId },
+        attributes: { exclude: ['user_id'] },
+        include: [{
+          model: models.users,
+          attributes: ['handle']
+        }],
+        order: [['created_at', 'DESC']],
+        limit,
+        offset
+      });
+      return res.send(message.success(comments));
+    } catch (error) {
+      return res.send(message.error('Something went wrong'));
+    }
+  };
 
 }
 

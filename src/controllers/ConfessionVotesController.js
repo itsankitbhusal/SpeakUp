@@ -362,10 +362,7 @@ class ConfessionVoteController{
           vote_types: 'down'
         }
       });
-      console.log('downvoteCount', downvoteCount);
-
       const totalVoteCount = upvoteCount - downvoteCount;
-      console.log('totalVoteCount', totalVoteCount);
       const result =  {
         totalVoteCount,
         downvoteCount,
