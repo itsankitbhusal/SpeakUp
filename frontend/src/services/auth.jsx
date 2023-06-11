@@ -5,7 +5,6 @@ export const login = async userData => {
     const response = await api.post('/auth/login', {
       ...userData
     });
-    console.log(response);
     return await response.data;
   } catch (error) {
     throw new Error(error);
