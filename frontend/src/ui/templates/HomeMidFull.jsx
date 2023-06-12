@@ -52,7 +52,7 @@ const HomeMidFull = ({ className }) => {
         ))}
         {isLoading && (
           <div className="flex justify-center w-full">
-            <p className="text-center text-gray-400 w-full"><Loading /></p>
+            <Loading />
           </div>
         )}
         <div ref={bottom} className='my-8' >
