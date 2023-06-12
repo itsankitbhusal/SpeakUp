@@ -1,3 +1,4 @@
+import  { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Sidebar from '../atoms/Sidebar';
 import Button from '../atoms/Button';
@@ -9,13 +10,9 @@ import { showToast } from '../../utils/toast';
 import decode from 'jwt-decode';
 
 const SidebarLinks = () => {
+  const [userHandle, setUserHandle] = useState('username');
   const navigate = useNavigate();
-  let userHandle= 'username';
   // get id from access token
-  if (localStorage.getItem('access')) {
-    const { handle } = decode(localStorage.getItem('access'));
-    userHandle = handle;
-  }
   const logoutUser = () => {
     const agree = window.confirm('Are you sure you want to logout?');
     if (!agree) { return; }
@@ -23,6 +20,15 @@ const SidebarLinks = () => {
     showToast('Logged out successfully', 'success');
     navigate('/login');
   };
+  // when user gets its first access token when on home page, than set the userHandle
+  useEffect(() => {
+    const access = localStorage.getItem('access');
+    if (access) {
+      const { handle } = decode(access);
+      setUserHandle(handle);
+    }
+  }, [localStorage.getItem('access')]);
+  
   return(
     <Sidebar className="grid gap-4" >
       <Link className='w-full' to='/profile'>

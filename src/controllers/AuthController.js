@@ -13,6 +13,13 @@ class AuthController {
       if (!handle || !passwordHash || !email) {
         return res.send(message.error('Please provide a handle, email and password'));
       }
+      if (handle) {
+        // check if handle is already taken
+        const foundUser = await models.users.findOne({ where: { handle } });
+        if (foundUser) {
+          return res.send(message.error('Handle already taken'));
+        }
+      }
       if (email) {
         // check if email is already verified in emails table
         const foundEmail = await models.emails.findOne({ where: { email } });
