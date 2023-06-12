@@ -4,7 +4,7 @@ import { getApprovedConfessions } from '../services/confessions';
 const ConfessionContext = createContext();
 
 const ConfessionProvider = ({ children }) => {
-  const [limit, setLimit] = useState(2);
+  const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [confessions, setConfessions] = useState([]);
