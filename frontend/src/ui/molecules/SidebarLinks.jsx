@@ -7,6 +7,7 @@ import { CgUserlane } from 'react-icons/cg';
 import { RiNotificationLine } from 'react-icons/ri';
 import { showToast } from '../../utils/toast';
 import decode from 'jwt-decode';
+import { useEffect } from 'react';
 
 const SidebarLinks = () => {
   const navigate = useNavigate();
@@ -23,6 +24,14 @@ const SidebarLinks = () => {
     showToast('Logged out successfully', 'success');
     navigate('/login');
   };
+  // when user gets its first access token when on home page, than set the userHandle
+  useEffect(() => {
+    if (localStorage.getItem('access')) {
+      const { handle } = decode(localStorage.getItem('access'));
+      userHandle = handle;
+    }
+  }, []);
+  
   return(
     <Sidebar className="grid gap-4" >
       <Link className='w-full' to='/profile'>
