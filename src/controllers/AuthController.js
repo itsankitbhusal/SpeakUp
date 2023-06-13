@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import models from '../models/index.js';
 import message from '../utils/message.js';
+import { Op,literal } from 'sequelize';
 import { signEmailVerificationToken, signAccessToken, signRefreshToken, sendMail } from '../utils/authUtils.js';
 
 class AuthController {
@@ -184,16 +185,98 @@ class AuthController {
 
   // get logged in user
   getMe = async (req, res) => {
-    const { handle } = req.user;
-    if (!handle) {
-      return res.send(message.error('Please provide a handle'));
+    if (!req.user) {
+      return res.send(message.error('req user not found'));
+    }
+    const { id } = req.user;
+    if (!id) {
+      return res.send(message.error('Please provide a id'));
     }
     try {
-      const user = await models.users.findOne({ where: { handle } });
+      const user = await models.users.findOne({ where: { id } });
       delete user?.dataValues.password;
-      return res.send(message.success(user));
+
+      // also count total no. of confessions made by user
+      const confessionCount = await models.confessions.count({ where: { user_id: id } });
+      // also count total no. of comments made by user
+      const commentCount = await models.comments.count({ where: { user_id: id } });
+      
+      // also count total no. of upvotes made by user
+      const upvoteCount = await models.confessionVotes.count({ where: { vote_type: 'up', user_id: id } });
+      // also count total no. of downvotes made by user
+      const downvoteCount = await models.confessionVotes.count({ where: { vote_type: 'down', user_id: id } });
+
+      // Get highest upvoted confession
+      const highestUpvotedConfession = await models.confessions.findOne({
+        attributes: [
+          'id',
+          'title',
+          'body',
+          'user_id',
+          'upvote_count',
+          'is_approved',
+          'downvote_count',
+          'created_at',
+          'updated_at'
+        ],
+        order: [['upvote_count', 'DESC']]
+      });
+
+      // Get highest viewed confession
+      const highestViewedConfession = await models.confessions.findOne({
+        attributes: [
+          'id',
+          'title',
+          'body',
+          'user_id',
+          'upvote_count',
+          'is_approved',
+          'downvote_count',
+          'created_at',
+          'updated_at',
+          [literal('(SELECT COUNT(*) FROM views WHERE views.confession_id = confessions.id)'), 'view_count']
+        ],
+        order: [[literal('(SELECT COUNT(*) FROM views WHERE views.confession_id = confessions.id)'), 'DESC']]
+      });
+      // Get the total number of views made by other users for all confessions of the specific user
+      const confessionViews = await models.views.count({
+        where: {
+          user_id: { [Op.ne]: id }
+        },
+        include: [
+          {
+            model: models.confessions,
+            where: {
+              user_id: id
+            }
+          }
+        ]
+      });
+
+      // total views gained by all confessions of the user
+      const totalViews = await models.views.count({
+        include: [{ model: models.confessions, where: { user_id: id } }]
+      });
+
+      
+      // lets arrange all data in a object
+      const userData = {
+        ...user.dataValues,
+        confessionCount,
+        commentCount,
+        upvoteCount,
+        downvoteCount,
+        highestUpvotedConfession,
+        highestViewedConfession,
+        confessionViews,
+        totalViews
+      };
+
+
+      return res.send(message.success(userData));
     }
     catch (error) {
+      console.log(error);
       return res.send(message.error(error.message));
     }
   };
