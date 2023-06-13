@@ -62,4 +62,9 @@ tags.belongsToMany(confessions, { through: confessionTags, foreignKey: 'tag_id' 
 // notifications relations
 notifications.belongsTo(users, { foreignKey: 'user_id' });
 
+// views relations
+views.belongsTo(users, { foreignKey: 'user_id' });
+views.belongsTo(confessions, { foreignKey: 'confession_id' });
+
+
 export default models;
