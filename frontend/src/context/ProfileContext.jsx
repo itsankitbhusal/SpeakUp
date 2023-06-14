@@ -12,12 +12,13 @@ const ProfileProvider = ({ children }) => {
   const [hasMore, setHasMore] = useState(true);
   // all data needed for the profile page
   const [user, setUser] = useState(null);
+  const [profileAvatar, setProfileAvatar] = useState(null);
 
   const getUserData = async () => {
     const response = await getUserById();
     if (response.success) {
       const { data } = response;
-      console.log(data);
+      setProfileAvatar(`https://ui-avatars.com/api/?background=348371&name=${ data?.handle }&bold=true&color=fff&uppercase=false&length=1`);
       setUser(data);
     } else {
       throw new Error(response.message);
@@ -47,7 +48,7 @@ const ProfileProvider = ({ children }) => {
   , [page, limit]);
     
   return (
-    <ProfileContext.Provider value={{ confessions, setPage, isLoading, hasMore, user, getUserData }}>
+    <ProfileContext.Provider value={{ confessions, setPage, isLoading, hasMore, user, getUserData, profileAvatar }}>
       {children}
     </ProfileContext.Provider>
   );
