@@ -34,7 +34,7 @@ const ProfileConfessions = ({ className }) => {
   }, [ bottom ]);
 
   return (
-    <div className={`grid place-items-center max-w-[58vw] ${ className }`}>
+    <div className={`grid place-items-center my-20 max-w-[58vw] ${ className }`}>
       <div ref={confessionRef}>
         {confessions?.map(confession => (
           <Confession
