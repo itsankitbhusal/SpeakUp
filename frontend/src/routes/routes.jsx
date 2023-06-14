@@ -1,3 +1,4 @@
+import EditConfession from '../ui/pages/EditConfession';
 import Home from '../ui/pages/Home';
 import Login from '../ui/pages/Login';
 import NotFound from '../ui/pages/NotFound';
@@ -16,6 +17,9 @@ const routes = [{
 }, {
   path: '/profile',
   element: <Profile />
+}, {
+  path: '/edit/:id',
+  element: <EditConfession />
 }, {
   path: '*',
   element: <NotFound />
