@@ -78,3 +78,25 @@ export const getAllPendingConfessions = async(limit, page) => {
     throw new Error(error);
   }
 };
+
+// get all confession created by user/logged in user
+export const getAllConfessionsByUser = async (limit, page) => {
+  try {
+    const response = await api.post(`${ route }/user?limit=${ limit }&page=${ page }`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+// update confession
+export const updateConfessionById = async (id, newConfessionData) => {
+  try {
+    const response = await api.put(`${ route }/${ id }`, {
+      ...newConfessionData
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};

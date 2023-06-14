@@ -42,7 +42,7 @@ const WriteComment = ({ confessionId }) => {
   return(
     <>
       <form className='w-full bg-red-200' onSubmit={formik.handleSubmit}>
-        <div className="flex justify-end relative">
+        <div className="flex justify-end relative z-0">
           <Input onChange={formik.handleChange}
             value={formik.values.body}
             name="body"

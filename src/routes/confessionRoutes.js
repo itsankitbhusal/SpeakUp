@@ -13,5 +13,7 @@ router.delete('/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshTo
 router.get('/pending', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionController.getAllPendingConfessions);
 router.put('/:id/approve', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionController.approveConfessionById);
 
+// get confession by user
+router.post('/user/:id?', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionController.getConfessionsByUserId);
 
 export default router;

@@ -6,7 +6,7 @@ const NotFound = () => (
   <>
     <div className=' grid place-items-center min-h-screen'>
       <div className='grid place-items-center gap-2 p-8 rounded-sm'>
-        <Text className=" text-[12rem] text-bold text-dangerLight -mb-12 ">404</Text>
+        <Text className=" text-404 text-bold text-dangerLight -mb-12 ">404</Text>
         <Text className=" text-base">Ooops! Page Not Found</Text>
         <div className=' grid place-items-center'>
           <Text className="text-md">This page doesn't exist or was removed!</Text>

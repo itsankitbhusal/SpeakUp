@@ -145,7 +145,7 @@ class ConfessionController {
           model: models.users,
           attributes: ['handle']
         }],
-        order:[['id', 'DESC']]
+        order: [['id', 'DESC']]
       });
 
       // include pagination info to response
@@ -189,6 +189,45 @@ class ConfessionController {
       return res.send(message.success(response));
     } catch (err) {
       return res.send(message.error(err.message));
+    }
+  };
+  // get confession with pagination by user id
+  getConfessionsByUserId = async (req, res) => {
+    // const userId = req.params.id;
+    let userId;
+    if (req.params.id) {
+      userId = req.params.id;
+    } else if (req.user) {
+      userId = req.user.id;
+    } else {
+      return res.send(message.error('Missing user id!'));
+    }
+    let { page = 0, limit = 10 } = req.query;
+    page = parseInt(page);
+    limit = parseInt(limit);
+    const offset = page * limit;
+    const limitPerPage = parseInt(limit);
+    try {
+      const confessions = await models.confessions.findAll({
+        where: { user_id: userId },
+        limit: limitPerPage,
+        offset,
+        attributes: { exclude: ['user_id'] },
+        include: [{
+          model: models.users,
+          attributes: ['handle']
+        }],
+        order: [['id', 'DESC']]
+      });
+      // include pagination info to response
+      const response = {
+        confessions,
+        page,
+        limit
+      };
+      return res.send(message.success(response));
+    } catch (error) {
+      res.send(message.error(error.message));
     }
   };
 }

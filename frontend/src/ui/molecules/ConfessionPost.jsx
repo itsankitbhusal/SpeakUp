@@ -10,7 +10,7 @@ import WriteComment from './WriteComment';
 import CommentList from '../organisms/CommentList';
 import { CommentProvider } from '../../context/CommentContext';
 
-const ConfessionPost = ({ handle, date, views, title, body, confessionId }) => {
+const ConfessionPost = ({ handle, date, views, title, body, confessionId, isApproved, isProfile }) => {
   
   const [showFullConfession, setShowFullConfession] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -37,7 +37,7 @@ const ConfessionPost = ({ handle, date, views, title, body, confessionId }) => {
   
   return (
     <div>
-      <UserDetail handle={handle} date={date} views={views} />
+      <UserDetail handle={handle} date={date} views={views} isApproved={isApproved} isProfile={isProfile} confessionId={confessionId} />
       <Heading heading="h4" className="text-black text-base text-justify mt-1">
         {title}
       </Heading>
