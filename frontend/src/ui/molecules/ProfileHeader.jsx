@@ -1,11 +1,14 @@
 import { useEffect, useContext } from 'react';
+import { Link } from 'react-router-dom';
 import { BsPostcard } from 'react-icons/bs';
 import { FaRegComments } from 'react-icons/fa';
 import { AiOutlineEye, AiOutlineTrophy } from 'react-icons/ai';
 import { BiUpvote } from 'react-icons/bi';
+import { MdArrowBackIos } from 'react-icons/md';
 
 import { ProfileContext } from '../../context/ProfileContext';
 import Line from '../atoms/Line';
+import Button from '../atoms/Button';
 
 const ProfileHeader = () => {
   const { user, getUserData, profileAvatar } = useContext(ProfileContext);
@@ -23,6 +26,11 @@ const ProfileHeader = () => {
   return (
     <div className='w-full flex flex-col items-center justify-center white'>
       <div className='w-full flex flex-col items-center justify-center mt-4'>
+        <div className='absolute w-full'>
+          <Link to="/">
+            <Button variant="ghost" ><MdArrowBackIos />Back</Button>
+          </Link>
+        </div>
         <div className='w-full inline-grid place-items-center text-4xl text-primary font-black'>
           <div className=' inline-grid place-items-center'>
             <div className=' flex items-center gap-4 justify-center'>
@@ -55,7 +63,7 @@ const ProfileHeader = () => {
             <div className='text-xl font-bold flex items-center gap-2 justify-center text-cblack'><AiOutlineTrophy className='-mt-1' />{ user? user?.highestViewedConfession?.view_count: '0'}</div>
           </div>
           <div className='flex flex-col items-center justify-center'>
-            <div className='text-base font-bold'>Top voted</div>
+            <div className='text-base font-bold'>Top Vote</div>
             <div className='text-xl font-bold flex items-center gap-2 justify-center text-cblack'><BiUpvote className='-mt-1' />{ user? user?.highestUpvotedConfession?.upvote_count: '0'}</div>
           </div>
         </div>

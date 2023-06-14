@@ -1,10 +1,11 @@
 import decode from 'jwt-decode';
 import { useFormik } from 'formik';
 import { useState, useEffect } from 'react';
-import { useNavigate ,useParams } from 'react-router-dom';
+import { useNavigate ,useParams, Link } from 'react-router-dom';
 import { showToast } from '../../utils/toast';
 import { getConfessionById, updateConfessionById } from '../../services/confessions';
 import { createConfessionValidationSchema } from '../../validationSchemas/createConfessionValidationSchema';
+import { MdArrowBackIos } from 'react-icons/md';
 import Button from '../atoms/Button';
 import Heading from '../atoms/Heading';
 import FormField from '../molecules/FormField';
@@ -70,13 +71,18 @@ const EditConfession = () => {
     validationSchema,
     onSubmit
   });
-
-
-    
+  
   return (
-    <div className='grid place-items-center mx-[20vw] h-screen'>
-      <form className='w-full' onSubmit={formik.handleSubmit}>
-        <Heading heading={'h3'} className='text-center'>Edit Confession</Heading>
+    <div className='relative grid place-items-center mx-[20vw] h-screen'>
+      <form className='relative w-full' onSubmit={formik.handleSubmit}>
+        <div className='absolute w-full inset-0 top-16 mt-1'>
+          <Link to="/profile">
+            <Button variant="ghost" ><MdArrowBackIos />Back</Button>
+          </Link>
+        </div>
+        <div className=' my-16'>
+          <Heading heading={'h3'} className='text-center'>Edit Confession</Heading>
+        </div>
         <div className=' grid place-items-center w-full h-full'>
           <div className='w-full'>
             <FormField
