@@ -11,7 +11,7 @@ import { deleteConfession } from '../../services/confessions';
 import { createReport } from '../../services/report';
 import { showToast } from '../../utils/toast';
 
-const UserDetail = ({ handle, date, views, isApproved, isProfile, confessionId }) => {
+const UserDetail = ({ handle, date, views, isApproved, isProfile, confessionId, commentId }) => {
   const navigate = useNavigate();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -39,25 +39,48 @@ const UserDetail = ({ handle, date, views, isApproved, isProfile, confessionId }
     setIsReportMenuOpen(!isReportMenuOpen);
   };
 
-  const handleReport = async() => {
-    console.log('report: ', confessionId);
+  const handleReport = async () => {
+    console.log('confession: ', confessionId);
+    console.log('comment: ', commentId);
     setIsModalOpen(true);
     if (!reportMessage) {
       return;
     }
-    const reportData = {
-      'reportType': 'confession',
-      confessionId,
-      'description': reportMessage
-    };
-
-    const response = await createReport(reportData);
-    if (response.success) {
-      showToast('Report submitted successfully', 'success');
-      setIsModalOpen(false);
-    } else {
-      showToast(response.message, 'error');
+    if (confessionId) {
+      const reportData = {
+        'reportType': 'confession',
+        confessionId,
+        'description': reportMessage
+      };
+      console.log('report data: ',reportData);
+      if (reportData.description) {
+        const response = await createReport(reportData );
+        if (response.success) {
+          showToast('Report submitted successfully', 'success');
+          setIsModalOpen(false);
+        } else {
+          showToast(response.message, 'error');
+        }
+      }
+    } else  {
+      const reportData = {
+        'reportType': 'comment',
+        commentId,
+        'description': reportMessage
+      };
+      console.log('report data: ',reportData);
+      if (reportData.description) {
+        const response = await createReport(reportData );
+        if (response.success) {
+          showToast('Report submitted successfully', 'success');
+          setIsModalOpen(false);
+        } else {
+          showToast(response.message, 'error');
+        }
+      }
     }
+   
+
   };
   
   const handleDelete = async() => {
@@ -128,8 +151,8 @@ const UserDetail = ({ handle, date, views, isApproved, isProfile, confessionId }
             isModalOpen && (
               <div className='fixed z-50 top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center'>
                 <div className='w-5/12 bg-white rounded-sm shadow-md p-4'>
-                  <Text className='text-lg font-semibold'>Report Confession</Text>
-                  <Text className='text-sm'>Please enter a message to report this confession</Text>
+                  <Text className='text-lg font-semibold'>{confessionId ? 'Report Confession': 'Report Comment'}</Text>
+                  <Text className='text-sm'>Please enter a message to report this { confessionId ? 'confession': 'comment'}</Text>
                   <textarea onChange={e => setReportMessage(e.target.value)} className='w-full h-32 border border-gray-300 rounded-sm p-2 mt-2' placeholder='Enter message here...'></textarea>
                   <div className='flex justify-end gap-2 mt-2'>
                     <Button variant='secondary' onClick={() => setIsModalOpen(false)}>Cancel</Button>
