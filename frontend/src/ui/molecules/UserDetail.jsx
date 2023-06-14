@@ -11,7 +11,7 @@ import { deleteConfession } from '../../services/confessions';
 import { createReport } from '../../services/report';
 import { showToast } from '../../utils/toast';
 
-const UserDetail = ({ handle, date, views, isApproved, isProfile, confessionId }) => {
+const UserDetail = ({ handle, date, views, isApproved, isProfile, confessionId, commentId }) => {
   const navigate = useNavigate();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -39,25 +39,48 @@ const UserDetail = ({ handle, date, views, isApproved, isProfile, confessionId }
     setIsReportMenuOpen(!isReportMenuOpen);
   };
 
-  const handleReport = async() => {
-    console.log('report: ', confessionId);
+  const handleReport = async () => {
+    console.log('confession: ', confessionId);
+    console.log('comment: ', commentId);
     setIsModalOpen(true);
     if (!reportMessage) {
       return;
     }
-    const reportData = {
-      'reportType': 'confession',
-      confessionId,
-      'description': reportMessage
-    };
-
-    const response = await createReport(reportData);
-    if (response.success) {
-      showToast('Report submitted successfully', 'success');
-      setIsModalOpen(false);
-    } else {
-      showToast(response.message, 'error');
+    if (confessionId) {
+      const reportData = {
+        'reportType': 'confession',
+        confessionId,
+        'description': reportMessage
+      };
+      console.log('report data: ',reportData);
+      if (reportData.description) {
+        const response = await createReport(reportData );
+        if (response.success) {
+          showToast('Report submitted successfully', 'success');
+          setIsModalOpen(false);
+        } else {
+          showToast(response.message, 'error');
+        }
+      }
+    } else  {
+      const reportData = {
+        'reportType': 'comment',
+        commentId,
+        'description': reportMessage
+      };
+      console.log('report data: ',reportData);
+      if (reportData.description) {
+        const response = await createReport(reportData );
+        if (response.success) {
+          showToast('Report submitted successfully', 'success');
+          setIsModalOpen(false);
+        } else {
+          showToast(response.message, 'error');
+        }
+      }
     }
+   
+
   };
   
   const handleDelete = async() => {
