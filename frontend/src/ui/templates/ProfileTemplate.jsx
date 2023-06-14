@@ -3,12 +3,14 @@ import ProfileConfessions from '../organisms/ProfileConfessions';
 
 const ProfileTemplate = () => (
   <>
-    <div className=' grid place-items-center'>
-      <div className=' flex w-full justify-evenly gap-0 items-start'>
-        <div className='sticky top-20 w-1/4  pt-2  flex justify-start'>
+    <div className='relative grid place-items-center z-50'>
+      <div className='w-full'>
+        <div className='sticky top-0 z-20'>
           <UserProfile />
         </div>
-        <ProfileConfessions />
+        <div className=' flex justify-center'>
+          <ProfileConfessions />
+        </div>
       </div>
     </div>
   </>

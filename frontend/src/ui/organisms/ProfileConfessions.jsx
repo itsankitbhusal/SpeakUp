@@ -34,7 +34,7 @@ const ProfileConfessions = ({ className }) => {
   }, [ bottom ]);
 
   return (
-    <div className={`grid place-items-center mt-32 max-w-[40vw] ${ className }`}>
+    <div className={`grid place-items-center max-w-[58vw] ${ className }`}>
       <div ref={confessionRef}>
         {confessions?.map(confession => (
           <Confession
@@ -45,6 +45,8 @@ const ProfileConfessions = ({ className }) => {
             views={confession.views_count}
             title={confession.title}
             body={confession.body}
+            isApproved={confession.is_approved}
+            isProfile={true}
           />
         ))}
         {isLoading && (

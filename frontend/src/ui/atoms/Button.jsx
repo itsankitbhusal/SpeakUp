@@ -33,6 +33,8 @@ const Button = ({ children, onClick, className, variant, type, handleSubmit }) =
   case 'outline-secondary':
     buttonClassName += ` bg-transparent text-secondary border border-secondary  hover:bg-secondaryLight hover:text-white hover:border-secondaryLight ${ className }`;
     break;
+  case 'icon':
+    buttonClassName += ` bg-transparent text-primary hover:text-primaryDark px-0 py-1 ${ className }`;
   default:
     buttonClassName += `${ className }`;
     break;

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import ConfessionPost from '../molecules/ConfessionPost';
 import { createView, getConfessionViewsByUserId } from '../../services/ConfessionView';
 
-const Confession = ({ handle, date, views, title, body, confessionId }) => {
+const Confession = ({ handle, date, views, title, body, confessionId, isApproved, isProfile }) => {
   const confessionRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false); 
   const [isAlreadyViewed, setIsAlreadyViewed] = useState(false);
@@ -63,6 +63,8 @@ const Confession = ({ handle, date, views, title, body, confessionId }) => {
         views={views}
         title={title}
         body={body}
+        isApproved={isApproved}
+        isProfile={isProfile}
       />
     </div>
   );

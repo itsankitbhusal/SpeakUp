@@ -1,7 +1,7 @@
-import ProfileSidebar from '../molecules/ProfileSidebar';
+import ProfileHeader from '../molecules/ProfileHeader';
 const UserProfile = () => (
-  <div className='mt-[10vh]'>
-    <ProfileSidebar />
+  <div className='mt-[20vh] bg-white  opacity-95'>
+    <ProfileHeader />
   </div>
 );
 
