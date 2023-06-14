@@ -88,3 +88,15 @@ export const getAllConfessionsByUser = async (limit, page) => {
     throw new Error(error);
   }
 };
+
+// update confession
+export const updateConfessionById = async (id, newConfessionData) => {
+  try {
+    const response = await api.put(`${ route }/${ id }`, {
+      ...newConfessionData
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
