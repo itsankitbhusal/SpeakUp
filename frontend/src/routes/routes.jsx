@@ -5,6 +5,8 @@ import NotFound from '../ui/pages/NotFound';
 import Profile from '../ui/pages/Profile';
 import Register from '../ui/pages/Register';
 
+import Dashboard from '../Dashboard/Dashboard';
+
 const routes = [{
   path: '/',
   element: <Home />
@@ -21,6 +23,10 @@ const routes = [{
   path: '/edit/:id',
   element: <EditConfession />
 }, {
+  path: '/dashboard',
+  element: <Dashboard />
+},
+{
   path: '*',
   element: <NotFound />
 }];

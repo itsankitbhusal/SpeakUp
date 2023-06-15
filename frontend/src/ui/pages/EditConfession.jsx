@@ -75,7 +75,7 @@ const EditConfession = () => {
   return (
     <div className='relative grid place-items-center mx-[20vw] h-screen'>
       <form className='relative w-full' onSubmit={formik.handleSubmit}>
-        <div className='absolute w-full inset-0 top-16 mt-1'>
+        <div className='absolute w-full inset-0 top-16 mt-1 z-0'>
           <Link to="/profile">
             <Button variant="ghost" ><MdArrowBackIos />Back</Button>
           </Link>
@@ -111,8 +111,8 @@ const EditConfession = () => {
             />
           </div>
         </div>
-        <div className='w-full mt-8 grid place-items-center'>
-          <Button variant="primary" className="w-1/2" type="submit"> Update Confession</Button>
+        <div className='w-full my-8 grid place-items-center'>
+          <Button variant="primary" className="w-1/2 z-50" type="submit"> Update Confession</Button>
         </div>
       </form>
     </div>

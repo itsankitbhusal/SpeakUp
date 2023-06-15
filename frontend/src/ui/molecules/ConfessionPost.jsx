@@ -2,7 +2,6 @@ import { useState } from 'react';
 import UserDetail from '../molecules/UserDetail';
 import Heading from '../atoms/Heading';
 import Line from '../atoms/Line';
-import Text from '../atoms/Text';
 import VotesBtn from './VotesBtn';
 import { FaCommentAlt } from 'react-icons/fa';
 import ReactMarkdown from 'react-markdown';
@@ -50,14 +49,16 @@ const ConfessionPost = ({ handle, date, views, title, body, confessionId, isAppr
           </div>
         </div>
         <div className="w-11/12">
-          <Text div className="text-justify text-[.9rem] flex flex-wrap">
-            <ReactMarkdown>{showFullConfession ? body : trimmedBody}</ReactMarkdown>
-            {!showFullConfession && trimmedBody.endsWith('...') && (
-              <span onClick={toggleContent} className="ml-2 w-full flex justify-end -mt-6 font-semibold cursor-pointer ">
-                <span className='bg-white pl-2'>See more</span>
-              </span>
-            )}
-          </Text>
+          
+          <ReactMarkdown>
+            {showFullConfession ? body : trimmedBody}
+          </ReactMarkdown>
+
+          {!showFullConfession && trimmedBody.endsWith('...') && (
+            <span onClick={toggleContent} className="ml-2 w-full flex justify-end -mt-6 font-semibold cursor-pointer ">
+              <span className='bg-white pl-2'>See more</span>
+            </span>
+          )}
           <CommentProvider>
             <div className="my-4">
               <WriteComment confessionId={confessionId} />

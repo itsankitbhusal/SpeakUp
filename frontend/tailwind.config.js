@@ -45,7 +45,7 @@ export default {
         '4xl': '3.052rem',
         '5xl': '3.815rem',
         '6xl': '4.768rem',
-        '404': '12rem'
+        '7xl': '12rem'
       }
     }
     
