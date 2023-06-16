@@ -1,5 +1,4 @@
 import decode from 'jwt-decode';
-import { Outlet } from 'react-router-dom';
 import EditConfession from '../ui/pages/EditConfession';
 import Home from '../ui/pages/Home';
 import Login from '../ui/pages/Login';
@@ -12,6 +11,7 @@ import Users from '../Dashboard/Pages/Users';
 import Confession from '../Dashboard/Pages/Confession';
 import Comment from '../Dashboard/Pages/Comment';
 import Reporting from '../Dashboard/Pages/Reporting';
+import DashHome from '../Dashboard/Pages/DashHome';
 
 const getUserRole =  () => {
   const user = localStorage.getItem('access');
@@ -40,10 +40,10 @@ const routes = [{
   element: <EditConfession />
 }, {
   path: '/dashboard',
-  element: <Dashboard />,
+  element: getUserRole() === 'admin'? <Dashboard />: null,
   children: [{
     index: true,
-    element: <h1>dashboard hello</h1>
+    element: <DashHome />
   },{
     path: 'users',
     element: <Users />
