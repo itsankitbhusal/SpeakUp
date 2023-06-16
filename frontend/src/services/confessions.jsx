@@ -72,7 +72,12 @@ export const approveConfession = async id => {
 // get all pending confessions with pagination limit and page
 export const getAllPendingConfessions = async(limit, page) => {
   try {
-    const response = await api.get(`${ route }/pending?limit=${ limit }&page=${ page }`);
+    let url = `${ route }/pending`;
+    const query = `?limit=${ limit }&page=${ page }`;
+    if (limit && page) {
+      url += query;
+    }
+    const response = await api.get(`${ url }`);
     return response.data;
   } catch (error) {
     throw new Error(error);
