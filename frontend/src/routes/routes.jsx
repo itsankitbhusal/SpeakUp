@@ -1,3 +1,5 @@
+import decode from 'jwt-decode';
+import { Outlet } from 'react-router-dom';
 import EditConfession from '../ui/pages/EditConfession';
 import Home from '../ui/pages/Home';
 import Login from '../ui/pages/Login';
@@ -6,6 +8,20 @@ import Profile from '../ui/pages/Profile';
 import Register from '../ui/pages/Register';
 
 import Dashboard from '../Dashboard/Dashboard';
+import Users from '../Dashboard/Pages/Users';
+import Confession from '../Dashboard/Pages/Confession';
+import Comment from '../Dashboard/Pages/Comment';
+import Reporting from '../Dashboard/Pages/Reporting';
+
+const getUserRole =  () => {
+  const user = localStorage.getItem('access');
+  if (user) {
+    const decodedUser = decode(user);
+    return decodedUser.role;
+  } else {
+    return 'not admin';
+  }
+};
 
 const routes = [{
   path: '/',
@@ -24,7 +40,27 @@ const routes = [{
   element: <EditConfession />
 }, {
   path: '/dashboard',
-  element: <Dashboard />
+  element: <Dashboard />,
+  children: [{
+    index: true,
+    element: <h1>dashboard hello</h1>
+  },{
+    path: 'users',
+    element: <Users />
+  }, {
+    path: 'confessions',
+    element: <Confession />
+  }, {
+    path: 'comments',
+    element: <Comment />
+  }, {
+    path: 'reportings',
+    element: <Reporting />
+  }, {
+    path: '*',
+    element: <h1>not found</h1>
+    
+  }]
 },
 {
   path: '*',
