@@ -1,7 +1,11 @@
-import React from 'react';
+import CommentTable from '../compoenents/CommentTable';
 
 const Comment = () => (
-  <div>Comment</div>
+  <>
+    <div>
+      <CommentTable />
+    </div>
+  </>
 );
 
 export default Comment;

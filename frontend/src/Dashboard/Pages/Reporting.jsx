@@ -1,7 +1,9 @@
-import React from 'react';
+import ReportingTable from '../compoenents/ReportingTable';
 
 const Reporting = () => (
-  <div>Reporting</div>
+  <div>
+    <ReportingTable />
+  </div>
 );
 
 export default Reporting;
