@@ -177,7 +177,8 @@ class ConfessionController {
         include: [{
           model: models.users,
           attributes: ['handle']
-        }]
+        }],
+        order: [['id', 'DESC']]
       });
       // include pagination info to response
       const response = {
