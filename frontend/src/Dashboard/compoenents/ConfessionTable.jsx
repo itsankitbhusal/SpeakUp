@@ -81,36 +81,44 @@ const ConfessionTable = () => {
           </thead>
           <tbody>
             {
-              confessions.map(confession => (
-                <tr key={confession.id} className="bg-white border-b hover:bg-cwhite">
-                  <td className="px-6 py-4">
-                    {confession.id}
-                  </td>
-                  <td onClick={() => {
-                    handleShowConfession(confession.id);
-                  }} title='Click to view Confession' className="px-6 py-4 hover:cursor-pointer">
-                    {confession.title}
-                  </td>
-                  <td className="px-6 py-4">
-                    {confession.user.handle}
-                  </td>
-                  <td className="px-6 py-4">
-                    {dateConverter(confession.created_at)}
-                  </td>
-                  <td className="flex items-center px-6 py-4 space-x-3 text-base">
-                    <div title='Approve' onClick={() => {
-                      handleApprove(confession.id);
-                    }} className="font-medium text-success hover:cursor-pointer hover:bg-white p-3 rounded-sm">
-                      <FaCheck />
-                    </div>
-                    <div title='Delete' onClick={() => {
-                      handleDelete(confession.id);
-                    }} className="font-medium text-danger hover:cursor-pointer hover:bg-white p-3 rounded-sm">
-                      <RiDeleteBin7Line />
-                    </div>
+              confessions.length === 0 && (
+                <tr className="bg-white border-b hover:bg-cwhite">
+                  <td className="px-6 py-4 text-center" colSpan={5}>
+                    No Confessions
                   </td>
                 </tr>
-              ))
+              )
+            }
+            {confessions?.map(confession => (
+              <tr key={confession.id} className="bg-white border-b hover:bg-cwhite">
+                <td className="px-6 py-4">
+                  {confession.id}
+                </td>
+                <td onClick={() => {
+                  handleShowConfession(confession.id);
+                }} title='Click to view Confession' className="px-6 py-4 hover:cursor-pointer">
+                  {confession.title}
+                </td>
+                <td className="px-6 py-4">
+                  {confession.user.handle}
+                </td>
+                <td className="px-6 py-4">
+                  {dateConverter(confession.created_at)}
+                </td>
+                <td className="flex items-center px-6 py-4 space-x-3 text-base">
+                  <div title='Approve' onClick={() => {
+                    handleApprove(confession.id);
+                  }} className="font-medium text-success hover:cursor-pointer hover:bg-white p-3 rounded-sm">
+                    <FaCheck />
+                  </div>
+                  <div title='Delete' onClick={() => {
+                    handleDelete(confession.id);
+                  }} className="font-medium text-danger hover:cursor-pointer hover:bg-white p-3 rounded-sm">
+                    <RiDeleteBin7Line />
+                  </div>
+                </td>
+              </tr>
+            ))
             }
           </tbody>
         </table>
