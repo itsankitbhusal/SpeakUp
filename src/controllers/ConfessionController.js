@@ -162,7 +162,7 @@ class ConfessionController {
   // get all pending confessions with pagination
   getAllPendingConfessions = async (req, res) => {
     // parse query params page and limit
-    let { page = 0, limit = 10 } = req.query;
+    let { page = 0, limit = 30 } = req.query;
     page = parseInt(page);
     limit = parseInt(limit);
 
@@ -173,13 +173,13 @@ class ConfessionController {
         where: { is_approved: false },
         limit: limitPerPage,
         offset,
-        attributes: { exclude: ['user_id'] },
+        attributes: { exclude: ['user_id', 'body'] },
         include: [{
           model: models.users,
           attributes: ['handle']
-        }]
+        }],
+        order: [['id', 'DESC']]
       });
-
       // include pagination info to response
       const response = {
         confessions,

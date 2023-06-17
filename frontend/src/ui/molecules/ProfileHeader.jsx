@@ -34,7 +34,7 @@ const ProfileHeader = () => {
         <div className='w-full inline-grid place-items-center text-4xl text-primary font-black'>
           <div className=' inline-grid place-items-center'>
             <div className=' flex items-center gap-4 justify-center'>
-              <img src={user && profileAvatar } alt='avatar' className='w-16 h-16 rounded-full bg-primaryLight' />
+              <img src={user && profileAvatar } alt='av' className='w-16 h-16 rounded-full bg-primaryLight' />
               {user ? `@${ user.handle }` : 'handle not found'}
             </div>
             <div className='w-full -mt-4'>

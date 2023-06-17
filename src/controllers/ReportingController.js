@@ -71,7 +71,9 @@ class ReportingController{
   // get all reportings
   getAllReportings = async (req, res) => {
     try {
-      const reportings = await models.reportings.findAll();
+      const reportings = await models.reportings.findAll({
+        order: [['created_at', 'DESC']]
+      });
       return res.send(message.success(reportings));
     } catch (error) {
       res.send(message.error(error.message));
@@ -124,7 +126,8 @@ class ReportingController{
     }
     try {
       const reportings = await models.reportings.findAll({
-        where: { reporter_id: id }
+        where: { reporter_id: id },
+        order: [['created_at', 'DESC']]
       });
       return res.send(message.success(reportings));
     } catch (error) {
@@ -144,7 +147,8 @@ class ReportingController{
     }
     try {
       const reportings = await models.reportings.findAll({
-        where: { reported_object_type: id }
+        where: { reported_object_type: id, is_resolved: false },
+        order: [['created_at', 'DESC']]
       });
       return res.send(message.success(reportings));
     } catch (error) {
@@ -171,6 +175,50 @@ class ReportingController{
         where: { is_resolved: id }
       });
       return res.send(message.success(reportings));
+    } catch (error) {
+      return res.send(message.error(error.message));
+    }
+  };
+  // resolve reporting by id and object type
+  resolveCommentReporting = async (req, res) => {
+    const { id } = req.params;
+    if (!id) {
+      return res.send(message.error('Missing required fields'));
+    }
+    try {
+      // first check if the comment with the id exists in reporting table
+      const existingReporting = await models.reportings.findOne({ where: { id } });
+      if (!existingReporting) {
+        return res.send(message.error('Reporting not found'));
+      }
+      if (existingReporting.reported_object_type !== 'comment') {
+        return res.send(message.error('Invalid reported object type'));
+      }
+      const resolvedComment = await models.reportings.update({ is_resolved: true }, { where: { id } });
+      console.log('resolbed comment', resolvedComment);
+      return res.send(message.success(resolvedComment));
+    } catch (error) {
+      return res.send(message.error(error.message));
+    }
+  };
+  // resolve confession reporting
+  resolveConfessionReporting = async (req, res) => {
+    const { id } = req.params;
+    if (!id) {
+      return res.send(message.error('Missing required fields'));
+    }
+    try {
+      // first check if the confession with the id exists in reporting table
+      const existingReporting = await models.reportings.findOne({ where: { id } });
+      if (!existingReporting) {
+        return res.send(message.error('Reporting not found'));
+      }
+      if (existingReporting.reported_object_type !== 'confession') {
+        return res.send(message.error('Invalid reported object type'));
+      }
+
+      const resolvedConfession = await models.reportings.update({ is_resolved: true }, { where: { id } });
+      return res.send(message.success(resolvedConfession));
     } catch (error) {
       return res.send(message.error(error.message));
     }

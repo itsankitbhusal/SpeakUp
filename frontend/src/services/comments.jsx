@@ -21,3 +21,13 @@ export const getCommentsByConfessionId = async (confessionId, page, size) => {
     throw new Error(error);
   }
 };
+
+// delete comment by id
+export const deleteCommentById = async id => {
+  try {
+    const response = await api.delete(`${ route }/${ id }`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};

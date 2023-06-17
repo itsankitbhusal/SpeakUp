@@ -10,6 +10,7 @@ router.post('/login', authController.loginUser);
 router.get('/token', authController.getNewAccessToken);
 
 router.get('/users', middlewares.verifyAccessToken,middlewares.verifyRefreshToken, authController.getAllUsers);
+router.put('/:id/admin', middlewares.verifyAccessToken,middlewares.verifyRefreshToken, authController.upgradeToAdmin);
 router.get('/user/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, authController.getSingleUser);
 router.get('/me', middlewares.verifyAccessToken,middlewares.verifyRefreshToken, authController.getMe);
 router.delete('/user/:id',middlewares.verifyAccessToken, middlewares.verifyRefreshToken, authController.deleteUser);
