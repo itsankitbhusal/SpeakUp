@@ -53,7 +53,7 @@ const Links = () => {
               <Link className='w-full' to='/dashboard/comments'>
                 <Button variant="ghost" className="w-full bg-transparent hover:bg-cwhite font-semibold">
                   <div className=' flex items-center gap-4 justify-start w-full'>
-                    <FaRegComments />Comments
+                    <MdOutlineReportProblem /><FaRegComments />Comments
                   </div>
                 </Button>
               </Link>
@@ -61,7 +61,7 @@ const Links = () => {
               <Link className='w-full' to='/dashboard/reportings'>
                 <Button variant="ghost" className="w-full bg-transparent hover:bg-cwhite font-semibold">
                   <div className=' flex items-center gap-4 justify-start w-full'>
-                    <MdOutlineReportProblem />Reportings
+                    <MdOutlineReportProblem /><BsFilesAlt />Confessions
                   </div>
                 </Button>
               </Link>
