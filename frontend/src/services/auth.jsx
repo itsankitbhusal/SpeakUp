@@ -49,3 +49,12 @@ export const deleteUser = async id => {
     throw new Error(error);
   }
 };
+
+export const upgradeUser = async id => {
+  try {
+    const response = await api.put(`${ route }/${ id }/admin`);
+    return await response.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
