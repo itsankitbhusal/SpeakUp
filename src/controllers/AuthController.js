@@ -156,7 +156,8 @@ class AuthController {
   getAllUsers = async (req, res) => {
     try {
       const users = await models.users.findAll({
-        attributes: { exclude: ['password'] }
+        attributes: { exclude: ['password'] },
+        order: [['created_at', 'DESC']]
       });
       return res.send(message.success(users));
     } catch (error) {
@@ -322,6 +323,25 @@ class AuthController {
         return res.send(message.success('Password changed'));
       }
     } catch (error) {
+      return res.send(message.error(error.message));
+    }
+  };
+  // upgrade user to admin
+  upgradeToAdmin = async (req, res) => {
+    const { id } = req.params;
+    // get role from middleware user
+    const { role } = req.user;
+    if (!id) {
+      return res.send(message.error('Please provide an id'));
+    }
+    if (role !== 'admin') {
+      return res.send(message.error('You are not authorized'));
+    }
+    try {
+      const updatedUser = await models.users.update({ role: 'admin' }, { where: { id } });
+      return res.send(message.success(updatedUser));
+    }
+    catch (error) {
       return res.send(message.error(error.message));
     }
   };
