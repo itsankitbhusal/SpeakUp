@@ -82,11 +82,13 @@ class CommentController {
   deleteComment = async (req, res) => {
     const { id } = req.params;
     //   first of all check if the comment id and user id match
-    const { id: userId } = req.user;
+    const { id: userId, role } = req.user;
     
     const comment = await models.comments.findOne({ where: { id } });
-    if (comment?.user_id !== userId) {
-      return res.send(message.error('You are not authorized to delete this comment'));
+    if (role !== 'admin') {
+      if (comment?.user_id !== userId) {
+        return res.send(message.error('You are not authorized to delete this comment'));
+      }
     }
     try {
       const deletedComment = await models.comments.destroy({ where: { id } });
