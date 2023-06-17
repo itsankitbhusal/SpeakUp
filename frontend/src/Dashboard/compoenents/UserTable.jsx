@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
+import { IoMdCloseCircle } from 'react-icons/io';
+import { MdVerified, MdAdminPanelSettings } from 'react-icons/md';
 import { RiDeleteBin7Line } from 'react-icons/ri';
-import { deleteUser, getAllUsers } from '../../services/auth';
+import { GrUpgrade } from 'react-icons/gr';
+import { deleteUser, getAllUsers, upgradeUser } from '../../services/auth';
 import { dateConverter } from '../../utils/dateConverter';
 import { showToast } from '../../utils/toast';
 
@@ -26,6 +29,34 @@ const UserTable = () => {
         setUsers(
           users.filter(user => user.id !== id)
         );
+      } else {
+        showToast('Something went wrong', 'error');
+      }
+    }
+  };
+
+  const handleUpgrade = async (handle, id) => {
+    const confirm = window.confirm(`Are you sure want to upgrade user ${ handle } to admin`);
+    // first check if user is already admin
+    const checkUser = users.find(user => user.id === id);
+    if (checkUser.role === 'admin') {
+      showToast('User is already admin', 'error');
+      return;
+    }
+    if (confirm) {
+      const response = await upgradeUser(id);
+      if (response.success) {
+        showToast('User upgraded successfully', 'success');
+        // now set updated user to verified
+        setUsers(users.map(user => {
+          if (user.id === id) {
+            return {
+              ...user,
+              role: 'admin'
+            };
+          }
+          return user;
+        }));
       } else {
         showToast('Something went wrong', 'error');
       }
@@ -66,16 +97,22 @@ const UserTable = () => {
                     {user.id}
                   </td>
                   <td className="px-6 py-4">
-                    {user.handle}
+                    <div className=' flex justify-center items-center gap-2'>
+                      {user.handle}
+                      {user.role==='admin'? <MdAdminPanelSettings className=' text-accent text-lg' /> : null}
+                    </div>
                   </td>
                   <td className="px-6 py-4">
-                    {user.is_verified ? '✅' : '❌'}
+                    {user.is_verified ? <MdVerified className=' text-primary' /> : <IoMdCloseCircle className='text-danger' />}
                   </td>
                   <td className="px-6 py-4">
                     {dateConverter(user.created_at)}
                   </td>
                   <td className="flex items-center px-6 py-4 space-x-3 text-base text-center">
-                    <div onClick={() => {
+                    <div title='Upgrade to Admin' onClick={() => {
+                      handleUpgrade(user.handle, user.id);
+                    }} className="font-medium text-primary hover:cursor-pointer hover:bg-white p-3 rounded-sm"><GrUpgrade /></div>
+                    <div title='Delete' onClick={() => {
                       handleDelete(user.handle, user.id);
                     }} className="font-medium text-danger hover:cursor-pointer hover:bg-white p-3 rounded-sm"><RiDeleteBin7Line /></div>
                   </td>
