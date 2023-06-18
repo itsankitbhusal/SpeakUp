@@ -22,6 +22,7 @@ app.use('/confession-tag', routes.confessionTagRoutes);
 app.use('/notification', routes.notificationRoutes);
 app.use('/view', routes.viewRoutes);
 app.use('/reporting', routes.reportingRoutes);
+app.use('/analytics', routes.analyticsRoutes);
 
 app.listen(process.env.PORT, async() => {
   await dbConfig.authenticate();
