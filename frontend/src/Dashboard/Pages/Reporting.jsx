@@ -1,4 +1,4 @@
-import ReportingTable from '../compoenents/ReportingTable';
+import ReportingTable from '../components/ReportingTable';
 
 const Reporting = () => (
   <div>

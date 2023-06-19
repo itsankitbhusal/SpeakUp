@@ -1,4 +1,4 @@
-import ConfessionTable from '../compoenents/ConfessionTable';
+import ConfessionTable from '../components/ConfessionTable';
 
 const Confession = () => (
   <>

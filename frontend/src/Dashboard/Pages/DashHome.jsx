@@ -1,9 +1,9 @@
-import Card from '../compoenents/Card';
+import ChartsContainer from '../components/ChartsContainer';
 
 const DashHome = () => (
   <>
-    <div className='w-full h-full grid place-items-center'>
-      <Card />
+    <div className=''>
+      <ChartsContainer />
     </div>
   </>
 );

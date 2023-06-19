@@ -1,4 +1,4 @@
-import UserTable from '../compoenents/UserTable';
+import UserTable from '../components/UserTable';
 
 const Users = () => (
   <>

@@ -1,4 +1,4 @@
-import CommentTable from '../compoenents/CommentTable';
+import CommentTable from '../components/CommentTable';
 
 const Comment = () => (
   <>
