@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import Links from './compoenents/Links';
+import Links from './components/Links';
 import { DashboardProvider } from '../context/DashboardContext';
 
 const Dashboard = ({ children }) => (
