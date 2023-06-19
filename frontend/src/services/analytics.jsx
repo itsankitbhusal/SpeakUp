@@ -30,3 +30,24 @@ export const getVerificationDistribution = async () => {
     throw new Error(error);
   }
 };
+
+// confession approval ratio
+export const getConfessionApprovalRatio = async () => {
+  try {
+    const response = await api.get(`${ route }/confession-approval`);
+    return await response.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+// get confession votes ratio
+
+export const getConfessionVotesRatio = async () => {
+  try {
+    const response = await api.get(`${ route }/up-down`);
+    return await response.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
