@@ -9,6 +9,6 @@ router.get('/growth-rate', middlewares.verifyAccessToken, middlewares.verifyRefr
 router.get('/roles', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, analyticsController.userRoleDistribution);
 router.get('/verification', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, analyticsController.verificationStatus);
 router.get('/confession-approval', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, analyticsController.confessionApprovalStatus);
-router.get('/up-down', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, analyticsController.upDownVoteRatio);
+router.get('/up-down', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, analyticsController.upDownVoteRatioOver12Weeks);
 
 export default router;

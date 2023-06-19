@@ -1,5 +1,6 @@
 import models from '../models/index.js';
 import message from '../utils/message.js';
+import moment from 'moment';
 import { Op } from 'sequelize';
 
 class AnalyticsController{
@@ -81,16 +82,48 @@ class AnalyticsController{
       res.send(message.error(error.message));
     }
   };
-  // up/down vote ratio
-  upDownVoteRatio = async (req, res) => {
+
+  // up/down vote ratio over 12 weeks for confessions
+  upDownVoteRatioOver12Weeks = async (req, res) => {
+    const labels = [];
+    const upVoteCount = [];
+    const downVoteCount = [];
+
+    const twelveWeeksAgo = moment().subtract(12, 'weeks').startOf('week').toDate();
     try {
-      const upDownVoteRatio = await models.confessionVotes.findAndCountAll({
-        attributes: ['vote_type'],
-        group: ['vote_type']
-      });
+      // finding up/down vote ratio for each week
+      for (let i = 0; i < 12; i++) {
+        const startOfWeek = moment(twelveWeeksAgo).add(i, 'weeks').startOf('week').toDate();
+        const endOfWeek = moment(twelveWeeksAgo).add(i, 'weeks').endOf('week').toDate();
 
-      return res.send(message.success(upDownVoteRatio.count));
+        const upVoteCountForWeek = await models.confessionVotes.count({
+          where: {
+            vote_type: 'up',
+            created_at: {
+              [Op.between]: [startOfWeek, endOfWeek]
+            }
+          }
+        });
+        const downVoteCountForWeek = await models.confessionVotes.count({
+          where: {
+            vote_type: 'down',
+            created_at: {
+              [Op.between]: [startOfWeek, endOfWeek]
+            }
+          }
+        });
 
+        labels.push(`Week ${ i + 1 }`);
+        upVoteCount.push(upVoteCountForWeek);
+        downVoteCount.push(downVoteCountForWeek);
+      }
+
+      const data = {
+        labels,
+        upVoteCount,
+        downVoteCount
+      };
+      return res.send(message.success(data));
     } catch (error) {
       res.send(message.error(error.message));
     }
