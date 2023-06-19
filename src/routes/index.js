@@ -8,6 +8,7 @@ import confessionTagRoutes from './confessionTagRoutes.js';
 import notificationRoutes from './notificationRoutes.js';
 import viewRoutes from './viewRoutes.js';
 import reportingRoutes from './reportingRoutes.js';
+import analyticsRoutes from './analyticsRoutes.js';
 
 export default {
   authRoutes,
@@ -19,5 +20,6 @@ export default {
   confessionTagRoutes,
   notificationRoutes,
   viewRoutes,
-  reportingRoutes
+  reportingRoutes,
+  analyticsRoutes
 };

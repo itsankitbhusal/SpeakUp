@@ -19,7 +19,7 @@ const Links = () => {
     navigate('/login');
   };
   return(
-    <div className=' w-full h-screen shadow-xl'>
+    <div className=' w-full h-screen border-r-2'>
       <div className=' max-w-[24vw] h-screen p-4'>
         <h1 className=' text-3xl font-bold text-center mt-16 leading-[3rem]'>
           <span className='font-black text-primary grid place-items-center text-4xl tracking-tighter'>SpeakUp</span>
