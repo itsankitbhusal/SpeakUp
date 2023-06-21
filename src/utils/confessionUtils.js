@@ -23,5 +23,21 @@ function sanitizeInput(input) {
   return trimmedInput;
 }
 
+// extract hashtags from a body of text
+function extractHashtags(body) {
+  const regex = /#(\[([^\]]+)\])\(\2\)/g;
+  const matches = body.match(regex);
+  const hashtags = [];
+  if (matches) {
+    matches.forEach(match => {
+      const start = match.split('](');
+      const end = start[1].split(')');
+      const hashtag = end[0];
+      hashtags.push(hashtag);
+    });
+  }
+  return hashtags;
+}
 
-export { sanitizeInput };
+
+export { sanitizeInput, extractHashtags };
