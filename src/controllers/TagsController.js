@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import models from '../models/index.js';
 import message from '../utils/message.js';
 
@@ -85,6 +86,29 @@ class TagsController{
       return res.send(message.error(error.message));
     }
   };
+
+  // search tags
+  searchTags = async (req, res) => {
+    const { name } = req.query;
+    if (!name) {
+      return res.send(message.error('Please provide a name'));
+    }
+    try {
+      const response = await models.tags.findAll({
+        where: {
+          name: {
+            [Op.like]: `%${ name }%`
+          }
+        },
+        attributes: ['id', 'name']
+      });
+      return res.send(message.success(response));
+    }
+    catch (error) {
+      return res.send(message.error(error.message));
+    }
+  };
+
 }
 
 export default TagsController;
