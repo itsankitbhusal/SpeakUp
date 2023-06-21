@@ -12,6 +12,7 @@ import Confession from '../Dashboard/Pages/Confession';
 import Comment from '../Dashboard/Pages/Comment';
 import Reporting from '../Dashboard/Pages/Reporting';
 import DashHome from '../Dashboard/Pages/DashHome';
+import Tag from '../Dashboard/Pages/Tag';
 
 const getUserRole =  () => {
   const user = localStorage.getItem('access');
@@ -39,6 +40,10 @@ const routes = [{
   path: '/edit/:id',
   element: <EditConfession />
 }, {
+  path: '/tag/:tag',
+  element: <Tag />
+},
+{
   path: '/dashboard',
   element: getUserRole() === 'admin'? <Dashboard />: null,
   children: [{
