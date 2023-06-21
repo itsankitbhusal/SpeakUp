@@ -12,7 +12,7 @@ import Confession from '../Dashboard/Pages/Confession';
 import Comment from '../Dashboard/Pages/Comment';
 import Reporting from '../Dashboard/Pages/Reporting';
 import DashHome from '../Dashboard/Pages/DashHome';
-import Tag from '../Dashboard/Pages/Tag';
+import Tag from '../ui/pages/Tag';
 
 const getUserRole =  () => {
   const user = localStorage.getItem('access');
