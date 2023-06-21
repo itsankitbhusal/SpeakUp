@@ -1,6 +1,6 @@
 import { literal } from 'sequelize';
 import models from '../models/index.js';
-import { sanitizeInput, message } from '../utils/index.js';
+import { sanitizeInput,extractHashtags, message } from '../utils/index.js';
 
 class ConfessionController {
 
@@ -22,8 +22,24 @@ class ConfessionController {
     const { id: userId } = req.user;
 
     // validate inputs
-    title = await sanitizeInput(title);
-    body = await sanitizeInput(body);
+    title = sanitizeInput(title);
+    body = sanitizeInput(body);
+
+    const hashtags = extractHashtags(body);
+    // create hashtags
+    if (hashtags.length > 0) {
+      try {
+        hashtags.forEach(async hashtag => {
+          // create hashtag
+          await models.tags.findOrCreate({
+            where: { name: hashtag }
+          });
+        });
+      } catch (error) {
+        res.send(message.error(error.message));
+      }
+    }
+    // return;
 
     // for title only limit to 150 characters
     if (title.length > 150) {
