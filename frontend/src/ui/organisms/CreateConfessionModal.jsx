@@ -71,7 +71,7 @@ const CreateConfessionModal = ({ preserveData, setPreserveData }) => {
     <>
       <form onSubmit={formik.handleSubmit}>
         <Modal title="Create Confession" showSaveButton showCancelButton>
-          <div className=" p-4 flex flex-col gap-2 ">
+          <div className="p-4 flex flex-col gap-2 ">
             <FormField
               id="confessionTitle"
               label="Confession Title"
@@ -93,28 +93,31 @@ const CreateConfessionModal = ({ preserveData, setPreserveData }) => {
               className="w-full"
               error={formik?.errors?.body}
             /> */}
-            <MentionsInput
-              value={formik.values.body}
-              name="body"
-              placeholder='Enter Confession Body'
-              // onChange={formik.handleChange}
-              onChange={e => {
-                formik.setFieldValue('body', e.target.value);
-              }}
-              // className="w-full min-h-[30vh] p-2 rounded-sm outline outline-1 outline-gray-200"
-              style={defaultStyle}
-            >
-              <Mention
-                trigger="#"
-                data={searchTagDatas}
-                // markup="$$$____id__~~~____display__$$$~~~"
-                markup='#[__display__](__id__)'
-                style={{
-                  backgroundColor: '#bfa5d0'
+            <div className='overflow-y-auto max-h-[60vh]'>
+              <label htmlFor="confessionBody" className='text-[.9rem] text-secondaryLight'>Confession Body</label>
+              <MentionsInput
+                id='confessionBody'
+                value={formik.values.body}
+                name="body"
+                placeholder='Enter Confession Body'
+                // onChange={formik.handleChange}
+                onChange={e => {
+                  formik.setFieldValue('body', e.target.value);
                 }}
-                appendSpaceOnAdd={true}
-              />
-            </MentionsInput>
+                className=" overflow-auto"
+                style={defaultStyle}
+              >
+                <Mention
+                  trigger="#"
+                  data={searchTagDatas}
+                  // markup="$$$____id__~~~____display__$$$~~~"
+                  markup='#[__display__](__id__)'
+                  style={defaultStyle}
+                  appendSpaceOnAdd={true}
+                />
+              </MentionsInput>
+            </div>
+            <span className='text-danger text-sm italic w-full flex justify-end items-center '>{formik?.errors?.body}</span>
           </div>
         </Modal>
       </form>
