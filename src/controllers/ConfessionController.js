@@ -26,20 +26,6 @@ class ConfessionController {
     body = sanitizeInput(body);
 
     const hashtags = extractHashtags(body);
-    // create hashtags
-    if (hashtags.length > 0) {
-      try {
-        hashtags.forEach(async hashtag => {
-          // create hashtag
-          await models.tags.findOrCreate({
-            where: { name: hashtag }
-          });
-        });
-      } catch (error) {
-        res.send(message.error(error.message));
-      }
-    }
-    // return;
 
     // for title only limit to 150 characters
     if (title.length > 150) {
@@ -49,8 +35,26 @@ class ConfessionController {
       return res.send(message.error('Missing title or body!'));
     }
     try {
-      const confession = await models.confessions.create({ title, body, user_id: userId });
-      return res.send(message.success(confession));
+      if (hashtags.length > 0) {
+        // create hashtag
+        hashtags.forEach(async hashtag => {
+          await models.tags.findOrCreate({ where: { name: hashtag } });
+        });
+
+        // now add confession and hashtags to confession_tags table
+        const confession = await models.confessions.create({ title, body, user_id: userId });
+        const confessionId = confession.id;
+        hashtags.forEach(async hashtag => {
+          const tag = await models.tags.findOne({ where: { name: hashtag } });
+          const tagId = tag.id;
+          await models.confessionTags.create({ confession_id: confessionId, tag_id: tagId });
+        }
+        );
+        return res.send(message.success(confession));
+      } else {
+        const confession = await models.confessions.create({ title, body, user_id: userId });
+        return res.send(message.success(confession));
+      }
     } catch (err) {
       return res.send(message.error(err.message));
     }
