@@ -100,19 +100,16 @@ const CreateConfessionModal = ({ preserveData, setPreserveData }) => {
                 value={formik.values.body}
                 name="body"
                 placeholder='Enter Confession Body'
-                // onChange={formik.handleChange}
                 onChange={e => {
                   formik.setFieldValue('body', e.target.value);
                 }}
-                className=" overflow-auto"
                 style={defaultStyle}
               >
                 <Mention
                   trigger="#"
                   data={searchTagDatas}
-                  // markup="$$$____id__~~~____display__$$$~~~"
                   markup='#[__display__](__id__)'
-                  style={defaultStyle}
+                  className=' bg-accentLight'
                   appendSpaceOnAdd={true}
                 />
               </MentionsInput>
