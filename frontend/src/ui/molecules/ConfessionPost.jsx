@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import UserDetail from '../molecules/UserDetail';
 import Heading from '../atoms/Heading';
 import Line from '../atoms/Line';
@@ -10,15 +11,16 @@ import CommentList from '../organisms/CommentList';
 import { CommentProvider } from '../../context/CommentContext';
 
 const ConfessionPost = ({ handle, date, views, title, body, confessionId, isApproved, isProfile }) => {
-  
   const [showFullConfession, setShowFullConfession] = useState(false);
   const [showComments, setShowComments] = useState(false);
+
+  const confessionBody = body;
 
   const toggleContent = () => {
     setShowFullConfession(!showFullConfession);
   };
   const maxWords = 72;
-
+  
   const trimBody = text => {
     const words = text.split(' ');
     if (words.length > maxWords) {
@@ -27,13 +29,23 @@ const ConfessionPost = ({ handle, date, views, title, body, confessionId, isAppr
     }
     return text;
   };
-  const trimmedBody = trimBody(body);
+  
+  const trimmedBody = trimBody(confessionBody);
 
   const handleCommentClick = () => {
     setShowComments(!showComments);
   };
-  
-  
+
+  const CustomLink = ({ href, children, ...otherProps }) => (
+    <Link
+      to={`tag/${ href }`}
+      className='bg-blue-100 hover:bg-blue-200'
+      {...otherProps}
+    >
+      {children}
+    </Link>
+  );
+
   return (
     <div>
       <UserDetail handle={handle} date={date} views={views} isApproved={isApproved} isProfile={isProfile} confessionId={confessionId} />
@@ -49,11 +61,12 @@ const ConfessionPost = ({ handle, date, views, title, body, confessionId, isAppr
           </div>
         </div>
         <div className="w-11/12">
-          
-          <ReactMarkdown>
-            {showFullConfession ? body : trimmedBody}
-          </ReactMarkdown>
 
+          <ReactMarkdown
+            components={{ a: CustomLink }}
+          >
+            {showFullConfession ? (confessionBody) : (trimmedBody)}
+          </ReactMarkdown>
           {!showFullConfession && trimmedBody.endsWith('...') && (
             <span onClick={toggleContent} className="ml-2 w-full flex justify-end -mt-6 font-semibold cursor-pointer ">
               <span className='bg-white pl-2'>See more</span>
@@ -72,4 +85,5 @@ const ConfessionPost = ({ handle, date, views, title, body, confessionId, isAppr
     </div>
   );
 };
+  
 export default ConfessionPost;

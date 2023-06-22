@@ -1,6 +1,6 @@
 import { literal } from 'sequelize';
 import models from '../models/index.js';
-import { sanitizeInput, message } from '../utils/index.js';
+import { sanitizeInput,extractHashtags, message, replaceHashtags } from '../utils/index.js';
 
 class ConfessionController {
 
@@ -22,8 +22,10 @@ class ConfessionController {
     const { id: userId } = req.user;
 
     // validate inputs
-    title = await sanitizeInput(title);
-    body = await sanitizeInput(body);
+    title = sanitizeInput(title);
+    body = sanitizeInput(body);
+
+    const { hashtags, ids } = extractHashtags(body);
 
     // for title only limit to 150 characters
     if (title.length > 150) {
@@ -32,8 +34,44 @@ class ConfessionController {
     if (!title || !body) {
       return res.send(message.error('Missing title or body!'));
     }
+    // after extracting body replace format "#[new](16)" or  "#[tech](tech)" with #tech like this
+    const bodyToSave = replaceHashtags(body);
     try {
-      const confession = await models.confessions.create({ title, body, user_id: userId });
+      const confession = await models.confessions.create({ title, body: bodyToSave, user_id: userId });
+      
+      if (hashtags.length > 0) {
+        // create hashtag
+        // as this doesn't work well with promises making use of for loop
+        // hashtags.forEach(async hashtag => {
+        //   await models.tags.findOrCreate({ where: { name: hashtag } });
+        // });
+        // create hashtag
+        for (const hashtag of hashtags) {
+          await models.tags.findOrCreate({ where: { name: hashtag } });
+        }
+        // now add confession and hashtags to confession_tags table
+        const confessionId = confession.id;
+        // hashtags.forEach(async hashtag => {
+        //   const tag = await models.tags.findOne({ where: { name: hashtag } });
+        //   const tagId = tag.id;
+        //   await models.confessionTags.create({ confession_id: confessionId, tag_id: tagId });
+        // });
+        for (const hashtag of hashtags) {
+          const tag = await models.tags.findOne({ where: { name: hashtag } });
+          const tagId = tag.id;
+          await models.confessionTags.create({ confession_id: confessionId, tag_id: tagId });
+        }
+      }
+      if (ids.length > 0) {
+        // for each id with confession id create entry in confession tags table
+        const confessionId = confession.id;
+        // ids.forEach(async id => {
+        //   await models.confessionTags.create({ confession_id: confessionId, tag_id: id });
+        // });
+        for (const id of ids) {
+          await models.confessionTags.create({ confession_id: confessionId, tag_id: id });
+        }
+      }
       return res.send(message.success(confession));
     } catch (err) {
       return res.send(message.error(err.message));

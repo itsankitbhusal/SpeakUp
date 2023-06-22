@@ -6,9 +6,14 @@ const router = Router();
 
 const tagsController = new TagsController();
 
+// search tags
+router.get('/search', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, tagsController.searchTags);
+
 router.get('/', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, tagsController.getAllTags); 
 router.post('/', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, tagsController.createTag);
 router.get('/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, tagsController.getSingleTag);
 router.put('/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, tagsController.updateTag);
 router.delete('/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, tagsController.deleteTag);
+
+
 export default router;

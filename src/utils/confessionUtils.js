@@ -23,5 +23,56 @@ function sanitizeInput(input) {
   return trimmedInput;
 }
 
+// extract hashtags from a body of text
+function extractHashtags(body) {
+  const regex = /#(\[([^\]]+)\])\(\2\)/g;
+  const regex2 = /#\[\w+\]\((\d+)\)/g;
 
-export { sanitizeInput };
+  const matches = body.match(regex);
+  const matches2 = body.match(regex2);
+  const hashtags = [];
+  const ids = [];
+  if (matches) {
+    matches.forEach(match => {
+      const start = match.split('](');
+      const end = start[1].split(')');
+      const hashtag = end[0];
+      // check if hashtag is already in hashtags
+      if (!hashtags.includes(hashtag)) {
+        hashtags.push(hashtag);
+      }
+    });
+  }
+  if (matches2) {
+    matches2.forEach(match => {
+      const start = match.split('](');
+      const end = start[1].split(')');
+      const id = end[0];
+      ids.push(id);
+    });
+  }
+  return { hashtags, ids };
+}
+
+// after extracting body replace format "#[new](16)" or  "#[tech](tech)" with #tech like this
+const replaceHashtags = body => { 
+  const pattern = /#\[(\w+)\]\(\w+\)/g;
+  const matches = body.match(pattern);
+  if (matches) {
+    // replace number inside () with the word inside []
+    matches.forEach(match => {
+      const start = match.split('](');
+      const tagName = start[0].split('[')[1];
+      const tagId = start[1].split(')')[0];
+      if (Number(tagId)) {
+        // replace the tagId with tagName
+        body = body.replace(match, `#[${ tagName }](${ tagName })`);
+      }
+    }
+    );
+  }
+  return body;
+
+};
+
+export { sanitizeInput, extractHashtags, replaceHashtags };
