@@ -45,25 +45,27 @@ confessions.hasMany(confessionVotes, { foreignKey: 'confession_id', onDelete: 'C
 confessions.hasMany(views, { foreignKey: 'confession_id', onDelete: 'CASCADE' });
 confessions.belongsToMany(tags, { through: confessionTags, foreignKey: 'confession_id' });
 confessions.hasMany(reportings, { foreignKey: 'confession_id', onDelete: 'CASCADE' });
+confessions.hasMany(notifications, { foreignKey: 'confession_id', onDelete: 'CASCADE' });
 // confession tags relations
 confessionTags.belongsTo(tags, { foreignKey: 'tag_id' });
 confessionTags.belongsTo(confessions, { foreignKey: 'confession_id' });
 
 // confession votes relation
-confessionVotes.belongsTo(users, { foreignKey: 'user_id' });
+confessionVotes.belongsTo(users, { foreignKey: 'user_id', onDelete: 'CASCADE' });
 
 // comment votes relation
-commentVotes.belongsTo(users, { foreignKey: 'user_id' });
+commentVotes.belongsTo(users, { foreignKey: 'user_id', onDelete: 'CASCADE' });
 
 // tags relations
-tags.belongsToMany(confessions, { through: confessionTags, foreignKey: 'tag_id' });
+tags.belongsToMany(confessions, { through: confessionTags, foreignKey: 'tag_id', onDelete: 'CASCADE' });
 
 // notifications relations
-notifications.belongsTo(users, { foreignKey: 'user_id' });
+notifications.belongsTo(users, { foreignKey: 'user_id', onDelete: 'CASCADE' });
+notifications.belongsTo(confessions, { foreignKey: 'confession_id', onDelete: 'CASCADE' });
 
 // views relations
-views.belongsTo(users, { foreignKey: 'user_id' });
-views.belongsTo(confessions, { foreignKey: 'confession_id' });
+views.belongsTo(users, { foreignKey: 'user_id', onDelete: 'CASCADE' });
+views.belongsTo(confessions, { foreignKey: 'confession_id', onDelete: 'CASCADE' });
 
 
 export default models;
