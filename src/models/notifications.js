@@ -16,6 +16,10 @@ const notifications = dbConfig.define('notifications', {
     type: new DataTypes.STRING,
     allowNull: false
   },
+  confessions_id: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
   is_viewed:{
     type: DataTypes.BOOLEAN,
     defaultValue: false
