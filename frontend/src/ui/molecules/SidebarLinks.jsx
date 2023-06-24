@@ -28,6 +28,10 @@ const SidebarLinks = () => {
       setUserHandle(handle);
     }
   }, [localStorage.getItem('access')]);
+
+  const handleNotificationClick = () => {
+    console.log('clicked');
+  };
   
   return(
     <Sidebar className="grid gap-4" >
@@ -47,13 +51,13 @@ const SidebarLinks = () => {
             </Button>
           </Link>
           
-          <Link className='w-full' to='/notifications'>
-            <Button variant="ghost" className="w-full bg-transparent hover:bg-cwhite font-semibold">
-              <div className=' flex items-center gap-4 justify-start w-full'>
-                <RiNotificationLine />Notification
-              </div>
-            </Button>
-          </Link>
+          {/* <Link className='w-full' to='/notifications'> */}
+          <Button onClick={handleNotificationClick} variant="ghost" className="w-full bg-transparent hover:bg-cwhite font-semibold">
+            <div className=' flex items-center gap-4 justify-start w-full'>
+              <RiNotificationLine />Notification
+            </div>
+          </Button>
+          {/* </Link> */}
 
           <Button variant="ghost" className="w-full bg-transparent hover:bg-cwhite font-semibold" onClick={logoutUser}>
             <div className=' flex items-center gap-4 justify-start w-full'>
