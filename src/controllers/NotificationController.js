@@ -4,7 +4,7 @@ import { sanitizeInput } from '../utils/confessionUtils.js';
 class NotificationController{
 // create a new notification
   createNotification = async (req, res) => {
-    const { userId } = req.body;
+    const { userId, confessionId } = req.body;
     let { notificationMessage } = req.body;
     if (!userId || !notificationMessage) {
       return res.send(message.error('Missing required fields'));
@@ -20,10 +20,10 @@ class NotificationController{
       }
       const newNotification = await models.notifications.create({
         user_id: userId,
+        confession_id: confessionId,
         message: notificationMessage
       });
       delete newNotification.dataValues.user_id;
-      delete newNotification.dataValues.is_viewed;
       return res.send(message.success(newNotification));
     } catch (error) {
       res.send(message.error(error.message));
