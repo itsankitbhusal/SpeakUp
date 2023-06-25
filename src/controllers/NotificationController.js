@@ -49,12 +49,15 @@ class NotificationController{
           ['created_at', 'DESC']
         ],
         attributes: {
-          exclude: ['user_id']
+          exclude: ['user_id', 'confession_id']
         },
-        include: {
+        include: [{
           model: models.users,
           attributes: ['handle']
-        }
+        }, {
+          model: models.confessions,
+          attributes: ['id', 'title', 'is_approved']
+        }]
       });
       return res.send(message.success(notifications));
     } catch (error) {
@@ -72,10 +75,16 @@ class NotificationController{
         attributes: {
           exclude: ['user_id']
         },
-        include: {
-          model: models.users,
-          attributes: ['handle']
-        }
+        include: [
+          {
+            model: models.users,
+            attributes: ['handle']
+          },
+          {
+            model: models.confessions,
+            attributes: ['id', 'title', 'is_approved']
+          }
+        ]
       });
       if (!notification) {
         return res.send(message.error('Notification not found'));
