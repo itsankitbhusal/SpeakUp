@@ -1,12 +1,12 @@
 import models from '../models/index.js';
 import message from '../utils/message.js';
-import { sanitizeInput } from '../utils/index.js';
+import { reportMessage, sanitizeInput } from '../utils/index.js';
 
-class ReportingController{
+class ReportingController {
   // create reporting
   createReporting = async (req, res) => {
     const { reportType, description } = req.body;
-    let {  confessionId, commentId } = req.body;
+    let { confessionId, commentId } = req.body;
     if (!reportType || !description) {
       return res.send(message.error('Missing required fields'));
     }
@@ -16,7 +16,7 @@ class ReportingController{
     }
     try {
       // get userId from access token
-      const { id:userId } = req.user;
+      const { id: userId } = req.user;
       if (!userId) {
         return res.send(message.error('Reporter not found'));
       }
@@ -62,7 +62,33 @@ class ReportingController{
         comment_id: commentId,
         description: sanitizedDescription
       });
-      return res.send(message.success( reporting));
+      // create notification for the user who created the confession
+      if (reportType === 'confession') {
+        const confession = await models.confessions.findOne({ where: { id: confessionId } });
+        const confessionTitle = confession.title.length > 50 ? `${ confession.title.substring(0, 50) }...` : confession.title;
+        const confessionUserId = confession.user_id;
+        const confessionMessage = reportMessage('confession', confessionTitle);
+        if (confessionMessage) {
+          await models.notifications.create({
+            user_id: confessionUserId,
+            message: confessionMessage,
+            confession_id: confessionId
+          });
+        }
+      } if (reportType == 'comment') {
+        const comment = await models.comments.findOne({ where: { id: commentId } });
+        const commentTrimmed = comment.body.length > 50 ? `${ comment.body.substring(0, 50) }...` : comment.body;
+        const commentUserId = comment.user_id;
+        const commentMessage = reportMessage('comment', commentTrimmed);
+        if (commentMessage) {
+          await models.notifications.create({
+            user_id: commentUserId,
+            message: commentMessage
+          });
+        }
+      }
+      
+      return res.send(message.success(reporting));
     }
     catch (error) {
       return res.send(message.error(error.message));
