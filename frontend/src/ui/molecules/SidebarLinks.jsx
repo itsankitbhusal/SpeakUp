@@ -1,6 +1,5 @@
 import  { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { MdMarkEmailRead } from 'react-icons/md';
 import Sidebar from '../atoms/Sidebar';
 import Button from '../atoms/Button';
 import Line from '../atoms/Line';
@@ -10,7 +9,8 @@ import { IoChevronBackOutline } from 'react-icons/io5';
 import { RiNotificationLine } from 'react-icons/ri';
 import { showToast } from '../../utils/toast';
 import decode from 'jwt-decode';
-import { getNotificationsByUserId } from '../../services/notifications';
+import { getNotificationsByUserId, updateNotificationStatus } from '../../services/notifications';
+import Text from '../atoms/Text';
 
 const SidebarLinks = () => {
   const [userHandle, setUserHandle] = useState('username');
@@ -40,26 +40,28 @@ const SidebarLinks = () => {
   };
 
   useEffect(() => {
-    if (isNotificationOpen === false) {
-      return;
-    }
     const getData = async () => {
       const access = localStorage.getItem('access');
       if (!access) { return; }
       const { id } = decode(access);
-      console.log('user id', id);
       const response = await getNotificationsByUserId(id);
-      console.log('response', response);
       if (response.success) {
-        console.log('notifications: ', response.data);
         setNotifications(response.data);
       }
     };
     getData();
   }, [isNotificationOpen]);
 
-  const handleNotificationCardClick = () => {
-    console.log('notification card clicked');
+  const markAsRead = async id => {
+    const response = await updateNotificationStatus(id);
+    if (response.success) {
+      // filter out the notification
+      const newNotifications = notifications.filter(notification => notification.id !== id);
+      setNotifications(newNotifications);
+      showToast('Notification marked as read', 'success');
+    } else {
+      showToast('Something went wrong', 'error');
+    }
   };
   
   return(
@@ -85,7 +87,14 @@ const SidebarLinks = () => {
           
                 {/* <Link className='w-full' to='/notifications'> */}
                 <Button onClick={handleNotificationClick} variant="ghost" className="w-full bg-transparent hover:bg-cwhite font-semibold">
-                  <div className=' flex items-center gap-4 justify-start w-full'>
+                  <div className='relative flex items-center gap-4 justify-start w-full'>
+                    {notifications?.length > 9 && (
+                      <span className='absolute top-0 left-2 text-xs text-white bg-primary border rounded-full h-3 w-3 grid place-items-center'>9</span>
+                    )}
+                    {notifications?.length > 0 && (
+                      <span className='absolute top-0 left-2 text-xs text-white bg-primary border rounded-full h-3 w-3 grid place-items-center'>{notifications.length}</span>
+                    )}
+                    
                     <RiNotificationLine />Notification
                   </div>
                 </Button>
@@ -113,41 +122,24 @@ const SidebarLinks = () => {
               </div>
             </Button>
             {/* notification */}
-            {/* 
-            {
-            "id": 12,
-            "message": "another message",
-            "confessions_id": null,
-            "is_viewed": false,
-            "created_at": "2023-06-24T15:10:31.000Z",
-            "updated_at": "2023-06-24T15:10:31.000Z",
-            "user": {
-                "handle": "Grover.Marks85"
-            },
-            "confession": {
-                "id": 1307,
-                "title": "Reiciendis excepturi ea pariatur architecto deserunt voluptatem optio eveniet magnam.",
-                "is_approved": true
-            }
-        },
-            */}
             <div className='grid place-items-center gap-2 rounded-sm overflow-y-auto max-h-[75vh] '>
               {notifications?.map(notification => (
                 <div key={notification.id} className='relative w-full grid place-items-center hover:cursor-pointer hover:bg-cwhite p-2 py-3'>
-                  <p onClick={handleNotificationCardClick} className='text-sm rounded-sm w-full'>
-                    {notification.confession ?(
-                      <span className=' text-cblack'>
-                        <span className='text-primary'>
-                          {notification.message} -
-                        </span>
-                        {notification.confession.title.split(' ').slice(0, 5).join(' ')}</span>
-                    ) : (
-                      <span className=' text-primary'>{ notification.message }</span>
+                  <Text className='text-sm rounded-sm w-full '>
+                    {notification && (
+                      <span className=' text-cblack'>{ notification.message }</span>
                     )}
-                  </p>
-                  <span className='underline text-primary font-bold text-end w-full text-sm hover:text-cblack '>Mark as read</span>
+                  </Text>
+                  <Text className=' w-full flex items-end justify-end'>
+                    <span onClick={() => {
+                      markAsRead(notification.id);
+                    }} className='underline text-primary font-bold text-end text-sm hover:text-cblack '>Mark as read</span>
+                  </Text>
                 </div>
               ))}
+              {notifications?.length === 0 && (
+                <Text className='text-sm text-cblack'>No notifications</Text>
+              )}
             </div>
           </>
         )}
