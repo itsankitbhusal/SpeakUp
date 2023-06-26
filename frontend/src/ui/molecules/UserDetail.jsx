@@ -8,10 +8,11 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import Text from '../atoms/Text';
 import Button from '../atoms/Button';
 import { deleteConfession } from '../../services/confessions';
+import { deleteCommentById } from '../../services/comments';
 import { createReport } from '../../services/report';
 import { showToast } from '../../utils/toast';
 
-const UserDetail = ({ handle, date, views, isApproved, isProfile, confessionId, commentId }) => {
+const UserDetail = ({ handle, date, views, isApproved, isProfile, confessionId, commentId, isComment }) => {
   const navigate = useNavigate();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -40,8 +41,6 @@ const UserDetail = ({ handle, date, views, isApproved, isProfile, confessionId, 
   };
 
   const handleReport = async () => {
-    console.log('confession: ', confessionId);
-    console.log('comment: ', commentId);
     setIsModalOpen(true);
     if (!reportMessage) {
       return;
@@ -52,7 +51,6 @@ const UserDetail = ({ handle, date, views, isApproved, isProfile, confessionId, 
         confessionId,
         'description': reportMessage
       };
-      console.log('report data: ',reportData);
       if (reportData.description) {
         const response = await createReport(reportData );
         if (response.success) {
@@ -68,7 +66,6 @@ const UserDetail = ({ handle, date, views, isApproved, isProfile, confessionId, 
         commentId,
         'description': reportMessage
       };
-      console.log('report data: ',reportData);
       if (reportData.description) {
         const response = await createReport(reportData );
         if (response.success) {
@@ -85,19 +82,30 @@ const UserDetail = ({ handle, date, views, isApproved, isProfile, confessionId, 
   
   const handleDelete = async() => {
     const confirm = window.confirm('Are you sure you want to delete this confession?');
-    if (confirm) {
-      // delete confession
-      const response = await deleteConfession(confessionId);
-      if (response.success) {
-        showToast('Confession deleted successfully', 'success');
-        navigate('/');
-      } else {
-        showToast(response.message, 'error');
+    if (isComment) {
+      if (confirm) {
+        const response = await deleteCommentById(commentId);
+        if (response.success) {
+          showToast('Comment deleted successfully', 'success');
+          navigate('/');
+        } else {
+          showToast(response.message, 'error');
+        }
+      }
+    } else {
+      if (confirm) {
+        // delete confession
+        const response = await deleteConfession(confessionId);
+        if (response.success) {
+          showToast('Confession deleted successfully', 'success');
+          navigate('/');
+        } else {
+          showToast(response.message, 'error');
+        }
       }
     }
   };
   const handleEdit = () => {
-    console.log('edit: ', confessionId);
     navigate(`/edit/${ confessionId }`);
   };
 
@@ -127,7 +135,7 @@ const UserDetail = ({ handle, date, views, isApproved, isProfile, confessionId, 
         )}
         {isApproved && (<FcApproval />)}
         <div className=' relative'>
-          {isProfile ? (
+          {isUser ? (
             <div onClick={handleDotsClick} className='hover:cursor-pointer hover:text-primaryDark'>
               < BsThreeDotsVertical className=' text-primary' />
             </div>
@@ -138,7 +146,11 @@ const UserDetail = ({ handle, date, views, isApproved, isProfile, confessionId, 
           )}
           {isMenuOpen && (
             <div id='menu' className='absolute -top-2 left-8 bg-white rounded-sm shadow-md p-2'>
-              <Button variant='icon' onClick={handleEdit} className=' text-base font-normal'><AiOutlineEdit />Edit</Button>
+              {
+                !isComment && (
+                  <Button variant='icon' onClick={handleEdit} className=' text-base font-normal'><AiOutlineEdit />Edit</Button>
+                )
+              }
               <Button variant='icon' onClick={handleDelete} className=' text-base font-normal'><AiOutlineDelete />Delete</Button>
             </div>
           )}
