@@ -4,7 +4,7 @@ import { sanitizeInput } from '../utils/confessionUtils.js';
 class NotificationController{
 // create a new notification
   createNotification = async (req, res) => {
-    const { userId } = req.body;
+    const { userId, confessionId } = req.body;
     let { notificationMessage } = req.body;
     if (!userId || !notificationMessage) {
       return res.send(message.error('Missing required fields'));
@@ -20,10 +20,10 @@ class NotificationController{
       }
       const newNotification = await models.notifications.create({
         user_id: userId,
+        confession_id: confessionId,
         message: notificationMessage
       });
       delete newNotification.dataValues.user_id;
-      delete newNotification.dataValues.is_viewed;
       return res.send(message.success(newNotification));
     } catch (error) {
       res.send(message.error(error.message));
@@ -43,18 +43,22 @@ class NotificationController{
       }
       const notifications = await models.notifications.findAll({
         where: {
-          user_id: userId
+          user_id: userId,
+          is_viewed: false
         },
         order: [
           ['created_at', 'DESC']
         ],
         attributes: {
-          exclude: ['user_id']
+          exclude: ['user_id', 'confession_id']
         },
-        include: {
+        include: [{
           model: models.users,
           attributes: ['handle']
-        }
+        }, {
+          model: models.confessions,
+          attributes: ['id', 'title', 'is_approved']
+        }]
       });
       return res.send(message.success(notifications));
     } catch (error) {
@@ -72,10 +76,16 @@ class NotificationController{
         attributes: {
           exclude: ['user_id']
         },
-        include: {
-          model: models.users,
-          attributes: ['handle']
-        }
+        include: [
+          {
+            model: models.users,
+            attributes: ['handle']
+          },
+          {
+            model: models.confessions,
+            attributes: ['id', 'title', 'is_approved']
+          }
+        ]
       });
       if (!notification) {
         return res.send(message.error('Notification not found'));

@@ -11,7 +11,7 @@ const Comment = ({ body, handle, date, commentId, showComments }) => {
       <div className=' w-full flex gap-2 justify-start items-center' >
         <VotesBtn showComments={showComments} commentId={commentId} />
         <div className='w-full'>
-          <UserDetail commentId={commentId} className="text-sm" handle={handle} date={convertedDate} />
+          <UserDetail commentId={commentId} isComment={true} className="text-sm" handle={handle} date={convertedDate} />
           <Text div className="text-justify text-md flex flex-wrap">
             <ReactMarkdown>
               {body}
