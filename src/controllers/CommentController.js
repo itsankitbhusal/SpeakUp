@@ -1,6 +1,6 @@
 import models from '../models/index.js';
 import message from '../utils/message.js';
-import { sanitizeInput } from '../utils/index.js';
+import { commentMileStone, sanitizeInput } from '../utils/index.js';
 
 class CommentController {
   // create comment
@@ -21,6 +21,22 @@ class CommentController {
         user_id: userId,
         confession_id:confessionId
       });
+      // count the total number of comments for this confession
+      const totalComments = await models.comments.count({ where: { confession_id: confessionId } });
+      const milestones = [1, 10, 50, 100, 1000, 10000, 100000, 1000000];
+      
+      if ( milestones.includes(totalComments)) {
+        const confession = await models.confessions.findOne({ where: { id: confessionId } });
+        const confessionTitle = confession.title.length > 50 ? `${ confession.title.substring(0, 50) }...` : confession.title;
+        const milestone = commentMileStone(totalComments, confessionTitle);
+        if (milestone) {
+          await models.notifications.create({
+            user_id: userId,
+            message: milestone,
+            confession_id: confessionId
+          });
+        }
+      }
       return res.send(message.success(comment));
     } catch (error) {
       return res.send(message.error('Something went wrong'));
