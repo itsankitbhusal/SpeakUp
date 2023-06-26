@@ -43,7 +43,8 @@ class NotificationController{
       }
       const notifications = await models.notifications.findAll({
         where: {
-          user_id: userId
+          user_id: userId,
+          is_viewed: false
         },
         order: [
           ['created_at', 'DESC']
