@@ -1,9 +1,7 @@
 import { literal } from 'sequelize';
 import models from '../models/index.js';
-import { sanitizeInput,extractHashtags, message, replaceHashtags } from '../utils/index.js';
-
+import { sanitizeInput, extractHashtags, message, replaceHashtags } from '../utils/index.js';
 class ConfessionController {
-
   // get all confessions
   getAllConfessions = async (req, res) => {
     try {
@@ -155,6 +153,20 @@ class ConfessionController {
     }
     try {
       const approvedConfession = await models.confessions.update({ is_approved: true }, { where: { id } });
+      // create notification for user who created this confession
+      const confession = await models.confessions.findByPk(id);
+      const userId = confession.user_id;
+      // trimmed notification title to 50 characters and add "..." at the end if title is longer than 50 characters else use the title as it is
+      const trimmedTitle = confession.title.length > 50 ? `${ confession.title.substr(0, 50)  }...` : confession.title;
+      const notificationMessage = `Your confession with title "${ trimmedTitle }" has been approved!`;
+      const confessionId = confession.id;
+      
+      await models.notifications.create({
+        user_id: userId,
+        confession_id: confessionId,
+        message: notificationMessage
+      });
+
       return res.send(message.success(approvedConfession));
     } catch (err) {
       return res.send(message.error(err.message));
