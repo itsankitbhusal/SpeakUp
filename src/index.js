@@ -3,8 +3,6 @@ import cors from 'cors';
 import 'dotenv/config.js';
 import dbConfig from './config/dbConfig.js';
 import routes from './routes/index.js';
-import { dirname, join } from 'path';
-import { fileURLToPath } from 'url';
 
 const app = express();
 app.use(cors());
@@ -27,14 +25,14 @@ app.use('/reporting', routes.reportingRoutes);
 app.use('/analytics', routes.analyticsRoutes);
 
 // react static files
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = dirname(__filename);
 
-app.use(express.static(join(__dirname, '../frontend/dist')));
+// app.use(express.static(join(__dirname, '../frontend/dist')));
 
-app.get('*', (req, res) => {
-  res.sendFile(join(__dirname, '../frontend/dist/index.html'));
-});
+// app.get('*', (req, res) => {
+//   res.sendFile(join(__dirname, '../frontend/dist/index.html'));
+// });
 
 app.listen(process.env.PORT, async() => {
   await dbConfig.authenticate();
