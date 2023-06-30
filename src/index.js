@@ -24,16 +24,6 @@ app.use('/view', routes.viewRoutes);
 app.use('/reporting', routes.reportingRoutes);
 app.use('/analytics', routes.analyticsRoutes);
 
-// react static files
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = dirname(__filename);
-
-// app.use(express.static(join(__dirname, '../frontend/dist')));
-
-// app.get('*', (req, res) => {
-//   res.sendFile(join(__dirname, '../frontend/dist/index.html'));
-// });
-
 app.listen(process.env.PORT, async() => {
   await dbConfig.authenticate();
   await dbConfig.sync();
