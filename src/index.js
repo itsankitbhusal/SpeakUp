@@ -30,10 +30,10 @@ app.use('/analytics', routes.analyticsRoutes);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-app.use(express.static(join(__dirname, '../frontend/build')));
+app.use(express.static(join(__dirname, '../frontend/dist')));
 
 app.get('*', (req, res) => {
-  res.sendFile(join(__dirname, '../frontend/build/index.html'));
+  res.sendFile(join(__dirname, '../frontend/dist/index.html'));
 });
 
 app.listen(process.env.PORT, async() => {
