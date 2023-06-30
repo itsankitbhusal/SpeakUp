@@ -25,8 +25,14 @@ const LoginFields = () => {
         // show toast
         showToast('Logged in successfully', 'success');
 
-        // navigate to home page
-        navigate('/');
+        const { role } = response.data.user;
+        if (role === 'admin') {
+          navigate('/dashboard');
+          return;
+        } else {
+          // navigate to home page
+          navigate('/');
+        }
       }
       if (!response.success) {
         showToast(response.message, 'error');
