@@ -1,3 +1,3 @@
-const BASE_URL = 'http://localhost:5001';
+const BASE_URL = 'https://hungry-worm-khakis.cyclic.app';
 
 export { BASE_URL };
