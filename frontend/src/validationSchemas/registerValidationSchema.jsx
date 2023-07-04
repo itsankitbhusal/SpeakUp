@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 export const registerValidationSchema = Yup.object({
   handle: Yup.string().required('Required'),
   email: Yup.string().email('Invalid email address').required('Required'),
-  password: Yup.string().required('Required').min(8, 'Must be 8 characters or more').max(15, 'Must be 15 characters or less'),
+  password: Yup.string().required('Required').min(8, 'Must be 8 characters or more').max(30, 'Must be 30 characters or less'),
   cpassword: Yup.string()
     .oneOf([Yup.ref('password'), null], 'Passwords must match')
     .required('Required'),
