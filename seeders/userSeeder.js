@@ -34,7 +34,7 @@ const bulkCreateFakeUsers = async num => {
       created_at: faker.date.anytime()
     });
 
-    // now create guest user with handle guest and password guest
+    // now create guest user with handle guest and password guest123
     await models.users.create({
       handle: 'guest',
       password: '$2a$10$nV/qXAHBO4o8Mgd40VcJJ.zjeaz4JTgA8mZQbIRxTnnOyWNAHeAsy',
