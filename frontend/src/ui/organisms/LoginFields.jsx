@@ -69,6 +69,13 @@ const LoginFields = () => {
          Don't have an account? <span className=' font-semibold'>Register here</span>
               </Link>
             </div>
+            {/* guest login */}
+            <span className=' mt-4'>
+              <Button variant='outline-secondary' className="cursor-pointer" onClick={() => {
+                formik.setFieldValue('handle', 'guest');
+                formik.setFieldValue('password', 'guest123');
+              }}>Guest Login</Button>
+            </span>
           </div>
         </div>
       </div>
