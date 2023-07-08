@@ -207,8 +207,9 @@ class AuthController {
       // also count total no. of downvotes made by user
       const downvoteCount = await models.confessionVotes.count({ where: { vote_type: 'down', user_id: id } });
 
-      // Get highest upvoted confession
+      // Get highest upvoted confession of the user
       const highestUpvotedConfession = await models.confessions.findOne({
+        where: { user_id: id },
         attributes: [
           'id',
           'title',
@@ -225,6 +226,7 @@ class AuthController {
 
       // Get highest viewed confession
       const highestViewedConfession = await models.confessions.findOne({
+        where: { user_id: id },
         attributes: [
           'id',
           'title',
@@ -239,6 +241,7 @@ class AuthController {
         ],
         order: [[literal('(SELECT COUNT(*) FROM views WHERE views.confession_id = confessions.id)'), 'DESC']]
       });
+
       // Get the total number of views made by other users for all confessions of the specific user
       const confessionViews = await models.views.count({
         where: {
