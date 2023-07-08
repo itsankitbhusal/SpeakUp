@@ -60,11 +60,11 @@ const ProfileHeader = () => {
           </div>
           <div className='flex flex-col items-center justify-center'>
             <div className='text-base font-bold'>Top Confession</div>
-            <div className='text-xl font-bold flex items-center gap-2 justify-center text-cblack'><AiOutlineTrophy className='-mt-1' />{ user? user?.highestViewedConfession?.view_count: '0'}</div>
+            <div className='text-xl font-bold flex items-center gap-2 justify-center text-cblack'><AiOutlineTrophy className='-mt-1' />{ user?.highestViewedConfession?.view_count? user?.highestViewedConfession?.view_count :'0'}</div>
           </div>
           <div className='flex flex-col items-center justify-center'>
             <div className='text-base font-bold'>Top Vote</div>
-            <div className='text-xl font-bold flex items-center gap-2 justify-center text-cblack'><BiUpvote className='-mt-1' />{ user? user?.highestUpvotedConfession?.upvote_count: '0'}</div>
+            <div className='text-xl font-bold flex items-center gap-2 justify-center text-cblack'><BiUpvote className='-mt-1' />{ user?.highestUpvotedConfession?.upvote_count ? user?.highestUpvotedConfession?.upvote_count : 0}</div>
           </div>
         </div>
       </div>
