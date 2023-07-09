@@ -6,13 +6,19 @@ import { Link } from 'react-router-dom';
 
 const Header = () => (
   <>
-    <header className='shadow-[rgba(0,_0,_0,_0.25)_0px_25px_50px_-12px] '>
+    <header className='  '>
       <div className='flex justify-between items-center gap-4 outline rounded-sm outline-primary outline-[1.5px]'>
         <Link to='/'>
-          <Logo width="150px" wide className=' ml-8' />
+          <div className='ml-2 w-[150px] max-h-[48px] flex gap-2 justify-center items-center'>
+            <Logo wide />
+          </div>
         </Link>
-        <Input placeholder="Search..." className="bg-transparent outline-none py-0 border-none mr-2  w-[32vw]" />
-        <Button className="w-[150px] rounded-l-none  text-2xl"><RxMagnifyingGlass /></Button>
+        <div className=' flex'>
+          <Input placeholder="Search..." className="bg-transparent outline-none py-0 border-none mr-2  w-[32vw]" />
+          <div className=' min-w-[150px]'>
+            <Button className="w-full h-full rounded-l-none text-2xl items-end"><RxMagnifyingGlass /></Button>
+          </div>
+        </div>
       </div>
     </header>
   </>
