@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 const Header = () => (
   <>
-    <header className='  '>
+    <header >
       <div className='flex justify-between items-center gap-4 outline rounded-sm outline-primary outline-[1.5px]'>
         <Link to='/'>
           <div className='ml-2 w-[150px] max-h-[48px] flex gap-2 justify-center items-center'>
