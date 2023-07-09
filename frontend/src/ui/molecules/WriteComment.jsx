@@ -41,13 +41,13 @@ const WriteComment = ({ confessionId }) => {
   };
   return(
     <>
-      <form className='w-full bg-red-200' onSubmit={formik.handleSubmit}>
+      <form className='w-full' onSubmit={formik.handleSubmit}>
         <div className="flex justify-end relative z-0">
           <Input onChange={formik.handleChange}
             value={formik.values.body}
             name="body"
             onKeyDown={handleKeyDown}
-            placeholder="Write a comment" className="w-full outline outline-1 outline-primary" />
+            placeholder="Write a comment" className="w-full outline outline-1 outline-primary bg-transparent" />
           <span className=' absolute top-0 text-danger italic text-sm px-1'>{formik.errors?.body}</span>
         </div>
       </form>
