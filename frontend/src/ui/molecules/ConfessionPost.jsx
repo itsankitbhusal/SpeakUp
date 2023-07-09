@@ -69,7 +69,7 @@ const ConfessionPost = ({ handle, date, views, title, body, confessionId, isAppr
           </ReactMarkdown>
           {!showFullConfession && trimmedBody.endsWith('...') && (
             <span onClick={toggleContent} className="ml-2 w-full flex justify-end -mt-6 font-semibold cursor-pointer ">
-              <span className='bg-white pl-2'>See more</span>
+              <span className='pl-2'>See more</span>
             </span>
           )}
           <CommentProvider>
