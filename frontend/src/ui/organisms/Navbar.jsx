@@ -2,8 +2,8 @@ import Header from '../molecules/Header';
 
 const Navbar = ({ className }) => (
   <>
-    <div className={` bg-inherit z-10 w-full opacity-95 pt-8 fixed top-0 mx-auto ${ className }`}>
-      <div className='  max-w-[60vw] mx-auto'>
+    <div className={`sm:min-w-screen w-screen bg-inherit z-10 pt-8 fixed top-0 mx-auto ${ className }`}>
+      <div className='mx-auto'>
         <Header />
       </div>
     </div>
