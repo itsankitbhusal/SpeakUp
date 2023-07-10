@@ -1,13 +1,29 @@
+import React, { useContext } from 'react';
+import { GrClose } from 'react-icons/gr';
 import SidebarLinks from '../molecules/SidebarLinks';
+import Button from '../atoms/Button';
+import { NavbarContext } from '../../context/NavbarContext';
 
-const SidebarFull = ({ className }) => (
-  <div className={`w-[20vw] rounded-sm ${ className }`}>
-    <div className='flex justify-start items-center'>
-      <div className='grid place-items-center my-16'>
-        <SidebarLinks />
+const SidebarFull = ({ className }) => {
+  const { isSidebarOpen, handleSidebar } = useContext(NavbarContext);
+  return (
+    <div className={`w-full rounded-sm ${ className }`}>
+      <div className="relative flex justify-start items-center">
+        <div className="grid place-items-center my-16">
+          <SidebarLinks />
+          {isSidebarOpen && (
+            <>
+              <div className=" absolute right-0 top-4">
+                <Button variant="icon" onClick={handleSidebar}>
+                  <GrClose />
+                </Button>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default SidebarFull;
