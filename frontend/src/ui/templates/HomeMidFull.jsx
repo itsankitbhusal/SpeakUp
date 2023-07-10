@@ -34,11 +34,13 @@ const HomeMidFull = () => {
   }, [ bottom ]);
 
   return (
-    <div className={`grid place-items-center max-w-[95vw] sm:max-w-[80vw] md:max-w-[60vw] lg:max-w-[40vw] ${ className }`}>
-      <ModalProvider>
-        <WriteConfession />
-      </ModalProvider>
-      <div ref={confessionRef}>
+    <div className={'grid place-items-center max-w-[95vw] sm:max-w-[80vw] md:max-w-[60vw] lg:max-w-[40vw] '}>
+      <div className='overflow-hidden sm:overflow-visible lg:w-full'>
+        <ModalProvider>
+          <WriteConfession />
+        </ModalProvider>
+      </div>
+      <div ref={confessionRef} className='w-full'>
         {confessions?.map(confession => (
           <Confession
             key={confession.id}
