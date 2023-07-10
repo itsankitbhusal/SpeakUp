@@ -19,7 +19,7 @@ const CommentList = ({ confessionId, showComments }) => {
         setCommentCount(data.count);
         setShowMore(data.count > size);
       } else {
-        console.log(response.message);
+        console.error(response.message);
       }
     };
 
@@ -41,9 +41,9 @@ const CommentList = ({ confessionId, showComments }) => {
   return (
     <div className='relative'>
       {commentCount ? (
-        <Text className='absolute text-sm -top-2 bg-white pr-2'>{commentCount} comments</Text>
+        <Text className='absolute text-sm -top-2 bg-inherit pr-2'>{commentCount} comments</Text>
       ) : (
-        <Text className='absolute text-sm -top-2 bg-white pr-2'>No comments yet</Text>
+        <Text className='absolute text-sm -top-2 bg-inherit pr-2'>No comments yet</Text>
       )}
       <Line className='my-0' />
       {showComments &&

@@ -145,7 +145,7 @@ const UserDetail = ({ handle, date, views, isApproved, isProfile, confessionId, 
             </div>
           )}
           {isMenuOpen && (
-            <div id='menu' className='absolute -top-2 left-8 bg-white rounded-sm shadow-md p-2'>
+            <div id='menu' className='absolute -top-2 left-8 bg-inherit rounded-sm shadow-md p-2'>
               {
                 !isComment && (
                   <Button variant='icon' onClick={handleEdit} className=' text-base font-normal'><AiOutlineEdit />Edit</Button>
@@ -155,14 +155,14 @@ const UserDetail = ({ handle, date, views, isApproved, isProfile, confessionId, 
             </div>
           )}
           {isReportMenuOpen &&  (
-            <div id='menu' className='absolute -top-2 left-8 bg-white rounded-sm shadow-md p-2'>
+            <div id='menu' className='absolute -top-2 left-8 bg-inherit rounded-sm shadow-md p-2'>
               <Button variant='icon' onClick={handleReport} className=' text-base font-normal'><MdOutlineReportProblem />Report</Button>
             </div>
           )}
           {
             isModalOpen && (
               <div className='fixed z-50 top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center'>
-                <div className='w-5/12 bg-white rounded-sm shadow-md p-4'>
+                <div className='w-5/12 bg-inherit rounded-sm shadow-md p-4'>
                   <Text className='text-lg font-semibold'>{confessionId ? 'Report Confession': 'Report Comment'}</Text>
                   <Text className='text-sm'>Please enter a message to report this { confessionId ? 'confession': 'comment'}</Text>
                   <textarea onChange={e => setReportMessage(e.target.value)} className='w-full h-32 border border-gray-300 rounded-sm p-2 mt-2' placeholder='Enter message here...'></textarea>

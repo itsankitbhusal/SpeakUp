@@ -47,7 +47,7 @@ const ConfessionPost = ({ handle, date, views, title, body, confessionId, isAppr
   );
 
   return (
-    <div>
+    <div >
       <UserDetail handle={handle} date={date} views={views} isApproved={isApproved} isProfile={isProfile} confessionId={confessionId} />
       <Heading heading="h4" className="text-black text-base text-justify mt-1">
         {title}
@@ -69,7 +69,7 @@ const ConfessionPost = ({ handle, date, views, title, body, confessionId, isAppr
           </ReactMarkdown>
           {!showFullConfession && trimmedBody.endsWith('...') && (
             <span onClick={toggleContent} className="ml-2 w-full flex justify-end -mt-6 font-semibold cursor-pointer ">
-              <span className='pl-2'>See more</span>
+              <span className='pl-2 bg-inherit'>See more</span>
             </span>
           )}
           <CommentProvider>

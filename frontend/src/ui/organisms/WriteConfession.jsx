@@ -17,7 +17,7 @@ const WriteConfession = () => {
   return (
     <>
       <div className='mt-32 mb-8 w-full' onClick={handleCreateConfessionClick} >
-        <div title='Create Confession'>
+        <div title='Create Confession' className='w-[95vw] sm:w-[80vw] md:w-[60vw] lg:w-full mx-1'>
           <CreateConfession />
         </div>
       </div>

@@ -35,6 +35,7 @@ const Button = ({ children, onClick, className, variant, type, handleSubmit }) =
     break;
   case 'icon':
     buttonClassName += ` bg-transparent text-primary hover:text-primaryDark px-0 py-1 ${ className }`;
+    break;
   default:
     buttonClassName += `${ className }`;
     break;
