@@ -6,6 +6,7 @@ const DashboardContext = createContext();
 const DashboardProvider = ({ children }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isNavOpen, setIsNavOpen] = useState(false);
     
   useEffect(() => {
     async function decodeToken(){
@@ -20,7 +21,7 @@ const DashboardProvider = ({ children }) => {
   },[]);
     
   return (
-    <DashboardContext.Provider value={{ isAdmin, isLoading }}>
+    <DashboardContext.Provider value={{ isAdmin, isLoading, isNavOpen, setIsNavOpen }}>
       {children}
     </DashboardContext.Provider>
   );

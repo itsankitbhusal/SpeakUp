@@ -6,6 +6,7 @@ import Line from '../atoms/Line';
 import { FiHome, FiLogOut } from 'react-icons/fi';
 import { CgUserlane } from 'react-icons/cg';
 import { IoChevronBackOutline } from 'react-icons/io5';
+import { MdOutlineDashboardCustomize } from 'react-icons/md';
 import { RiNotificationLine } from 'react-icons/ri';
 import { showToast } from '../../utils/toast';
 import decode from 'jwt-decode';
@@ -16,6 +17,7 @@ const SidebarLinks = () => {
   const [userHandle, setUserHandle] = useState('username');
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const navigate = useNavigate();
   // get id from access token
@@ -30,8 +32,11 @@ const SidebarLinks = () => {
   useEffect(() => {
     const access = localStorage.getItem('access');
     if (access) {
-      const { handle } = decode(access);
-      setUserHandle(handle);
+      const decodedUser = decode(access);
+      if (decodedUser.role === 'admin') {
+        setIsAdmin(true);
+      }
+      setUserHandle(decodedUser.handle);
     }
   }, [localStorage.getItem('access')]);
 
@@ -76,6 +81,21 @@ const SidebarLinks = () => {
             </Link>
             <Line />
             <div >
+              {isAdmin && (
+                <div className=' w-full mb-4'>
+                  <Link to="/dashboard">
+                    <Button
+                      variant="outline-primary"
+                      className="w-full hover:bg-cwhite font-semibold"
+                    >
+                      <div className=" flex items-center gap-4 justify-start w-full">
+                        <MdOutlineDashboardCustomize />
+                      Dashboard
+                      </div>
+                    </Button>
+                  </Link>
+                </div>
+              )}
               <div className='w-full grid place-items-center'>
                 <Link className='w-full' to='/'>
                   <Button variant="ghost" className="w-full bg-transparent hover:bg-cwhite font-semibold">
