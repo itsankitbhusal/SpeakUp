@@ -3,7 +3,7 @@ import { ProfileProvider } from '../../context/ProfileContext';
 
 const Profile = () => (
   <>
-    <div className='mx-[20vw] my-10'>
+    <div className='mx-0 md:mx-[10vw] lg:mx-[20vw]'>
       <ProfileProvider>
         <ProfileTemplate />
       </ProfileProvider>
