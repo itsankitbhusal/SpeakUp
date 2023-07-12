@@ -76,8 +76,6 @@ const UserDetail = ({ handle, date, views, isApproved, isProfile, confessionId, 
         }
       }
     }
-   
-
   };
   
   const handleDelete = async() => {
@@ -145,7 +143,7 @@ const UserDetail = ({ handle, date, views, isApproved, isProfile, confessionId, 
             </div>
           )}
           {isMenuOpen && (
-            <div id='menu' className='absolute -top-2 left-8 bg-inherit rounded-sm shadow-md p-2'>
+            <div id='menu' className='absolute -top-2 -left-24 bg-white md:left-8 rounded-sm shadow-md p-2'>
               {
                 !isComment && (
                   <Button variant='icon' onClick={handleEdit} className=' text-base font-normal'><AiOutlineEdit />Edit</Button>
@@ -155,7 +153,7 @@ const UserDetail = ({ handle, date, views, isApproved, isProfile, confessionId, 
             </div>
           )}
           {isReportMenuOpen &&  (
-            <div id='menu' className='absolute -top-2 left-8 bg-inherit rounded-sm shadow-md p-2'>
+            <div id='menu' className='absolute -top-2 -left-24 bg-white md:left-8 rounded-sm shadow-md p-2'>
               <Button variant='icon' onClick={handleReport} className=' text-base font-normal'><MdOutlineReportProblem />Report</Button>
             </div>
           )}

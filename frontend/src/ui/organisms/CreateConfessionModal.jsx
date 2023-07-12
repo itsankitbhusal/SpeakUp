@@ -69,9 +69,9 @@ const CreateConfessionModal = ({ preserveData, setPreserveData }) => {
 
   return (
     <>
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={formik.handleSubmit} className=' grid place-items-center'>
         <Modal title="Create Confession" showSaveButton showCancelButton>
-          <div className="p-4 flex flex-col gap-2 ">
+          <div className="p-0 sm:p-4 flex flex-col gap-2">
             <FormField
               id="confessionTitle"
               label="Confession Title"
@@ -82,17 +82,6 @@ const CreateConfessionModal = ({ preserveData, setPreserveData }) => {
               className="w-full"
               error={formik?.errors?.title}
             />
-            {/* <FormField
-              textArea={true}
-              id="confessionBody"
-              label="Confession Body"
-              placeholder="Enter Confession Body"
-              name="body"
-              value={formik.values.body}
-              onChange={formik.handleChange}
-              className="w-full"
-              error={formik?.errors?.body}
-            /> */}
             <div className='overflow-y-auto max-h-[60vh]'>
               <label htmlFor="confessionBody" className='text-[.9rem] text-secondaryLight'>Confession Body</label>
               <MentionsInput

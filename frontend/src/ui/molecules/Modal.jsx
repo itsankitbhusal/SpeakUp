@@ -34,9 +34,9 @@ const Modal = ({ children, title, showSaveButton, showCancelButton }) => {
   return (
     <div>
       {showModal && (
-        <Dialog className={'rounded-sm'}>
-          <div ref={modalRef} className="modal rounded-sm w-[40vw] p-4">
-            <div className="flex justify-between items-center p-2 rounded-sm">
+        <Dialog className='rounded-sm'>
+          <div ref={modalRef} className="modal grid place-items-center rounded-sm w-screen h-screen sm:w-[80vw] sm:h-full md:w-[60vw] lg:w-[40vw] p-4">
+            <div className="flex w-full justify-between items-center p-2 rounded-sm">
               <Heading heading="h4" className="text-lg">
                 {title}
               </Heading>
@@ -45,8 +45,8 @@ const Modal = ({ children, title, showSaveButton, showCancelButton }) => {
                 className=" font-bold text-primary text-xl hover:cursor-pointer"
               />
             </div>
-            <div className="p-2">{children}</div>
-            <div className="flex gap-2 justify-end p-2">
+            <div className="p-2 w-full">{children}</div>
+            <div className="flex gap-2 justify-end w-full p-2">
               {showCancelButton && (
                 <Button onClick={CloseModal} variant="ghost">
                   Cancel

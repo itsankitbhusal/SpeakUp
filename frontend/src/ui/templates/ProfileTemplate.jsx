@@ -8,7 +8,7 @@ const ProfileTemplate = () => (
         <div className='sticky top-0 z-20'>
           <UserProfile />
         </div>
-        <div className=' flex justify-center'>
+        <div className='grid place-items-center'>
           <ProfileConfessions />
         </div>
       </div>

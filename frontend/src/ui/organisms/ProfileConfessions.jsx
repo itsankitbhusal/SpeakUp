@@ -8,10 +8,8 @@ import { ProfileContext } from '../../context/ProfileContext';
 const ProfileConfessions = ({ className }) => {
   const bottom = useRef(null);
   const confessionRef = useRef(null);
-  //   const { confessions, setPage, isLoading, hasMore } = useContext(ConfessionContext);
   const { confessions, setPage, isLoading, hasMore } = useContext(ProfileContext);
-  
-  
+
   // handle observer
   const handleObserver = entries => {
     const target = entries[0];
@@ -34,7 +32,7 @@ const ProfileConfessions = ({ className }) => {
   }, [ bottom ]);
 
   return (
-    <div className={`grid place-items-center my-20 max-w-[58vw] ${ className }`}>
+    <div className={`grid place-items-center my-20 w-full sm:max-w-[80vw] md:max-w-[60vw] lg:max-w-[58vw] ${ className }`}>
       <div ref={confessionRef}>
         {confessions?.map(confession => (
           <Confession
