@@ -71,8 +71,8 @@ const SidebarLinks = () => {
   
   return(
     <Sidebar className="grid gap-4" >
-      {
-        !isNotificationOpen && (
+      <div className='grid w-screen mx-0 sm:mx-4 place-items-center sm:w-full'>
+        {!isNotificationOpen && (
           <>
             <Link className='w-full' to='/profile'>
               <div className=' text-lg w-full grid place-items-center'>
@@ -131,39 +131,39 @@ const SidebarLinks = () => {
           
           </>
         )
-      }
-      <div className=' grid place-items-center gap-2'>
-        {/* close notification button */}
-        {isNotificationOpen && ( 
-          <>
-            <Button onClick={handleNotificationClick} variant="ghost" className="w-full bg-transparent hover:bg-cwhite font-semibold">
-              <div className=' flex items-center gap-4 justify-start w-full'>
-                <IoChevronBackOutline />Back
-              </div>
-            </Button>
-            {/* notification */}
-            <div className='grid place-items-center gap-2 rounded-sm overflow-y-auto max-h-[75vh] '>
-              {notifications?.map(notification => (
-                <div key={notification.id} className='relative w-full grid place-items-center hover:cursor-pointer hover:bg-cwhite p-2 py-3'>
-                  <Text className='text-sm rounded-sm w-full '>
-                    {notification && (
-                      <span className=' text-cblack'>{ notification.message }</span>
-                    )}
-                  </Text>
-                  <Text className=' w-full flex items-end justify-end'>
-                    <span onClick={() => {
-                      markAsRead(notification.id);
-                    }} className='underline text-primary font-bold text-end text-sm hover:text-cblack '>Mark as read</span>
-                  </Text>
+        }
+        <div className=' grid place-items-center gap-2'>
+          {/* close notification button */}
+          {isNotificationOpen && ( 
+            <>
+              <Button onClick={handleNotificationClick} variant="ghost" className="w-full bg-transparent hover:bg-cwhite font-semibold">
+                <div className=' flex items-center gap-4 justify-start w-full'>
+                  <IoChevronBackOutline />Back
                 </div>
-              ))}
-              {notifications?.length === 0 && (
-                <Text className='text-sm text-cblack'>No notifications</Text>
-              )}
-            </div>
-          </>
-        )}
-
+              </Button>
+              {/* notification */}
+              <div className='grid place-items-center gap-2 rounded-sm overflow-y-auto max-h-[75vh] '>
+                {notifications?.map(notification => (
+                  <div key={notification.id} className='relative w-full grid place-items-center hover:cursor-pointer hover:bg-cwhite p-2 py-3'>
+                    <Text className='text-sm rounded-sm w-full '>
+                      {notification && (
+                        <span className=' text-cblack'>{ notification.message }</span>
+                      )}
+                    </Text>
+                    <Text className=' w-full flex items-end justify-end'>
+                      <span onClick={() => {
+                        markAsRead(notification.id);
+                      }} className='underline text-primary font-bold text-end text-sm hover:text-cblack '>Mark as read</span>
+                    </Text>
+                  </div>
+                ))}
+                {notifications?.length === 0 && (
+                  <Text className='text-sm text-cblack'>No notifications</Text>
+                )}
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </Sidebar>
   );
