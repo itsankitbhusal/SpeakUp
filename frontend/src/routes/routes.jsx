@@ -13,6 +13,8 @@ import Comment from '../Dashboard/Pages/Comment';
 import Reporting from '../Dashboard/Pages/Reporting';
 import DashHome from '../Dashboard/Pages/DashHome';
 import Tag from '../ui/pages/Tag';
+import PublicProfile from '../ui/pages/PublicProfile';
+import { ProfileProvider } from '../context/ProfileContext';
 
 const getUserRole =  () => {
   const user = localStorage.getItem('access');
@@ -36,6 +38,11 @@ const routes = [{
 }, {
   path: '/profile',
   element: <Profile />
+},{
+  path: '/profile/:handle',
+  element: <ProfileProvider>
+    <PublicProfile />
+  </ProfileProvider>
 }, {
   path: '/edit/:id',
   element: <EditConfession />
