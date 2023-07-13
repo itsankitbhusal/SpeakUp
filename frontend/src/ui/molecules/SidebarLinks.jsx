@@ -70,16 +70,18 @@ const SidebarLinks = () => {
   };
   
   return(
-    <Sidebar className="grid gap-4" >
-      <div className='grid w-screen mx-0 sm:mx-4 place-items-center sm:w-full'>
+    <Sidebar  >
+      <div className='grid w-screen mx-0 sm:mx-4 lg:m-0 4 place-items-center sm:w-full'>
         {!isNotificationOpen && (
           <>
-            <Link className='w-full' to='/profile'>
+            <Link className='w-full' to={`/profile/${ userHandle }`}>
               <div className=' text-lg w-full grid place-items-center'>
                 <Button variant="user" > <CgUserlane />{userHandle}</Button>
               </div>
             </Link>
-            <Line />
+            <div className=' w-1/2'>
+              <Line />
+            </div>
             <div >
               {isAdmin && (
                 <div className=' w-full mb-4'>
