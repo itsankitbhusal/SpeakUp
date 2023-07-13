@@ -165,19 +165,86 @@ class AuthController {
     }
   };
 
-  // get single user by id
+  // get single user by handle
   getSingleUser = async (req, res) => { 
-    const { id } = req.params;
-    if (!id) {
-      return res.send(message.error('Please provide an id'));
+    const { handle } = req.params;
+    if (!handle) {
+      return res.send(message.error('Please provide an handle'));
     }
     try {
-      const user = await models.users.findOne({ where: { id } });
-      delete user?.dataValues.password;
+      const user = await models.users.findOne({ where: { handle } });
+      delete user?.dataValues.password;      
       if (!user) {
         return res.send(message.success('User not available'));
       }
-      return res.send(message.success(user));
+
+      // get total confession count
+      const confessionCount = await models.confessions.count({ where: { user_id: user.id } });
+
+      // get total comment count
+      const commentCount = await models.comments.count({ where: { user_id: user.id } });
+
+      // total no. of upvotes made by user
+      const upvoteCount = await models.confessionVotes.count({ where: { vote_type: 'up', user_id: user.id } });
+
+      // total no. of downvotes made by user
+      const downvoteCount = await models.confessionVotes.count({ where: { vote_type: 'down', user_id: user.id } });
+
+      // get highest voted confession of the user 
+      const highestUpvotedConfession = await models.confessions.findOne({ where: { user_id: user.id }, order: [['upvote_count', 'DESC']] });
+      
+      // get highest viewed confession of user
+      const highestViewedConfession = await models.confessions.findOne({
+        where: { user_id: user.id },
+        attributes: [
+          'id',
+          'title',
+          'body',
+          'user_id',
+          'upvote_count',
+          'is_approved',
+          'downvote_count',
+          'created_at',
+          'updated_at',
+          [literal('(SELECT COUNT(*) FROM views WHERE views.confession_id = confessions.id)'), 'view_count']
+        ],
+        order: [[literal('(SELECT COUNT(*) FROM views WHERE views.confession_id = confessions.id)'), 'DESC']]
+      });
+
+      // Get the total number of views made by other users for all confessions of the specific user
+      const confessionViews = await models.views.count({
+        where: {
+          user_id: { [Op.ne]: user.id }
+        },
+        include: [
+          {
+            model: models.confessions,
+            where: {
+              user_id: user.id
+            }
+          }
+        ]
+      });
+
+      // total views gained by all confessions of the user
+      const totalViews = await models.views.count({
+        include: [{ model: models.confessions, where: { user_id: user.id } }]
+      });
+
+      // lets arrange all data in a object
+      const userData = {
+        ...user.dataValues,
+        confessionCount,
+        commentCount,
+        upvoteCount,
+        downvoteCount,
+        highestUpvotedConfession,
+        highestViewedConfession,
+        confessionViews,
+        totalViews
+      };
+
+      return res.send(message.success(userData));
     }
     catch (error) {
       return res.send(message.error(error.message));
