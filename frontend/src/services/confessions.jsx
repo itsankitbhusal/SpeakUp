@@ -58,6 +58,12 @@ export const getAllConfessionsByUser = async (limit, page) => {
   return response.data;
 };
 
+// get all confession by user handle
+export const getAllConfessionsByHandle = async (limit, page, handle) => { 
+  const response = await api.post(`${ route }/user/handle/${ handle }?limit=${ limit }&page=${ page }`);
+  return response.data;
+};
+
 // update confession
 export const updateConfessionById = async (id, newConfessionData) => {
   const response = await api.put(`${ route }/${ id }`, { ...newConfessionData });

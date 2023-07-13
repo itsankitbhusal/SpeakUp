@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import decode from 'jwt-decode';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AiFillEye, AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai';
 import { MdOutlineReportProblem } from 'react-icons/md';
 import { FcApproval } from 'react-icons/fc';
@@ -120,7 +120,14 @@ const UserDetail = ({ handle, date, views, isApproved, isProfile, confessionId, 
   return(
     <div className='flex justify-between items-center w-full'>
       <div className=' flex justify-between items-center gap-1 text-md'>
-        <Text className="text-md transition-all hover:cursor-pointer hover:underline">{handle}</Text>
+        {!isUser ? (
+          <Link to={`/profile/${ handle }`}>
+            <Text className="text-md transition-all hover:cursor-pointer hover:underline">{handle}</Text>
+          </Link>
+        ) : (
+          <Text className="text-md transition-all hover:cursor-pointer hover:underline">{handle}</Text>
+        )}
+
         <div className=' w-1 h-1 bg-secondary rounded-full my-2'></div>
         <Text className="text-md">{date}</Text>
       </div>

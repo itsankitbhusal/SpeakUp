@@ -36,7 +36,7 @@ class ConfessionController {
     const bodyToSave = replaceHashtags(body);
     try {
       const confession = await models.confessions.create({ title, body: bodyToSave, user_id: userId });
-      
+
       if (hashtags.length > 0) {
         // create hashtag
         // as this doesn't work well with promises making use of for loop
@@ -157,10 +157,10 @@ class ConfessionController {
       const confession = await models.confessions.findByPk(id);
       const userId = confession.user_id;
       // trimmed notification title to 50 characters and add "..." at the end if title is longer than 50 characters else use the title as it is
-      const trimmedTitle = confession.title.length > 50 ? `${ confession.title.substr(0, 50)  }...` : confession.title;
+      const trimmedTitle = confession.title.length > 50 ? `${ confession.title.substr(0, 50) }...` : confession.title;
       const notificationMessage = `Your confession with title "${ trimmedTitle }" has been approved!`;
       const confessionId = confession.id;
-      
+
       await models.notifications.create({
         user_id: userId,
         confession_id: confessionId,
@@ -279,6 +279,43 @@ class ConfessionController {
     } catch (error) {
       res.send(message.error(error.message));
     }
+  };
+  // get confession by user handle
+  getConfessionsByUserHandle = async (req, res) => {
+    const { handle } = req.params;
+    let showAllConfession;
+    if (handle === req.user.handle) {
+      showAllConfession = true;
+    }
+    if (!handle) {
+      return res.send(message.error('Missing handle!'));
+    }
+    const { page = 0, limit = 10 } = req.query;
+    const offset = page * limit;
+    const limitPerPage = parseInt(limit);
+    try {
+      const confessions = await models.confessions.findAll({
+        where: showAllConfession ? { '$user.handle$': handle } : { '$user.handle$': handle, is_approved: true },
+        limit: limitPerPage,
+        offset,
+        attributes: { exclude: ['user_id'] },
+        include: [{
+          model: models.users,
+          attributes: ['handle']
+        }],
+        order: [['id', 'DESC']]
+      });
+      // include pagination info to response
+      const response = {
+        confessions,
+        page,
+        limit
+      };
+      return res.send(message.success(response));
+    } catch (error) {
+      return res.send(message.error(error.message));
+    }
+
   };
 }
 export default ConfessionController;

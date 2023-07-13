@@ -3,7 +3,6 @@ import EditConfession from '../ui/pages/EditConfession';
 import Home from '../ui/pages/Home';
 import Login from '../ui/pages/Login';
 import NotFound from '../ui/pages/NotFound';
-import Profile from '../ui/pages/Profile';
 import Register from '../ui/pages/Register';
 
 import Dashboard from '../Dashboard/Dashboard';
@@ -13,6 +12,8 @@ import Comment from '../Dashboard/Pages/Comment';
 import Reporting from '../Dashboard/Pages/Reporting';
 import DashHome from '../Dashboard/Pages/DashHome';
 import Tag from '../ui/pages/Tag';
+import PublicProfile from '../ui/pages/PublicProfile';
+import { ProfileProvider } from '../context/ProfileContext';
 
 const getUserRole =  () => {
   const user = localStorage.getItem('access');
@@ -34,8 +35,10 @@ const routes = [{
   path: '/register',
   element: <Register />
 }, {
-  path: '/profile',
-  element: <Profile />
+  path: '/profile/:handle',
+  element: <ProfileProvider>
+    <PublicProfile />
+  </ProfileProvider>
 }, {
   path: '/edit/:id',
   element: <EditConfession />

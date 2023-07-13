@@ -16,4 +16,7 @@ router.put('/:id/approve', middlewares.verifyAccessToken, middlewares.verifyRefr
 // get confession by user
 router.post('/user/:id?', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionController.getConfessionsByUserId);
 
+// get confession by user handle
+router.post('/user/handle/:handle?', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionController.getConfessionsByUserHandle);
+
 export default router;

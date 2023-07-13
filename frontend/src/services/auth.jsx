@@ -11,8 +11,13 @@ export const register = async userData => {
   return await response.data;
 };
 
-export const getUserById = async() => {
+export const getLoggedInUser = async() => {
   const response = await api.get(`${ route }/me`);
+  return await response.data;
+};
+
+export const getUserByHandle = async handle => {
+  const response = await api.get(`${ route }/user/${ handle }`);
   return await response.data;
 };
 
