@@ -1,6 +1,6 @@
 import { useState, useEffect, createContext } from 'react';
-import { getAllConfessionsByUser } from '../services/confessions';
-import { getUserById } from '../services/auth';
+import { getAllConfessionsByHandle } from '../services/confessions';
+import { getUserByHandle } from '../services/auth';
 
 const ProfileContext = createContext();
 
@@ -8,14 +8,18 @@ const ProfileProvider = ({ children }) => {
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [userDataLoading, setUserDataLoading] = useState(false);
   const [confessions, setConfessions] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   // all data needed for the profile page
   const [user, setUser] = useState(null);
   const [profileAvatar, setProfileAvatar] = useState(null);
 
-  const getUserData = async () => {
-    const response = await getUserById();
+  const [profileHandle, setProfileHandle] = useState(null);
+
+  const getUserData = async handle => {
+    setUserDataLoading(true);
+    const response = await getUserByHandle(handle);
     if (response.success) {
       const { data } = response;
       setProfileAvatar(`https://ui-avatars.com/api/?background=348371&name=${ data?.handle }&bold=true&color=fff&uppercase=false&length=1`);
@@ -23,13 +27,14 @@ const ProfileProvider = ({ children }) => {
     } else {
       throw new Error(response.message);
     }
+    setUserDataLoading(false);
   };
 
 
   const getConfession = async () => {
     if (!hasMore) {return;}
     setIsLoading(true);
-    const response = await getAllConfessionsByUser(limit, page);
+    const response = await  getAllConfessionsByHandle(limit, page, profileHandle);
     if (response.success) {
       const { data } = response;
       if (data.confessions.length < limit) {
@@ -45,10 +50,15 @@ const ProfileProvider = ({ children }) => {
   useEffect(() => {
     getConfession();
   }
-  , [page, limit]);
+  , [page, limit, profileHandle]);
+  
+  // for user data
+  useEffect(() => {
+    getUserData(profileHandle);
+  },[profileHandle]);
     
   return (
-    <ProfileContext.Provider value={{ confessions, setPage, isLoading, hasMore, user, getUserData, profileAvatar }}>
+    <ProfileContext.Provider value={{ confessions, setPage, isLoading, userDataLoading, hasMore, user, getUserData, profileAvatar, profileHandle, setProfileHandle }}>
       {children}
     </ProfileContext.Provider>
   );
