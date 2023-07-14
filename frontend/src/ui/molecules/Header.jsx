@@ -13,8 +13,7 @@ import { ConfessionContext } from '../../context/ConfessionContext';
 const Header = () => {
   const [search, setSearch] = useState('');
   const [searchModal, setSearchModal] = useState(false);
-  const [searchedConfession, setSearchedConfession] = useState([]); // [ { id, title, content, author, created_at, updated_at, likes, dislikes, comments }
-  
+  const [searchedConfession, setSearchedConfession] = useState([]);
   const { handleSidebar } = useContext(NavbarContext);
   const { setConfessions } = useContext(ConfessionContext);
 
