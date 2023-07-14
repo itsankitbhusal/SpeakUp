@@ -31,7 +31,7 @@ const ConfessionProvider = ({ children }) => {
   }, [page, limit]);
     
   return (
-    <ConfessionContext.Provider value={{ confessions, setPage, isLoading, hasMore }}>
+    <ConfessionContext.Provider value={{ confessions, setPage, isLoading, hasMore, setConfessions }}>
       {children}
     </ConfessionContext.Provider>
   );};

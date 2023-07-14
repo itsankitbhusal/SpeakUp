@@ -69,3 +69,9 @@ export const updateConfessionById = async (id, newConfessionData) => {
   const response = await api.put(`${ route }/${ id }`, { ...newConfessionData });
   return response.data;
 };
+
+// search confession by title
+export const searchConfessionByTitle = async (title, limit, page) => {
+  const response = await api.get(`${ route }/search?title=${ title }&limit=${ limit }&page=${ page }`);
+  return response.data;
+};

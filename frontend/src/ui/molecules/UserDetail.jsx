@@ -166,14 +166,16 @@ const UserDetail = ({ handle, date, views, isApproved, isProfile, confessionId, 
           )}
           {
             isModalOpen && (
-              <div className='fixed z-50 top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center'>
-                <div className='w-5/12 bg-inherit rounded-sm shadow-md p-4'>
-                  <Text className='text-lg font-semibold'>{confessionId ? 'Report Confession': 'Report Comment'}</Text>
-                  <Text className='text-sm'>Please enter a message to report this { confessionId ? 'confession': 'comment'}</Text>
-                  <textarea onChange={e => setReportMessage(e.target.value)} className='w-full h-32 border border-gray-300 rounded-sm p-2 mt-2' placeholder='Enter message here...'></textarea>
-                  <div className='flex justify-end gap-2 mt-2'>
-                    <Button variant='secondary' onClick={() => setIsModalOpen(false)}>Cancel</Button>
-                    <Button variant='primary' onClick={handleReport}>Submit</Button>
+              <div>
+                <div className='fixed z-50 top-0 left-0 w-full h-full bg-black bg-opacity-70 flex justify-center items-center'>
+                  <div className='w-5/12 bg-white rounded-sm shadow-md p-4'>
+                    <Text className='text-lg font-semibold'>{confessionId ? 'Report Confession': 'Report Comment'}</Text>
+                    <Text className='text-sm'>Please enter a message to report this { confessionId ? 'confession': 'comment'}</Text>
+                    <textarea onChange={e => setReportMessage(e.target.value)} className='w-full h-32 border border-gray-300 rounded-sm p-2 mt-2' placeholder='Enter message here...'></textarea>
+                    <div className='flex justify-end gap-2 mt-2'>
+                      <Button variant='secondary' onClick={() => setIsModalOpen(false)}>Cancel</Button>
+                      <Button variant='primary' onClick={handleReport}>Submit</Button>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -5,6 +5,9 @@ import middlewares  from '../middlewares/index.js';
 const router = Router();
 const confessionController = new ConfessionController();
 
+// search confession by title
+router.get('/search', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionController.searchConfessionByTitle);
+
 router.get('/', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionController.getAllApprovedConfessions);
 router.post('/', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionController.createConfession);
 router.get('/pending', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionController.getAllPendingConfessions);
@@ -18,5 +21,6 @@ router.post('/user/:id?', middlewares.verifyAccessToken, middlewares.verifyRefre
 
 // get confession by user handle
 router.post('/user/handle/:handle?', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionController.getConfessionsByUserHandle);
+
 
 export default router;

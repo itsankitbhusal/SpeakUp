@@ -1,4 +1,4 @@
-import { literal } from 'sequelize';
+import { literal, Op } from 'sequelize';
 import models from '../models/index.js';
 import { sanitizeInput, extractHashtags, message, replaceHashtags } from '../utils/index.js';
 class ConfessionController {
@@ -316,6 +316,40 @@ class ConfessionController {
       return res.send(message.error(error.message));
     }
 
+  };
+
+  // search confession by title
+  searchConfessionByTitle = async (req, res) => {
+    const { title } = req.query;
+    if (!title) {
+      return res.send(message.error('Missing title!'));
+    }
+    const { page = 0, limit = 10 } = req.query;
+    const offset = page * limit;
+    const limitPerPage = parseInt(limit);
+    try {
+      const confessions = await models.confessions.findAll({
+        where: { title: { [Op.like]: `%${ title }%` }, is_approved: true },
+        limit: limitPerPage,
+        offset,
+        attributes: { exclude: ['user_id'] },
+        include: [{
+          model: models.users,
+          attributes: ['handle']
+        }],
+        order: [['id', 'DESC']]
+      });
+      // include pagination info to response
+      const response = {
+        confessions,
+        page,
+        limit
+      };
+      return res.send(message.success(response));
+    }
+    catch (err) {
+      return res.send(message.error(err.message));
+    }
   };
 }
 export default ConfessionController;
