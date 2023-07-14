@@ -15,7 +15,7 @@ import Tag from '../ui/pages/Tag';
 import PublicProfile from '../ui/pages/PublicProfile';
 import { ProfileProvider } from '../context/ProfileContext';
 
-const getUserRole =  () => {
+const getUserRole = () => {
   const user = localStorage.getItem('access');
   if (user) {
     const decodedUser = decode(user);
@@ -25,54 +25,69 @@ const getUserRole =  () => {
   }
 };
 
-const routes = [{
-  path: '/',
-  element: <Home />
-}, {
-  path: '/login',
-  element: <Login />
-}, {
-  path: '/register',
-  element: <Register />
-}, {
-  path: '/profile/:handle',
-  element: <ProfileProvider>
-    <PublicProfile />
-  </ProfileProvider>
-}, {
-  path: '/edit/:id',
-  element: <EditConfession />
-}, {
-  path: '/tag/:tag',
-  element: <Tag />
-},
-{
-  path: '/dashboard',
-  element: getUserRole() === 'admin'? <Dashboard />: null,
-  children: [{
-    index: true,
-    element: <DashHome />
-  },{
-    path: 'users',
-    element: <Users />
-  }, {
-    path: 'confessions',
-    element: <Confession />
-  }, {
-    path: 'comments',
-    element: <Comment />
-  }, {
-    path: 'reportings',
-    element: <Reporting />
-  }, {
+const routes = [
+  {
+    path: '/',
+    element: <Home />
+  },
+  {
+    path: '/login',
+    element: <Login />
+  },
+  {
+    path: '/register',
+    element: <Register />
+  },
+  {
+    path: '/profile/:handle',
+    element: (
+      <ProfileProvider>
+        <PublicProfile />
+      </ProfileProvider>
+    )
+  },
+  {
+    path: '/edit/:id',
+    element: <EditConfession />
+  },
+  {
+    path: '/tag/:tag',
+    element: <Tag />
+  },
+  {
+    path: '/dashboard',
+    element: getUserRole() === 'admin' ? <Dashboard /> : null,
+    children: [
+      {
+        index: true,
+        element: <DashHome />
+      },
+      {
+        path: 'users',
+        element: <Users />
+      },
+      {
+        path: 'confessions',
+        element: <Confession />
+      },
+      {
+        path: 'comments',
+        element: <Comment />
+      },
+      {
+        path: 'reportings',
+        element: <Reporting />
+      },
+      {
+        path: '*',
+        element: <NotFound />
+      }
+    ]
+  },
+  {
     path: '*',
-    element: <h1>not found</h1>
-    
-  }]
-},
-{
-  path: '*',
-  element: <NotFound />
-}];
+    element: <NotFound />
+  }
+];
 
 export default routes;

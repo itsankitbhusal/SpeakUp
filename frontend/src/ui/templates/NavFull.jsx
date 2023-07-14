@@ -1,4 +1,3 @@
-import React from 'react';
 import Navbar from '../organisms/Navbar';
 const NavFull = ({ className }) => (
   <Navbar className={className} />
