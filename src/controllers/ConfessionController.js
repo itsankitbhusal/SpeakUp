@@ -195,7 +195,7 @@ class ConfessionController {
           model: models.users,
           attributes: ['handle']
         }],
-        order: [['id', 'DESC']]
+        order: [['created_at', 'DESC'], [literal('(confessions.upvote_count - confessions.downvote_count)'), 'DESC']]
       });
 
       // include pagination info to response
