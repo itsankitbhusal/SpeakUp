@@ -1,9 +1,10 @@
 import bcrypt from 'bcryptjs';
+import md5 from 'md5';
 import jwt from 'jsonwebtoken';
 import models from '../models/index.js';
 import message from '../utils/message.js';
 import { Op,literal } from 'sequelize';
-import { signEmailVerificationToken, signAccessToken, signRefreshToken, sendMail } from '../utils/authUtils.js';
+import { signEmailVerificationToken, signAccessToken, signRefreshToken, sendMail, signResetPasswordToken } from '../utils/authUtils.js';
 
 class AuthController {
   // create user and send verification email
@@ -21,24 +22,29 @@ class AuthController {
           return res.send(message.error('Handle already taken'));
         }
       }
+      let emailHash;
       if (email) {
         // check if email is already verified in emails table
         const foundEmail = await models.emails.findOne({ where: { email } });
         if (foundEmail && foundEmail.is_verified) {
           return res.send(message.error('You cannot register with this email'));
         }
+        emailHash = md5(email);
+        console.log('\n\n\n\n email hash: ', emailHash);
       }
       passwordHash = await bcrypt.hash(passwordHash, 10);
       // generate jwt refresh and access token
       const refreshToken = signRefreshToken(handle);
       
-      const createdUser = await models.users.create({ handle, password: passwordHash });
+      const createdUser = await models.users.create({ handle, email_hash: emailHash, password: passwordHash });
 
       // token for email verification only
       const tokenForEmailVerification = signEmailVerificationToken(handle, email);
 
       // send verification email
-      // sendMail(email, tokenForEmailVerification);
+      if (tokenForEmailVerification) {
+        sendMail(email, tokenForEmailVerification, 'verification');
+      }
 
       delete createdUser.dataValues.password;
 
@@ -55,9 +61,57 @@ class AuthController {
   };
 
   // verify created user with email and insert in emails table
+  resetVerification = async (req, res) => {
+    const { token } = req.query;
+    const { password } = req.body;
+    if (!token) {
+      return res.send(message.error('Token not provided'));
+    }
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      if (!decoded) {
+        return res.send(message.error('Invalid token'));
+      }
+      const { handle, email } = decoded;
+      const foundUser = await models.users.findOne({ where: { handle } });
+      if (!foundUser) {
+        return res.send(message.error('User not found with this handle'));
+      }
+      const foundEmail = await models.emails.findOne({ where: { email } });
+      if(!foundEmail) {
+        return res.send(message.error('You cannot rest password with this email'));
+      }
+
+      // check if email match to md5 hash in users table email_hash
+      if (foundUser.email_hash !== md5(email)) {
+        return res.send(message.error('Enter the email which was used to create this account'));
+      }
+
+      // verify user in users table
+      await models.users.update({ is_verified: true }, { where: { handle } });
+
+      // update password in users table
+      const passwordHash = await bcrypt.hash(password, 10);
+      await models.users.update({ password: passwordHash }, { where: { handle } });
+
+      // now sign jwt refresh and access token
+      const refreshToken = signRefreshToken(handle);
+      const accessToken = signAccessToken(foundUser.dataValues.id, handle, foundUser.dataValues.role, foundUser.dataValues.is_verified);
+      delete foundUser.dataValues.password;
+      delete foundUser.dataValues.email_hash;
+      return res.send(message.success({
+        user: foundUser,
+        accessToken,
+        refreshToken
+      }));
+    }
+    catch (error) {
+      return res.send(message.error(error.message));
+    }
+  };
   // also set is_verified to true in users and emails table
   emailVerification = async (req, res) => {
-    const { token } = req.params;
+    const { token } = req.query;
     // console.log(token);
     if (!token) {
       return res.send(message.error('Token not provided'));
@@ -95,6 +149,9 @@ class AuthController {
       return res.send(message.error(error.message));
     }
   };
+
+  // rest user detail verification
+  
   // check user login and return jwt refresh and access token
   loginUser = async (req, res) => {
     const { handle, password } = req.body;
@@ -112,7 +169,7 @@ class AuthController {
       }
       // generate jwt refresh and access token
       const refreshToken = signRefreshToken(handle);
-      const accessToken = signAccessToken(foundUser.dataValues.id, handle, foundUser.dataValues.role);
+      const accessToken = signAccessToken(foundUser.dataValues.id, handle, foundUser.dataValues.role, foundUser.dataValues.is_verified);
       delete foundUser.dataValues.password;
       return res.send(message.success({
         user: foundUser,
@@ -141,10 +198,41 @@ class AuthController {
       if (!foundUser) {
         return res.send(message.error('User not found'));
       }
-      const accessToken = signAccessToken(foundUser.dataValues.id,handle, foundUser.dataValues.role);
+      const accessToken = signAccessToken(foundUser.dataValues.id,handle, foundUser.dataValues.role, foundUser.dataValues.is_verified);
       return res.send(message.success({ accessToken }));
     } catch (error) {
       return res.send(error.message);
+    }
+  };
+
+  // reset password
+  resetPassword = async (req, res) => { 
+    const { handle, email } = req.body;
+    if (!handle || !email) {
+      return res.send(message.error('Please provide a handle and email'));
+    }
+    try {
+      const foundUser = await models.users.findOne({ where: { handle } });
+      if (!foundUser) {
+        return res.send(message.error('User not found'));
+      }
+      const foundEmail = await models.emails.findOne({ where: { email } });
+      if (!foundEmail) {
+        return res.send(message.error('Email not found'));
+      }
+      // check if email match to md5 hash in users table email_hash
+      if (foundUser.email_hash !== md5(email)) {
+        return res.send(message.error('Enter the email which was used to create this account'));
+      }
+      // generate token to send email for user
+      const token = signResetPasswordToken(foundUser.id, handle, email);
+
+      // send email verification link
+      if (token) {
+        sendMail(email,token, 'rest' );
+      }
+    } catch (error) {
+      res.send(message.error(error));
     }
   };
 
