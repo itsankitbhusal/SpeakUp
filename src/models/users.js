@@ -13,6 +13,10 @@ const users = dbConfig.define('users', {
     allowNull: false,
     unique: true
   },
+  email_hash: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
   password: {
     type: DataTypes.STRING,
     required: true
