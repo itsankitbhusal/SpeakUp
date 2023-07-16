@@ -4,10 +4,16 @@ import { BASE_URL } from '../constants/constant';
 
 const getNewAccessToken = async () => {
   const refreshToken = localStorage.getItem('refresh');
-  if (refreshToken === undefined || refreshToken === null || refreshToken === '') {
+  if (
+    refreshToken === undefined ||
+    refreshToken === null ||
+    refreshToken === ''
+  ) {
     return;
   }
-  const response = await axios.get(`${ BASE_URL }/auth/token`, { headers: { 'refresh': refreshToken } });
+  const response = await axios.get(`${ BASE_URL }/auth/token`, {
+    headers: { refresh: refreshToken }
+  });
   const newAccessToken = await response.data.data.accessToken;
   localStorage.setItem('access', newAccessToken);
   return newAccessToken;
@@ -21,39 +27,57 @@ const api = axios.create({
 });
 
 // axios interceptor to to get new access token when it expires and error 401
-api.interceptors.request.use(async config => {
-  // check if its login or register route
-  if (config.url === '/auth/login' || config.url === '/auth/register') {
+api.interceptors.request.use(
+  async config => {
+    // check if its login or register route
+    if (config.url === '/auth/login' || config.url === '/auth/register') {
+      return config;
+    }
+
+    if (
+      config.url.includes('/auth/reset/') ||
+      config.url.includes('/auth/verify/')
+    ) {
+      return config;
+    }
+
+    const accessToken = localStorage.getItem('access');
+    const refreshToken = localStorage.getItem('refresh');
+    if (!accessToken && !refreshToken) {
+      throw new Error('No token found');
+    }
+    config.headers['refresh'] = refreshToken;
+    if (
+      accessToken === undefined ||
+      accessToken === null ||
+      accessToken === ''
+    ) {
+      localStorage.removeItem('access');
+      return config;
+    }
+    const decoded = decode(accessToken);
+    if (decoded.exp < Date.now() / 1000) {
+      const newAccessToken = await getNewAccessToken();
+      config.headers['authorization'] = `Bearer ${ newAccessToken }`;
+    } else {
+      config.headers['authorization'] = `Bearer ${ accessToken }`;
+    }
     return config;
+  },
+  error => Promise.reject(error)
+);
+api.interceptors.response.use(
+  response => response,
+  async error => {
+    if (error?.response?.status === 401) {
+      const newAccessToken = await getNewAccessToken();
+      const { config } = error;
+      config.headers['authorization'] = `Bearer ${ newAccessToken }`;
+      return await axios.request(config);
+    } else {
+      return Promise.reject(error);
+    }
   }
-  const accessToken = localStorage.getItem('access');
-  const refreshToken = localStorage.getItem('refresh');
-  if (!accessToken && !refreshToken) {
-    throw new Error('No token found');
-  }
-  config.headers['refresh'] = refreshToken;
-  if (accessToken === undefined || accessToken === null || accessToken === '') {
-    localStorage.removeItem('access');
-    return config;
-  }
-  const decoded = decode(accessToken);
-  if (decoded.exp < Date.now() / 1000) {
-    const newAccessToken = await getNewAccessToken();
-    config.headers['authorization'] = `Bearer ${ newAccessToken }`;
-  } else {
-    config.headers['authorization'] = `Bearer ${ accessToken }`;
-  }
-  return config;
-}, error => Promise.reject(error));
-api.interceptors.response.use(response => response, async error => {
-  if (error?.response?.status === 401) {
-    const newAccessToken = await getNewAccessToken();
-    const { config } = error;
-    config.headers['authorization'] = `Bearer ${ newAccessToken }`;
-    return await axios.request(config);
-  } else {
-    return Promise.reject(error);
-  }
-});
+);
 
 export default api;

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import FormField from '../molecules/FormField';
@@ -5,8 +6,11 @@ import Button from '../atoms/Button';
 import { showToast } from '../../utils/toast';
 import { loginValidationSchema } from '../../validationSchemas/loginValidationSchema';
 import { login } from '../../services/auth';
+import ForgetPasswordModal from '../molecules/ForgetPasswordModal';
 
 const LoginFields = () => {
+  const [forgetPassword, setForgetPassword] = useState(false);
+
   const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
@@ -39,47 +43,61 @@ const LoginFields = () => {
       }
     }
   });
+
+  const handleForgetPassword = () => {
+    setForgetPassword(true);
+  };
   return (
-    <form onSubmit={formik.handleSubmit}>
-      <div className=" grid place-items-center gap-4 ">
-        <FormField
-          id="handle"
-          type="text"
-          placeholder="Enter handle"
-          label="Handle"
-          {...formik.getFieldProps('handle')}
-          error={formik.touched.handle && formik.errors.handle}
-        />
-        <FormField
-          id="password"
-          type="password"
-          placeholder="Enter password"
-          label="Password"
-          {...formik.getFieldProps('password')}
-          error={formik.touched.password && formik.errors.password}
-        />
+    <>
+      <form onSubmit={formik.handleSubmit}>
+        <div className=" grid place-items-center gap-4 ">
+          <FormField
+            id="handle"
+            type="text"
+            placeholder="Enter handle"
+            label="Handle"
+            {...formik.getFieldProps('handle')}
+            error={formik.touched.handle && formik.errors.handle}
+          />
+          <FormField
+            id="password"
+            type="password"
+            placeholder="Enter password"
+            label="Password"
+            {...formik.getFieldProps('password')}
+            error={formik.touched.password && formik.errors.password}
+          />
       
-        <div className=" mt-4 mb-8 w-full flex justify-end">
-          <div className='w-full flex flex-col items-end'>
-            <Button type="submit" variant="primary" className=" w-full py-3">
+          <div className=" mt-4 mb-8 w-full flex justify-end">
+            <div className='w-full flex flex-col items-end'>
+              <Button type="submit" variant="primary" className=" w-full py-3">
             Login
-            </Button>
-            <div className="w-full flex text-md justify-end mt-3">
-              <Link to="/register" className="text-primary hover:underline">
+              </Button>
+              <div className="w-full flex text-md justify-end mt-3">
+                <Link to="/register" className="text-primary hover:underline">
          Don't have an account? <span className=' font-semibold'>Register here</span>
-              </Link>
+                </Link>
+              </div>
+              <div className="w-full flex text-md justify-end mt-0">
+                <span onClick={handleForgetPassword} className='text-primary hover:underline hover:cursor-pointer'>Forget password?</span>
+              </div>
+              {/* guest login */}
+              <span className=' mt-4'>
+                <Button variant='outline-secondary' className="cursor-pointer" onClick={() => {
+                  formik.setFieldValue('handle', 'guest');
+                  formik.setFieldValue('password', 'guest123');
+                }}>Guest Login</Button>
+              </span>
             </div>
-            {/* guest login */}
-            <span className=' mt-4'>
-              <Button variant='outline-secondary' className="cursor-pointer" onClick={() => {
-                formik.setFieldValue('handle', 'guest');
-                formik.setFieldValue('password', 'guest123');
-              }}>Guest Login</Button>
-            </span>
           </div>
         </div>
-      </div>
-    </form>
+      </form>
+      {/* forget password modal */}
+      {forgetPassword && (
+        <ForgetPasswordModal setForgetPassword={setForgetPassword} />
+      )}
+      
+    </>
   );
 };
 
