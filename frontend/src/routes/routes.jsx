@@ -5,6 +5,9 @@ import Login from '../ui/pages/Login';
 import NotFound from '../ui/pages/NotFound';
 import Register from '../ui/pages/Register';
 
+import Verify from '../ui/pages/Verify';
+import Reset from '../ui/pages/Reset';
+
 import Dashboard from '../Dashboard/Dashboard';
 import Users from '../Dashboard/Pages/Users';
 import Confession from '../Dashboard/Pages/Confession';
@@ -53,6 +56,14 @@ const routes = [
   {
     path: '/tag/:tag',
     element: <Tag />
+  },
+  {
+    path: '/verify/:token',
+    element: <Verify />
+  },
+  {
+    path: '/reset/:token',
+    element: <Reset />
   },
   {
     path: '/dashboard',
