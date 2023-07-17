@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Heading from '../atoms/Heading';
 import FormField from '../molecules/FormField';
 import Button from '../atoms/Button';
@@ -7,6 +7,7 @@ import { showToast } from '../../utils/toast';
 import { resetPassword } from '../../services/emails';
 
 const Reset = () => {
+  const navigate = useNavigate();
   const { token } = useParams();
   const [formData, setFormData] = useState({
     password: '',
@@ -27,12 +28,19 @@ const Reset = () => {
       showToast('Password and confirm password should be same', 'error');
       return;
     }
-    console.log(formData);
 
     // call api to reset password
     try {
-      const response = await resetPassword(token, formData.password);
-      console.log(response);
+      const response = await resetPassword(token, { password: formData.password });
+      if (response?.success) {
+        const { accessToken, refreshToken } = response.data;
+        showToast('Password reset successfully', 'success');
+        localStorage.setItem('access', accessToken);
+        localStorage.setItem('refresh', refreshToken);
+        navigate('/');
+      } else {
+        showToast('Password reset failed', 'error');
+      }
     } catch (error) {
       console.error(error);
     }
@@ -47,7 +55,7 @@ const Reset = () => {
           <form onSubmit={handleSubmit} className='w-full max-w-sm my-8'>
             <div className='flex items-center mb-6'>
               <div className='w-full grid gap-4'>
-                <FormField id="password" onChange={handleChange} label='Password' type='password' placeholder="Enter new password" name="password" />
+                <FormField id="password" onChange={handleChange} label='New Password' type='password' placeholder="Enter new password" name="password" />
                 <FormField id="cpassword" onChange={handleChange} label='Confirm Password' type='password' placeholder="Enter confirm password" name="cpassword" />
                 <Button className="mt-4" variant="primary" type='submit'>Reset Password</Button>
               </div>
