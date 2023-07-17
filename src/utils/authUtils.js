@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import  jwt  from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
 import message from './message.js';
 
@@ -9,7 +9,7 @@ const signEmailVerificationToken = (handle, email) => jwt.sign({ handle, email }
 });
 
 // sign access token
-const signAccessToken = (id, handle, role='user') => jwt.sign({ id, handle, role }, process.env.JWT_SECRET_ACCESS, {
+const signAccessToken = (id, handle, role = 'user', is_verified) => jwt.sign({ id, handle, role, is_verified }, process.env.JWT_SECRET_ACCESS, {
   expiresIn: '15min'
 });
 
@@ -18,10 +18,27 @@ const signRefreshToken = handle => jwt.sign({ handle }, process.env.JWT_SECRET_R
   expiresIn: '7d'
 });
 
+// sign reset password token
+const signResetPasswordToken = (id, handle, email) => jwt.sign({ id, handle, email }, process.env.JWT_SECRET, {
+  expiresIn: '1d'
+});
+
 // send mail
-const sendMail = async(email, token) => {
-  const port = process.env.PORT || 3000;
-  const host = process.env.URL || 'http://localhost';
+const sendMail = async (email, token, job) => {
+  const frontendURL = process.env.FRONTEND_URL;
+  if (job === '' || job === null || job === undefined) {
+    return;
+  }
+  let emailMessage;
+  let subject;
+  if (job === 'verification') {
+    emailMessage = `<p>Click <a target="_blank" href="${ frontendURL }/verify/${ token }">here</a> to verify your account</p>`;
+    subject = 'Verify your email';
+  }
+  if (job === 'rest') {
+    emailMessage = `<p>Click <a target="_blank" href="${ frontendURL }/reset/${ token }">here</a> to reset your password</p>`;
+    subject = 'Reset your password';
+  }
   // verify user using nodemailer and send verification link and jwt token
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -37,8 +54,8 @@ const sendMail = async(email, token) => {
   const mailOptions = {
     from: process.env.EMAIL,
     to: email,
-    subject: 'Verify your email',
-    html: `<p>Click <a href="${ host }:${ port }/auth/verify/${ token }">here</a> to verify your email</p>`
+    subject: `${ subject }`,
+    html: `${ emailMessage }`
   };
 
   try {
@@ -47,7 +64,6 @@ const sendMail = async(email, token) => {
   } catch (error) {
     throw new Error('Error sending email');
   }
-
 };
 
-export { signEmailVerificationToken, signAccessToken, signRefreshToken, sendMail };
+export { signEmailVerificationToken, signAccessToken, signRefreshToken, sendMail, signResetPasswordToken };

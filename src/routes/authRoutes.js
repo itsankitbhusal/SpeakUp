@@ -6,8 +6,11 @@ const router = Router();
 const authController = new AuthController();
 router.post('/register', authController.addUser);
 router.get('/verify/:token', authController.emailVerification);
+router.post('/reset', authController.resetPassword);
+router.post('/reset/:token', authController.resetVerification);
 router.post('/login', authController.loginUser);
 router.get('/token', authController.getNewAccessToken);
+router.post('/forget', authController.resetPassword);
 
 router.get('/users', middlewares.verifyAccessToken,middlewares.verifyRefreshToken, authController.getAllUsers);
 router.put('/:id/admin', middlewares.verifyAccessToken,middlewares.verifyRefreshToken, authController.upgradeToAdmin);
