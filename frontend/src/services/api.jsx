@@ -34,13 +34,6 @@ api.interceptors.request.use(
       return config;
     }
 
-    if (
-      config.url.includes('/auth/reset/') ||
-      config.url.includes('/auth/verify/')
-    ) {
-      return config;
-    }
-
     const accessToken = localStorage.getItem('access');
     const refreshToken = localStorage.getItem('refresh');
     if (!accessToken && !refreshToken) {
