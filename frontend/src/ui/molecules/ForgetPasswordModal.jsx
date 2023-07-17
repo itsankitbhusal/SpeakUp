@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { GrClose } from 'react-icons/gr';
 import Button from '../atoms/Button';
 import FormField from './FormField';
+import { sendResetPasswordEmail } from '../../services/emails';
+import { showToast } from '../../utils/toast';
 
 const ForgetPasswordModal = ({ setForgetPassword }) => {
   const [formData, setFormData] = useState({
@@ -14,9 +16,16 @@ const ForgetPasswordModal = ({ setForgetPassword }) => {
       [e.target.id]: e.target.value
     });
   };
-  const handleForgetSubmit = e => {
+  const handleForgetSubmit = async e => {
     e.preventDefault();
-    console.log(formData);
+    // make api call to send email if handle and email are valid
+    const response = await sendResetPasswordEmail(formData);
+    if (response?.success) {
+      showToast('Password rest email sent successfully', 'success');
+      setForgetPassword(false);
+    } else {
+      showToast('Enter the email that was used to create this account', 'error');
+    }
   };
   return(
     <>
