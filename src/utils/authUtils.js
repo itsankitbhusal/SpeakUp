@@ -30,11 +30,14 @@ const sendMail = async (email, token, job) => {
     return;
   }
   let emailMessage;
+  let subject;
   if (job === 'verification') {
-    emailMessage = `<p>Click <a href="${ frontendURL }/verify/${ token }">here</a>${ emailMessage }</p>`;
+    emailMessage = `<p>Click <a target="_blank" href="${ frontendURL }/verify/${ token }">here</a> to verify your account</p>`;
+    subject = 'Verify your email';
   }
   if (job === 'rest') {
-    emailMessage = `<p>Click <a href="${ frontendURL }/reset/${ token }">here</a>${ emailMessage }</p>`;
+    emailMessage = `<p>Click <a target="_blank" href="${ frontendURL }/reset/${ token }">here</a> to reset your password</p>`;
+    subject = 'Reset your password';
   }
   // verify user using nodemailer and send verification link and jwt token
   const transporter = nodemailer.createTransport({
@@ -51,8 +54,8 @@ const sendMail = async (email, token, job) => {
   const mailOptions = {
     from: process.env.EMAIL,
     to: email,
-    subject: 'Verify your email',
-    html: `<p>Click <a href="${ host }:${ port }/auth/verify/${ token }">here</a>${ emailMessage }</p>`
+    subject: `${ subject }`,
+    html: `${ emailMessage }`
   };
 
   try {

@@ -62,7 +62,7 @@ class AuthController {
 
   // verify created user with email and insert in emails table
   resetVerification = async (req, res) => {
-    const { token } = req.query;
+    const { token } = req.params;
     const { password } = req.body;
     if (!token) {
       return res.send(message.error('Token not provided'));
@@ -88,8 +88,10 @@ class AuthController {
       }
 
       // verify user in users table
-      await models.users.update({ is_verified: true }, { where: { handle } });
-
+      if (foundUser.is_verified === false) {
+        await models.users.update({ is_verified: true }, { where: { handle } });
+      }
+      
       // update password in users table
       const passwordHash = await bcrypt.hash(password, 10);
       await models.users.update({ password: passwordHash }, { where: { handle } });
@@ -111,7 +113,7 @@ class AuthController {
   };
   // also set is_verified to true in users and emails table
   emailVerification = async (req, res) => {
-    const { token } = req.query;
+    const { token } = req.params;
     // console.log(token);
     if (!token) {
       return res.send(message.error('Token not provided'));
@@ -229,7 +231,11 @@ class AuthController {
 
       // send email verification link
       if (token) {
-        sendMail(email,token, 'rest' );
+        if (sendMail(email, token, 'rest')) {
+          res.send(message.success('Email sent'));
+        } else {
+          res.send(message.error('Something went wrong'));
+        }
       }
     } catch (error) {
       res.send(message.error(error));
@@ -460,30 +466,6 @@ class AuthController {
     }
   };
 
-  // reset password
-  resetPassword = async(req, res) => {
-    const { handle, role } = req.user;
-    const { oldPassword, newPassword } = req.body;
-    if (!handle || !role) {
-      res.send(message.error('Not authorized'));
-    }
-    if (!oldPassword || !newPassword) {
-      res.send(message.error('Please provide password to change')); 
-    }
-    try {
-      const foundUser = await models.users.findOne({ where: { handle } }); 
-      const isPasswordMatched = await bcrypt.compare(oldPassword, foundUser.password);
-      if (!isPasswordMatched) {
-        return res.send(message.error('Password didn\'t match'));
-      } else {
-        const passwordHash = await bcrypt.hash(newPassword, 10);
-        await models.users.update({ password: passwordHash }, { where: { handle } });
-        return res.send(message.success('Password changed'));
-      }
-    } catch (error) {
-      return res.send(message.error(error.message));
-    }
-  };
   // upgrade user to admin
   upgradeToAdmin = async (req, res) => {
     const { id } = req.params;
