@@ -49,6 +49,11 @@ class AuthController {
       delete createdUser.dataValues.password;
 
       if (createdUser) {
+        // send notification to user that email verification is pending
+        await models.notifications.create({
+          user_id: createdUser.id,
+          message: 'Please verify your email to get full access'
+        });
         return res.send(message.success({
           user: createdUser,
           refreshToken
@@ -117,13 +122,7 @@ class AuthController {
     // console.log(token);
     if (!token) {
       return res.send(message.error('Token not provided'));
-    }
-    // update user in users table if email is verified
-    const updateUser = async handle => {
-      // verify user in users table
-      await models.users.update({ is_verified: true }, { where: { handle } });
-      return message.success('User verified');
-    };
+    }    
     try {
       // check token validity and verify user
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -133,14 +132,18 @@ class AuthController {
       const { handle, email } = decoded;
       const foundEmail = await models.emails.findOne({ where: { email } });
 
+      const foundUser = await models.users.findOne({ where: { handle } });
+
       if (!foundEmail) {
-        await models.emails.create({ email, is_verified: true });
-        await updateUser(handle);
-        return res.send(message.success('User verified'));
+        return res.send(message.error('Something went wrong'));
       }
-      else if (foundEmail && !foundEmail.is_verified) {
-        await models.emails.update({ is_verified: true }, { where: { email } });
-        await updateUser(handle);
+      if (foundEmail) {
+        if (foundEmail.is_verified === true) {
+          return res.send(message.error('Email already verified'));
+        }
+        await models.users.update({ is_verified: true }, { where: { handle } });
+        // remove the notification from notifications table
+        await models.notifications.destroy({ where: { user_id: foundUser.id } });
         return res.send(message.success('User verified'));
       }
       else {

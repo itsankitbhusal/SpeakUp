@@ -1,17 +1,24 @@
 import { useState, useContext } from 'react';
+import { NavbarContext } from '../../context/NavbarContext';
 import { ModalContext } from '../../context/ModalContext';
 import CreateConfession from '../atoms/CreateConfession';
 import CreateConfessionModal from './CreateConfessionModal';
+import { showToast } from '../../utils/toast';
 
 
 const WriteConfession = () => {
   const { showModal, OpenModal } = useContext(ModalContext);
+  const { isVerifiedUser } = useContext(NavbarContext);
   const [preserveData, setPreserveData] = useState({
     title: '',
     body: ''
   });
   
   const handleCreateConfessionClick = () => {
+    if (!isVerifiedUser) {
+      showToast('Please verify account to create confession', 'error');
+      return;
+    }
     OpenModal();
   };
   return (

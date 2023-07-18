@@ -8,16 +8,20 @@ import { useContext, useEffect, useState } from 'react';
 import { NavbarContext } from '../../context/NavbarContext';
 import { searchConfessionByTitle } from '../../services/confessions';
 import { ConfessionContext } from '../../context/ConfessionContext';
-
+import { showToast } from '../../utils/toast';
 
 const Header = () => {
   const [search, setSearch] = useState('');
   const [searchModal, setSearchModal] = useState(false);
   const [searchedConfession, setSearchedConfession] = useState([]);
-  const { handleSidebar } = useContext(NavbarContext);
+  const { handleSidebar, isVerifiedUser } = useContext(NavbarContext);
   const { setConfessions } = useContext(ConfessionContext);
 
   const handleSearchChange = async e => {
+    if (!isVerifiedUser) {
+      showToast('Please verify account to search', 'error');
+      return;
+    }
     setSearch(e.target.value);
     if (e.target.value.length > 3) {
       setSearchModal(true);
@@ -28,10 +32,10 @@ const Header = () => {
     }
   };
 
-  const getSearchResults = async title => { 
+  const getSearchResults = async title => {
     const response = await searchConfessionByTitle(title, 10, 1);
     const { data } = await response;
-    if (response.success ) {
+    if (response.success) {
       return data;
     }
   };
@@ -39,19 +43,21 @@ const Header = () => {
   // trim confession body to 300 chars
   const trimBody = body => {
     if (body.length > 200) {
-      return `${ body.slice(0, 200)  }...`;
+      return `${ body.slice(0, 200) }...`;
     }
     return body;
   };
 
   // handle confession click
-  const handleConfessionClick = async confession => { 
+  const handleConfessionClick = async confession => {
     setSearchModal(false);
     setSearch('');
 
     // set confessions to searched confession
     setConfessions(prevConfessions => {
-      const newConfessions = prevConfessions.filter(conf => conf.id !== confession.id);
+      const newConfessions = prevConfessions.filter(
+        conf => conf.id !== confession.id
+      );
       return [confession, ...newConfessions];
     });
   };
@@ -66,58 +72,76 @@ const Header = () => {
 
   return (
     <>
-      <header className='grid place-items-center'>
-        <div className='flex w-[95vw] sm:w-[80vw] lg:w-[60vw] justify-between gap-0 md:gap-4 outline rounded-sm outline-primary outline-[1.5px] my-4'>
-          <div className='flex items-center '>
-            <div className='max-w-[100px] sm:max-w-[150px] sm:max-h-[48px] ml-2 flex gap-2 justify-center items-center'>
+      <header className="grid place-items-center">
+        <div className="flex w-[95vw] sm:w-[80vw] lg:w-[60vw] justify-between gap-0 md:gap-4 outline rounded-sm outline-primary outline-[1.5px] my-4">
+          <div className="flex items-center ">
+            <div className="max-w-[100px] sm:max-w-[150px] sm:max-h-[48px] ml-2 flex gap-2 justify-center items-center">
               <Logo />
             </div>
           </div>
-          <Input value={search} onChange={handleSearchChange} placeholder="Search..." className={'bg-inherit outline-none border-none w-[28vw] sm:w-[32vw] '} />
-          <Button onClick={handleSidebar} className="text-primary text-base sm:text-xl lg:hidden ">
+          <Input
+            value={search}
+            onChange={handleSearchChange}
+            placeholder="Search..."
+            className={
+              'bg-inherit outline-none border-none w-[28vw] sm:w-[32vw] '
+            }
+          />
+          <Button
+            onClick={handleSidebar}
+            className="text-primary text-base sm:text-xl lg:hidden "
+          >
             <GiHamburgerMenu />
           </Button>
-          <div className='sm:min-w-0 xl:min-w-[150px] transition-all hidden lg:block'>
-            <Button className="w-full h-full flex rounded-l-none text-2xl"><RxMagnifyingGlass /></Button>
+          <div className="sm:min-w-0 xl:min-w-[150px] transition-all hidden lg:block">
+            <Button className="w-full h-full flex rounded-l-none text-2xl">
+              <RxMagnifyingGlass />
+            </Button>
           </div>
         </div>
       </header>
-      <div className=' grid place-items-center'>
+      <div className=" grid place-items-center">
         {searchModal && (
-          <div className='relative w-full sm:max-w-[80vw] h-screen bg-transparent bg-opacity-95 mx-4 lg:ml-24 grid place-items-center '>
-            <div className='absolute top-0 right-8 sm:right-0 shadow-lg lg:mr-20 bg-white z-10'>
-              <spa8 onClick={() => {
-                setSearchModal(false);
-                setSearch('');
-              }} className=' hover:bg-primary hover:text-white text-primary rounded-sm outline outline-1 outline-primary hover:cursor-pointer h-8 w-8 grid place-items-center'>
+          <div className="relative w-full sm:max-w-[80vw] h-screen bg-transparent bg-opacity-95 mx-4 lg:ml-24 grid place-items-center ">
+            <div className="absolute top-0 right-8 sm:right-0 shadow-lg lg:mr-20 bg-white z-10">
+              <span
+                onClick={() => {
+                  setSearchModal(false);
+                  setSearch('');
+                }}
+                className=" hover:bg-primary hover:text-white text-primary rounded-sm outline outline-1 outline-primary hover:cursor-pointer h-8 w-8 grid place-items-center"
+              >
                 <GrClose />
-              </spa8>
+              </span>
             </div>
-            <div className='absolute w-full flex justify-end right-0 overflow-y-auto lg:mr-20 lg:w-[45vw] h-full rounded-sm shadow-md'>
-              <div className=' relative'>
-                <div className=' max-w-full'>
+            <div className="absolute w-full flex justify-end right-0 overflow-y-auto lg:mr-20 lg:w-[45vw] h-full rounded-sm shadow-md">
+              <div className=" relative">
+                <div className=" max-w-full">
                   {searchedConfession?.map(confession => (
-                    <div onClick={() => handleConfessionClick(confession)} key={confession.id} className='grid p-2 hover:bg-gray-200 hover:cursor-pointer'>
-                      <h3 className='text-md font-semibold'>{confession.title}</h3>
-                      <p className='text-sm'>{trimBody(confession.body)}</p>
+                    <div
+                      onClick={() => handleConfessionClick(confession)}
+                      key={confession.id}
+                      className="grid p-2 hover:bg-gray-200 hover:cursor-pointer"
+                    >
+                      <h3 className="text-md font-semibold">
+                        {confession.title}
+                      </h3>
+                      <p className="text-sm">{trimBody(confession.body)}</p>
                     </div>
-                  ))
-                  }
-                  {
-                    searchedConfession.length === 0 && (
-                      <div className='grid place-items-center h-full'>
-                        <h3 className='text-md font-semibold'>No results found</h3>
-                      </div>
-                    )
-                  }
+                  ))}
+                  {searchedConfession.length === 0 && (
+                    <div className="grid w-screen place-items-center h-full">
+                      <h3 className="text-md font-semibold">
+                        No results found
+                      </h3>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
-          
           </div>
         )}
       </div>
-        
     </>
   );
 };

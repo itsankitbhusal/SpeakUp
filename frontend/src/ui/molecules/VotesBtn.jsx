@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { GoTriangleDown, GoTriangleUp } from 'react-icons/go';
+import { NavbarContext } from '../../context/NavbarContext';
 import {
   createUpvote,
   createDownvote,
@@ -20,8 +21,11 @@ import {
   getVotesByCommentIdAndUserIdComment,
   getVotesComment
 } from '../../services/commentVotes';
+import { showToast } from '../../utils/toast';
 
 const VotesBtn = ({ className, small, confessionId, commentId }) => {
+  const { isVerifiedUser } = useContext(NavbarContext);
+
   const [votes, setVotes] = useState({
     upvotes: 0,
     downvotes: 0,
@@ -53,7 +57,6 @@ const VotesBtn = ({ className, small, confessionId, commentId }) => {
       }
     }
   };
-  
 
   useEffect(() => {
     if (confessionId) {
@@ -66,6 +69,10 @@ const VotesBtn = ({ className, small, confessionId, commentId }) => {
   }, [confessionId, commentId]);
 
   const handleUpvote = async () => {
+    if (!isVerifiedUser) {
+      showToast('Please verify your email to vote', 'error');
+      return;
+    }
     if (confessionId) {
       // Confession vote
       if (hasUpvoted) {
@@ -146,6 +153,10 @@ const VotesBtn = ({ className, small, confessionId, commentId }) => {
   };
 
   const handleDownvote = async () => {
+    if (!isVerifiedUser) {
+      showToast('Please verify your email to vote', 'error');
+      return;
+    }
     if (confessionId) {
       // Confession vote
       if (hasDownvoted) {
