@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import decode from 'jwt-decode';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AiFillEye, AiOutlineEdit, AiOutlineDelete } from 'react-icons/ai';
 import { MdOutlineReportProblem } from 'react-icons/md';
 import { FcApproval } from 'react-icons/fc';
@@ -11,6 +11,7 @@ import { deleteConfession } from '../../services/confessions';
 import { deleteCommentById } from '../../services/comments';
 import { createReport } from '../../services/report';
 import { showToast } from '../../utils/toast';
+import { NavbarContext } from '../../context/NavbarContext';
 
 const UserDetail = ({ handle, date, views, isApproved, isProfile, confessionId, commentId, isComment }) => {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ const UserDetail = ({ handle, date, views, isApproved, isProfile, confessionId, 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [reportMessage, setReportMessage] = useState('');
   
+  const { isVerifiedUser } = useContext(NavbarContext);
 
   useEffect(() => {
     const token = localStorage.getItem('access');
@@ -107,6 +109,16 @@ const UserDetail = ({ handle, date, views, isApproved, isProfile, confessionId, 
     navigate(`/edit/${ confessionId }`);
   };
 
+  const handleUserHandleClick = () => {
+    if (!isVerifiedUser) {
+      showToast('Please verify your email to view profile', 'error');
+      return;
+    }
+    if (!isUser) {
+      navigate(`/profile/${ handle }`);
+    }
+  };
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       setIsMenuOpen(false);
@@ -120,13 +132,9 @@ const UserDetail = ({ handle, date, views, isApproved, isProfile, confessionId, 
   return(
     <div className='flex justify-between items-center w-full'>
       <div className=' flex justify-between items-center gap-1 text-md'>
-        {!isUser ? (
-          <Link to={`/profile/${ handle }`}>
-            <Text className="text-md transition-all hover:cursor-pointer hover:underline">{handle}</Text>
-          </Link>
-        ) : (
+        <div onClick={handleUserHandleClick} >
           <Text className="text-md transition-all hover:cursor-pointer hover:underline">{handle}</Text>
-        )}
+        </div>
 
         <div className=' w-1 h-1 bg-secondary rounded-full my-2'></div>
         <Text className="text-md">{date}</Text>
