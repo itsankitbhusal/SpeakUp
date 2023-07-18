@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import UserDetail from '../molecules/UserDetail';
 import Heading from '../atoms/Heading';
@@ -9,8 +9,12 @@ import ReactMarkdown from 'react-markdown';
 import WriteComment from './WriteComment';
 import CommentList from '../organisms/CommentList';
 import { CommentProvider } from '../../context/CommentContext';
+import { NavbarContext } from '../../context/NavbarContext';
+import { showToast } from '../../utils/toast';
 
 const ConfessionPost = ({ handle, date, views, title, body, confessionId, isApproved, isProfile }) => {
+  const { isVerifiedUser } = useContext(NavbarContext);
+
   const [showFullConfession, setShowFullConfession] = useState(false);
   const [showComments, setShowComments] = useState(false);
 
@@ -33,6 +37,10 @@ const ConfessionPost = ({ handle, date, views, title, body, confessionId, isAppr
   const trimmedBody = trimBody(confessionBody);
 
   const handleCommentClick = () => {
+    if (!isVerifiedUser) {
+      showToast('Please verify account to comment', 'error');
+      return;
+    }
     setShowComments(!showComments);
   };
 
@@ -69,7 +77,7 @@ const ConfessionPost = ({ handle, date, views, title, body, confessionId, isAppr
           </ReactMarkdown>
           {!showFullConfession && trimmedBody.endsWith('...') && (
             <span onClick={toggleContent} className="ml-2 w-full flex justify-end -mt-6 font-semibold cursor-pointer ">
-              <span className='pl-2 bg-inherit'>See more</span>
+              <span className='px-2 bg-cwhite'>See more</span>
             </span>
           )}
           <CommentProvider>
