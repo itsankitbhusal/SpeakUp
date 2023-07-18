@@ -7,7 +7,7 @@ import { createConfession } from '../../services/confessions';
 import { showToast } from '../../utils/toast';
 import { useFormik } from 'formik';
 import { createConfessionValidationSchema } from '../../validationSchemas/createConfessionValidationSchema';
-
+import { NavbarContext } from '../../context/NavbarContext';
 import FormField from '../molecules/FormField';
 import { searchTags } from '../../services/tags';
 
@@ -16,6 +16,7 @@ import defaultStyle from './defaultStyle';
 const CreateConfessionModal = ({ preserveData, setPreserveData }) => {
   // context data to close modal
   const { CloseModal } = useContext(ModalContext);
+  const { isVerifiedUser } = useContext(NavbarContext);
 
   const searchTagDatas = async (query, callback) => {
     if (!query) { return; }
@@ -43,8 +44,12 @@ const CreateConfessionModal = ({ preserveData, setPreserveData }) => {
 
   // on submit function to handle form submission
   const onSubmit = async (values, { resetForm }) => {
-    // console.log(values);
-    // return;
+    if (!isVerifiedUser) {
+      showToast('You need to verify your email to write a confession', 'error');
+      resetForm({ values: initialValues });
+      CloseModal();
+      return;
+    }
     const response = await createConfession(values);
     if (response.success) {
       resetForm({ values: initialValues });
