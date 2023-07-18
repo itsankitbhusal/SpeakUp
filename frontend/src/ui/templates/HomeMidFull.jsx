@@ -2,6 +2,7 @@ import { useContext, useEffect, useRef } from 'react';
 import Text from '../atoms/Text';
 import { ModalProvider } from '../../context/ModalContext';
 import { ConfessionContext } from '../../context/ConfessionContext';
+import { NavbarContext } from '../../context/NavbarContext';
 import Confession from '../organisms/Confession';
 import WriteConfession from '../organisms/WriteConfession';
 import { dateConverter } from '../../utils/dateConverter';
@@ -11,11 +12,15 @@ const HomeMidFull = () => {
   const bottom = useRef(null);
   const confessionRef = useRef(null);
   const { confessions, setPage, isLoading, hasMore } = useContext(ConfessionContext);
+  const { isVerifiedUser } = useContext(NavbarContext);
   
   // handle observer
   const handleObserver = entries => {
     const target = entries[0];
     if (target.isIntersecting && hasMore) {
+      if (!isVerifiedUser) {
+        return;
+      }
       setPage(prevPage => prevPage + 1);
     }
   };
@@ -52,13 +57,21 @@ const HomeMidFull = () => {
             body={confession.body}
           />
         ))}
+        {!isVerifiedUser && 
+          (
+            <div className='grid place-items-center'>
+              <Text className="text-center text-gray-400 font-bold text-base">You need to verify your email to view more confession</Text>
+            </div>
+          )
+        }
+        
         {isLoading && (
           <div className="flex justify-center w-full">
             <Loading />
           </div>
         )}
         <div ref={bottom} className='my-8' >
-          <Text className="text-center text-gray-400">{ !isLoading && 'End of page'}</Text>
+          <Text className="text-center text-gray-400">{ !isLoading && isVerifiedUser && 'End of page.'}</Text>
         </div>
       </div>
     </div>
