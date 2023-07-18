@@ -8,16 +8,21 @@ import { useContext, useEffect, useState } from 'react';
 import { NavbarContext } from '../../context/NavbarContext';
 import { searchConfessionByTitle } from '../../services/confessions';
 import { ConfessionContext } from '../../context/ConfessionContext';
+import { showToast } from '../../utils/toast';
 
 
 const Header = () => {
   const [search, setSearch] = useState('');
   const [searchModal, setSearchModal] = useState(false);
   const [searchedConfession, setSearchedConfession] = useState([]);
-  const { handleSidebar } = useContext(NavbarContext);
+  const { handleSidebar, isVerifiedUser } = useContext(NavbarContext);
   const { setConfessions } = useContext(ConfessionContext);
 
   const handleSearchChange = async e => {
+    if (!isVerifiedUser) {
+      showToast('Please verify account to search', 'error');
+      return;
+    }
     setSearch(e.target.value);
     if (e.target.value.length > 3) {
       setSearchModal(true);
@@ -86,12 +91,12 @@ const Header = () => {
         {searchModal && (
           <div className='relative w-full sm:max-w-[80vw] h-screen bg-transparent bg-opacity-95 mx-4 lg:ml-24 grid place-items-center '>
             <div className='absolute top-0 right-8 sm:right-0 shadow-lg lg:mr-20 bg-white z-10'>
-              <spa8 onClick={() => {
+              <span onClick={() => {
                 setSearchModal(false);
                 setSearch('');
               }} className=' hover:bg-primary hover:text-white text-primary rounded-sm outline outline-1 outline-primary hover:cursor-pointer h-8 w-8 grid place-items-center'>
                 <GrClose />
-              </spa8>
+              </span>
             </div>
             <div className='absolute w-full flex justify-end right-0 overflow-y-auto lg:mr-20 lg:w-[45vw] h-full rounded-sm shadow-md'>
               <div className=' relative'>
@@ -105,7 +110,7 @@ const Header = () => {
                   }
                   {
                     searchedConfession.length === 0 && (
-                      <div className='grid place-items-center h-full'>
+                      <div className='grid w-screen place-items-center h-full'>
                         <h3 className='text-md font-semibold'>No results found</h3>
                       </div>
                     )
