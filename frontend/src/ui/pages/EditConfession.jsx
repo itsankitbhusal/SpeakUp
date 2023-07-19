@@ -81,6 +81,10 @@ const EditConfession = () => {
   
   const onSubmit = async values => {
     // update confession
+    if (values.body.length > 3000) {
+      showToast('Character limit of 3000 reached', 'error');
+      return;
+    }
     const response = await updateConfessionById(id, values);
     if (response.success) {
       showToast('Confession updated successfully', 'success');
@@ -134,7 +138,7 @@ const EditConfession = () => {
               error={formik?.errors?.body}
             />
           </div> */}
-          <div className='overflow-y-auto max-h-[60vh]'>
+          <div className='overflow-y-auto w-full h-full'>
             <label htmlFor="confessionBody" className='text-[.9rem] text-secondaryLight'>Confession Body</label>
             <MentionsInput
               id='confessionBody'

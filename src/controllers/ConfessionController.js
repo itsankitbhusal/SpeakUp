@@ -131,27 +131,36 @@ class ConfessionController {
     if (!confession) {
       return res.send(message.error('Confession not found!'));
     }
+    // check if confession has some change
     if (confession.title === title && confession.body === body) {
       return res.send(message.error('Nothing to update!'));
     }
+    // process hashtags
+    const tagsToCreate = [];
+    const confessionTagsToCreate = [];
+    for (let i = 0; i < hashtags.length; i++) {
+      const hashtag = hashtags[i];
+      const tagId = ids[i];
+      if (tagId) {
+        confessionTagsToCreate.push({ confession_id: id, tag_id: tagId });
+      } else {
+        let tag = await models.tags.findOne({ where: { name: hashtag } });
+        if (!tag) {
+          tag = await models.tags.create({ name: hashtag });
+        }
+        confessionTagsToCreate.push({ confession_id: id, tag_id: tag.id });
+      }
+    }
     try {
-      // update confession and set is_approved to false
+      // Create new tags if needed
+      if (tagsToCreate.length > 0) {
+        await models.tags.bulkCreate(tagsToCreate, { ignoreDuplicates: true });
+      }
+      // Link confession to tags
+      if (confessionTagsToCreate.length > 0) {
+        await models.confessionTags.bulkCreate(confessionTagsToCreate, { ignoreDuplicates: true });
+      }
       const updatedConfession = await models.confessions.update({ title, body: bodyToSave, is_approved: false, updated_at: new Date() }, { where: { id } });
-      // create hashtag
-      if (hashtags.length > 0) {
-        for(const hashtag of hashtags) {
-          await models.tags.findOrCreate({ where: { name: hashtag } });
-        }
-      }
-      // now add confession and hashtags to confession_tags table
-      const confessionId = id;
-      if (hashtags.length > 0) {
-        for (const hashtag of hashtags) {
-          const tag = await models.tags.findOne({ where: { name: hashtag } });
-          const tagId = tag.id;
-          await models.confessionTags.create({ confession_id: confessionId, tag_id: tagId });
-        }
-      }
       return res.send(message.success(updatedConfession));
     }
     catch (err) {
