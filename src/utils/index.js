@@ -1,7 +1,8 @@
 // export all from the utils folder
 import { signEmailVerificationToken, signAccessToken, signRefreshToken, sendMail } from './authUtils.js';
 import { sanitizeInput, extractHashtags, replaceHashtags } from './confessionUtils.js';
-import { commentMileStone, reportMessage } from './reportMessage.js';
+import { reportMessage } from './reportMessage.js';
+import { commentMileStone } from './commentMileStone.js';
 import message from './message.js';
 
 export {
