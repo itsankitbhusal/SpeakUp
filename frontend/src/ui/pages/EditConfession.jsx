@@ -5,13 +5,17 @@ import { useNavigate ,useParams, Link } from 'react-router-dom';
 import { showToast } from '../../utils/toast';
 import { getConfessionById, updateConfessionById } from '../../services/confessions';
 import { createConfessionValidationSchema } from '../../validationSchemas/createConfessionValidationSchema';
+import { Mention, MentionsInput } from 'react-mentions';
 import { MdArrowBackIos } from 'react-icons/md';
 import Button from '../atoms/Button';
 import Heading from '../atoms/Heading';
 import FormField from '../molecules/FormField';
+import  defaultStyle  from '../organisms/defaultStyle';
+import { searchTags } from '../../services/tags';
 
 const EditConfession = () => {
   const navigate = useNavigate();
+  const [handle, setHandle] = useState('');
   const [confession, setConfession] = useState(null);
   const [isConfessionLoaded, setIsConfessionLoaded] = useState(false);
   const [initialValues, setInitialValues] = useState({
@@ -20,6 +24,22 @@ const EditConfession = () => {
   });
 
   const { id } = useParams();
+
+  const searchTagDatas = async (query, callback) => {
+    if (!query) { return; }
+    
+    const response = await searchTags(query);
+    if (response.success) {
+      const suggestions = { id: query, display: query };
+      const tagArray = response.data.map(tag => ({
+        id: tag.id,
+        display: tag.name
+      }));
+      return callback([...tagArray, suggestions]);
+    } else {
+      callback([{ id: query, display: query }]);
+    }
+  };
 
   const getConfession = async () => {
     const response = await getConfessionById(id);
@@ -37,6 +57,10 @@ const EditConfession = () => {
   };
   useEffect(() => {
     getConfession();
+    const token = localStorage.getItem('access');
+    const decodedData = decode(token);
+
+    setHandle(decodedData?.handle);
   }, []);
   
   useEffect(() => {
@@ -76,7 +100,7 @@ const EditConfession = () => {
     <div className='relative grid place-items-center mx-[20vw] h-screen'>
       <form className='relative w-full' onSubmit={formik.handleSubmit}>
         <div className='absolute w-full inset-0 top-16 mt-1 z-0'>
-          <Link to="/profile">
+          <Link to={`/profile/${ handle }`}>
             <Button variant="ghost" ><MdArrowBackIos />Back</Button>
           </Link>
         </div>
@@ -96,7 +120,7 @@ const EditConfession = () => {
               error={formik?.errors?.title}
             />
           </div>
-          <div className=' w-full max-h-screen'>
+          {/* <div className=' w-full max-h-screen'>
             <FormField
               textArea
               big
@@ -109,6 +133,27 @@ const EditConfession = () => {
               className="w-full"
               error={formik?.errors?.body}
             />
+          </div> */}
+          <div className='overflow-y-auto max-h-[60vh]'>
+            <label htmlFor="confessionBody" className='text-[.9rem] text-secondaryLight'>Confession Body</label>
+            <MentionsInput
+              id='confessionBody'
+              value={formik.values.body}
+              name="body"
+              placeholder='Enter Confession Body'
+              onChange={e => {
+                formik.setFieldValue('body', e.target.value);
+              }}
+              style={defaultStyle}
+            >
+              <Mention
+                trigger="#"
+                data={searchTagDatas}
+                markup='#[__display__](__id__)'
+                className=' bg-accentLight'
+                appendSpaceOnAdd={true}
+              />
+            </MentionsInput>
           </div>
         </div>
         <div className='w-full my-8 grid place-items-center'>
