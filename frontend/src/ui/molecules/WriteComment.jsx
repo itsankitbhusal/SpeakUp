@@ -5,9 +5,12 @@ import { createComment } from '../../services/comments';
 import { showToast } from '../../utils/toast';
 import { useContext } from 'react';
 import { CommentContext } from '../../context/CommentContext';
+import { NavbarContext } from '../../context/NavbarContext';
 
 const WriteComment = ({ confessionId }) => {
   const { addComment } = useContext(CommentContext);
+  const { isVerifiedUser } = useContext(NavbarContext);
+
   const commentSchema = Yup.object().shape({
     body: Yup.string()
       .min(10, 'Too Short!')
@@ -20,6 +23,10 @@ const WriteComment = ({ confessionId }) => {
     },
     validationSchema: commentSchema,
     onSubmit: async values => {
+      if (!isVerifiedUser) {
+        showToast('Approve your account to comment', 'error');
+        return;
+      }
       // make api request to create comment
       if (values) {
         const response = await createComment(values, confessionId);
@@ -34,6 +41,10 @@ const WriteComment = ({ confessionId }) => {
     }
   });
   const handleKeyDown = e => {
+    if (!isVerifiedUser) {
+      showToast('Approve your account to comment', 'error');
+      return;
+    }
     if (e.key === 'Enter') {
       e.preventDefault();
       formik.handleSubmit();
