@@ -85,7 +85,7 @@ class CommentController {
     }
     try {
       const updatedComment = await models.comments.update(
-        { body },
+        { body, updated_at: new Date() },
         { where: { id } }
       );
       return res.send(message.success(updatedComment));

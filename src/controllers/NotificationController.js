@@ -108,7 +108,7 @@ class NotificationController{
       if (!foundNotification) {
         return res.send(message.error('Notification not found'));
       }
-      await models.notifications.update({ is_viewed: true }, {
+      await models.notifications.update({ is_viewed: true, updated_at: new Date() }, {
         where: { id: notificationId } 
       });
       return res.send(message.success('Notification updated successfully'));

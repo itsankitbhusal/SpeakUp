@@ -97,7 +97,7 @@ class ConfessionVoteController{
         return res.send(message.error('You have not voted for this confession.'));
       }
       const updatedConfessionVote = await models.confessionVotes.update({
-        vote_type: voteType
+        vote_type: voteType, updated_at: new Date()
       }, {
         where: { user_id: userId, confession_id: confessionId }
       });
@@ -135,7 +135,7 @@ class ConfessionVoteController{
         return res.send(message.error('You have already down voted for this confession.'));
       }
       const updatedConfessionVote = await models.confessionVotes.update({
-        vote_type: voteType
+        vote_type: voteType, updated_at: new Date()
       }, {
         where: { user_id: userId, confession_id: confessionId }
       });
