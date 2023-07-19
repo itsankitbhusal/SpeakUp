@@ -5,7 +5,9 @@ class ConfessionController {
   // get all confessions
   getAllConfessions = async (req, res) => {
     try {
-      const confessions = await models.confessions.findAll();
+      // const confessions = await models.confessions.findAll();
+      // find all confessions order by updated_at desc
+      const confessions = await models.confessions.findAll({ order: [['updated_at', 'DESC']] });
       return res.send(message.success(confessions));
     } catch (err) {
       return res.send(message.error(err.message));
@@ -108,12 +110,22 @@ class ConfessionController {
     title = await sanitizeInput(title);
     body = await sanitizeInput(body);
 
+    const { hashtags, ids } = extractHashtags(body);
+
+    // for title only limit to 150 characters
+    if (title.length > 150) {
+      title = title.substr(0, 150);
+    }
+
     if (!id) {
       return res.send(message.error('Missing id!'));
     }
     if (!title || !body) {
       return res.send(message.error('Missing title or body!'));
     }
+
+    const bodyToSave = replaceHashtags(body);
+
     // check if confession exists and data are changed
     const confession = await models.confessions.findByPk(id);
     if (!confession) {
@@ -123,7 +135,23 @@ class ConfessionController {
       return res.send(message.error('Nothing to update!'));
     }
     try {
-      const updatedConfession = await models.confessions.update({ title, body }, { where: { id } });
+      // update confession and set is_approved to false
+      const updatedConfession = await models.confessions.update({ title, body: bodyToSave, is_approved: false, updated_at: new Date() }, { where: { id } });
+      // create hashtag
+      if (hashtags.length > 0) {
+        for(const hashtag of hashtags) {
+          await models.tags.findOrCreate({ where: { name: hashtag } });
+        }
+      }
+      // now add confession and hashtags to confession_tags table
+      const confessionId = id;
+      if (hashtags.length > 0) {
+        for (const hashtag of hashtags) {
+          const tag = await models.tags.findOne({ where: { name: hashtag } });
+          const tagId = tag.id;
+          await models.confessionTags.create({ confession_id: confessionId, tag_id: tagId });
+        }
+      }
       return res.send(message.success(updatedConfession));
     }
     catch (err) {
@@ -152,7 +180,7 @@ class ConfessionController {
       return res.send(message.error('Missing id!'));
     }
     try {
-      const approvedConfession = await models.confessions.update({ is_approved: true }, { where: { id } });
+      const approvedConfession = await models.confessions.update({ is_approved: true, updated_at: new Date() }, { where: { id } });
       // create notification for user who created this confession
       const confession = await models.confessions.findByPk(id);
       const userId = confession.user_id;
@@ -228,7 +256,7 @@ class ConfessionController {
           model: models.users,
           attributes: ['handle']
         }],
-        order: [['id', 'DESC']]
+        order: [['updated_at', 'DESC']]
       });
       // include pagination info to response
       const response = {
