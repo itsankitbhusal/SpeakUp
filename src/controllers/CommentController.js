@@ -31,7 +31,7 @@ class CommentController {
         const milestone = commentMileStone(totalComments, confessionTitle);
         if (milestone) {
           await models.notifications.create({
-            user_id: userId,
+            user_id: confession.user_id,
             message: milestone,
             confession_id: confessionId
           });
