@@ -13,6 +13,7 @@ import { NavbarContext } from '../../context/NavbarContext';
 import { showToast } from '../../utils/toast';
 
 const ConfessionPost = ({ handle, date, views, title, body, confessionId, isApproved, isProfile }) => {
+  const url = 'http://localhost:5173';
   const { isVerifiedUser } = useContext(NavbarContext);
 
   const [showFullConfession, setShowFullConfession] = useState(false);
@@ -44,9 +45,17 @@ const ConfessionPost = ({ handle, date, views, title, body, confessionId, isAppr
     setShowComments(!showComments);
   };
 
+  const linkToTags = (user, href) => {
+    if (user === true) {
+      return `${ url }/tag/${ href }`;
+    } else {
+      return '#';
+    }
+  };
+
   const CustomLink = ({ href, children, ...otherProps }) => (
     <Link
-      to={`tag/${ href }`}
+      to={linkToTags(isVerifiedUser, href)}
       className='bg-blue-100 hover:bg-blue-200'
       {...otherProps}
     >

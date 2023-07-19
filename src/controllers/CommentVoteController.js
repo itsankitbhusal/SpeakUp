@@ -101,7 +101,7 @@ class CommentVoteController{
         return res.send(message.error('You have already voted for this comment.'));
       }
       const updatedCommentVote = await models.commentVotes.update({
-        vote_type: voteType
+        vote_type: voteType, updated_at: new Date()
       }, {
         where: {
           user_id: userId,
@@ -145,7 +145,7 @@ class CommentVoteController{
         return res.send(message.error('You have not voted for this comment.'));
       }
       const updatedCommentVote = await models.commentVotes.update({
-        vote_type: voteType
+        vote_type: voteType, updated_at: new Date()
       }, {
         where: {
           user_id: userId,

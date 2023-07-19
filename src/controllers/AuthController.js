@@ -94,12 +94,12 @@ class AuthController {
 
       // verify user in users table
       if (foundUser.is_verified === false) {
-        await models.users.update({ is_verified: true }, { where: { handle } });
+        await models.users.update({ is_verified: true, updated_at: new Date() }, { where: { handle } });
       }
       
       // update password in users table
       const passwordHash = await bcrypt.hash(password, 10);
-      await models.users.update({ password: passwordHash }, { where: { handle } });
+      await models.users.update({ password: passwordHash, updated_at: new Date() }, { where: { handle } });
 
       // now sign jwt refresh and access token
       const refreshToken = signRefreshToken(handle);
@@ -141,7 +141,7 @@ class AuthController {
         if (foundEmail.is_verified === true) {
           return res.send(message.error('Email already verified'));
         }
-        await models.users.update({ is_verified: true }, { where: { handle } });
+        await models.users.update({ is_verified: true, updated_at: new Date() }, { where: { handle } });
         // remove the notification from notifications table
         await models.notifications.destroy({ where: { user_id: foundUser.id } });
         return res.send(message.success('User verified'));
@@ -481,7 +481,7 @@ class AuthController {
       return res.send(message.error('You are not authorized'));
     }
     try {
-      const updatedUser = await models.users.update({ role: 'admin' }, { where: { id } });
+      const updatedUser = await models.users.update({ role: 'admin', updated_at: new Date() }, { where: { id } });
       return res.send(message.success(updatedUser));
     }
     catch (error) {

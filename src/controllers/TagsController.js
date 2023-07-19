@@ -62,7 +62,7 @@ class TagsController{
       if (!tag) {
         return res.send(message.error('Tag not found'));
       }
-      const updatedTag = await models.tags.update({ name }, { where: { id } });
+      const updatedTag = await models.tags.update({ name, updated_at: new Date() }, { where: { id } });
       return res.send(message.success(updatedTag));
     } catch (error) {
       return res.send(message.error(error.message));

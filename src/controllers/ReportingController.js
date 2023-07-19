@@ -123,7 +123,7 @@ class ReportingController {
     }
     try {
       const reporting = await models.reportings.update(
-        { is_resolved: true },
+        { is_resolved: true, updated_at: new Date() },
         { where: { id } }
       );
       return res.send(message.success(reporting));
@@ -220,7 +220,7 @@ class ReportingController {
       if (existingReporting.reported_object_type !== 'comment') {
         return res.send(message.error('Invalid reported object type'));
       }
-      const resolvedComment = await models.reportings.update({ is_resolved: true }, { where: { id } });
+      const resolvedComment = await models.reportings.update({ is_resolved: true, updated_at: new Date() }, { where: { id } });
       console.log('resolbed comment', resolvedComment);
       return res.send(message.success(resolvedComment));
     } catch (error) {
@@ -243,7 +243,7 @@ class ReportingController {
         return res.send(message.error('Invalid reported object type'));
       }
 
-      const resolvedConfession = await models.reportings.update({ is_resolved: true }, { where: { id } });
+      const resolvedConfession = await models.reportings.update({ is_resolved: true, updated_at: new Date() }, { where: { id } });
       return res.send(message.success(resolvedConfession));
     } catch (error) {
       return res.send(message.error(error.message));
