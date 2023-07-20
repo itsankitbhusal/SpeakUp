@@ -366,7 +366,11 @@ class ConfessionController {
     const limitPerPage = parseInt(limit);
     try {
       const confessions = await models.confessions.findAll({
-        where: { title: { [Op.like]: `%${ title }%` }, is_approved: true },
+        where: {
+          [Op.and]: literal('MATCH (title) AGAINST (:search_query IN BOOLEAN MODE)'),
+          is_approved: true
+        },
+        replacements: { search_query: title },
         limit: limitPerPage,
         offset,
         attributes: { exclude: ['user_id'] },

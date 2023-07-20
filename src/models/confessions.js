@@ -35,7 +35,12 @@ const confessions = dbConfig.define('confessions', {
 
 }, {
   createdAt: 'created_at',
-  updatedAt: 'updated_at'
+  updatedAt: 'updated_at',
+  indexes: [{
+    type: 'FULLTEXT',
+    fields: ['title'],
+    name: 'title_fulltext_idx'
+  }]
 });
 
 
