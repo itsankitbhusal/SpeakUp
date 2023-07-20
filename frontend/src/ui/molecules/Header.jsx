@@ -23,20 +23,23 @@ const Header = () => {
       return;
     }
     setSearch(e.target.value);
+    // check if innerWidth is smaller than 1024px
+    if (window.innerWidth > 1024) {
+      return;
+    }
     if (e.target.value.length > 3) {
       setSearchModal(true);
-      const data = await getSearchResults(e.target.value);
-      if (data) {
-        setSearchedConfession(data.confessions);
-      }
+      await getSearchResults(e.target.value);
     }
   };
 
   const getSearchResults = async title => {
-    const response = await searchConfessionByTitle(title, 10, 1);
+    const response = await searchConfessionByTitle(title, 10, 0);
     const { data } = await response;
     if (response.success) {
-      return data;
+      if (data.confessions.length > 0) {
+        setSearchedConfession(data.confessions);
+      }
     }
   };
 
@@ -46,6 +49,21 @@ const Header = () => {
       return `${ body.slice(0, 200) }...`;
     }
     return body;
+  };
+
+  // handle search button click
+  const handleSearchClick = async () => {
+    // code to search confession
+    if (!isVerifiedUser) {
+      showToast('Please verify account to search', 'error');
+      return;
+    }
+    if (search.length < 3) {
+      showToast('Please enter atleast 3 characters', 'error');
+      return;
+    }
+    await getSearchResults(search);
+
   };
 
   // handle confession click
@@ -94,7 +112,7 @@ const Header = () => {
             <GiHamburgerMenu />
           </Button>
           <div className="sm:min-w-0 xl:min-w-[150px] transition-all hidden lg:block">
-            <Button className="w-full h-full flex rounded-l-none text-2xl">
+            <Button onClick={handleSearchClick} className="w-full h-full flex rounded-l-none text-2xl">
               <RxMagnifyingGlass />
             </Button>
           </div>
