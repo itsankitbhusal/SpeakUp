@@ -7,24 +7,32 @@ const ShowConfession = ({ id, setShowConfessionModal }) => {
   const [confession, setConfession] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-    
-  useEffect(() => {
-    const getConfession = async () => {
+
+  // get single confession by id
+  const getConfession = async () => {
+    setLoading(true);
+    try {
       const response = await getConfessionById(id);
       if (response.success) {
         setConfession(response.data);
         setLoading(false);
-      } else {
-        setError(true);
-        setLoading(false);
       }
-    };
+    } catch (error) {
+      setError(error);
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     getConfession();
   }, [id]);
-    
+
   const handleCloseClick = () => {
     setShowConfessionModal(false);
   };
+
   const handleOutsideClick = e => {
     if (e.target.classList.contains('fixed')) {
       setShowConfessionModal(false);

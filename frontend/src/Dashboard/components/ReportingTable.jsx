@@ -9,42 +9,56 @@ import { deleteConfession } from '../../services/confessions';
 
 const ReportingTable = () => {
   const [confessions, setConfessions] = useState([]);
-    
-  useEffect(() => {
-    const getComments = async () => {
+
+  // get reported confessions
+  const getComments = async () => {
+    try {
       const response = await getReportByType('confession');
       if (response.success) {
         setConfessions(response.data);
       }
-    };
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
     getComments();
   }, []);
   
   const handleDelete = async (id, confessionId) => {
     const confirm = window.confirm(`Are you sure want to delete confession ${ confessionId }`);
     if (confirm) {
-      const response = await deleteConfession(confessionId);
-      if (response.success) {
-        if (response.data === 0) {
-          showToast('Some error occured', 'error');
-          return;
+      try {
+        const response = await deleteConfession(confessionId);
+        if (response.success) {
+          if (response.data === 0) {
+            showToast('Some error occured', 'error');
+            return;
+          }
+          const updatedComments = confessions.filter(confession => confession.id !== id);
+          setConfessions(updatedComments);
+          showToast('Confession deleted successfully', 'success');
+        } else {
+          showToast(response.message, 'error');
         }
-        const updatedComments = confessions.filter(confession => confession.id !== id);
-        setConfessions(updatedComments);
-        showToast('Confession deleted successfully', 'success');
-      } else {
-        showToast(response.message, 'error');
+      } catch (error) {
+        console.error(error);
       }
     }
   };
   const handleResolve = async id => {
-    const response = await resolveConfessionReport(id);
-    if (response.success) {
-      const updatedConfessions = confessions.filter(confession => confession.id !== id);
-      setConfessions(updatedConfessions);
-      showToast('Confession resolved', 'success');
-    } else {
-      showToast(response.message, 'error');
+    try {
+      const response = await resolveConfessionReport(id);
+      if (response.success) {
+        const updatedConfessions = confessions.filter(confession => confession.id !== id);
+        setConfessions(updatedConfessions);
+        showToast('Confession resolved', 'success');
+      } else {
+        showToast(response.message, 'error');
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
   
@@ -106,8 +120,6 @@ const ReportingTable = () => {
                 </tr>
               ))
             }
-        
-            {/* More table rows */}
           </tbody>
         </table>
       </div>

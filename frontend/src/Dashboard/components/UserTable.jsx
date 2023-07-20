@@ -10,27 +10,37 @@ import { showToast } from '../../utils/toast';
 const UserTable = () => {
   const [users, setUsers] = React.useState([]);
 
-  useEffect(() => {
-    const getUser = async() => {
+  // ger all users
+  const getUsers = async () => {
+    try {
       const response = await getAllUsers();
       if (response.success) {
         setUsers(response.data);
       }
-    };
-    getUser();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getUsers();
   }, []);
 
   const handleDelete = async (handle, id) => {
     const confirm = window.confirm(`Are you sure want to delete user ${ handle }`);
     if (confirm) {
-      const deleted = await deleteUser(id);
-      if (deleted.success) {
-        showToast('User deleted successfully', 'success');
-        setUsers(
-          users.filter(user => user.id !== id)
-        );
-      } else {
-        showToast('Something went wrong', 'error');
+      try {
+        const deleted = await deleteUser(id);
+        if (deleted.success) {
+          showToast('User deleted successfully', 'success');
+          setUsers(
+            users.filter(user => user.id !== id)
+          );
+        } else {
+          showToast('Something went wrong', 'error');
+        }
+      } catch (error) {
+        console.error(error);
       }
     }
   };
@@ -44,21 +54,25 @@ const UserTable = () => {
       return;
     }
     if (confirm) {
-      const response = await upgradeUser(id);
-      if (response.success) {
-        showToast('User upgraded successfully', 'success');
-        // now set updated user to verified
-        setUsers(users.map(user => {
-          if (user.id === id) {
-            return {
-              ...user,
-              role: 'admin'
-            };
-          }
-          return user;
-        }));
-      } else {
-        showToast('Something went wrong', 'error');
+      try {
+        const response = await upgradeUser(id);
+        if (response.success) {
+          showToast('User upgraded successfully', 'success');
+          // now set updated user to verified
+          setUsers(users.map(user => {
+            if (user.id === id) {
+              return {
+                ...user,
+                role: 'admin'
+              };
+            }
+            return user;
+          }));
+        } else {
+          showToast('Something went wrong', 'error');
+        }
+      } catch (error) {
+        console.error(error);
       }
     }
   };

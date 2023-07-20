@@ -1,31 +1,10 @@
 import { useState, useEffect } from 'react';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Filler,
-  Legend
-} from 'chart.js';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Filler, Legend } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
 import { getConfessionVotesRatio } from '../../services/analytics';
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Filler,
-  Legend
-);
-
-
+ChartJS.register( CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Filler, Legend );
 
 const UpDownChart = () => {
   const [ratio, setRatio] = useState({
@@ -33,9 +12,9 @@ const UpDownChart = () => {
     upVoteCount: null,
     downVoteCount: null
   });
-    
-  useEffect(() => {
-    const getData = async () => {
+    // get confession votes up/down ratio
+  const getData = async () => {
+    try {
       const response = await getConfessionVotesRatio();
       const { data } = response;
       setRatio(prev => ({
@@ -44,7 +23,12 @@ const UpDownChart = () => {
         upVoteCount: data.upVoteCount,
         downVoteCount: data.downVoteCount
       }));
-    };
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
     getData();
   }, []);
     
@@ -61,7 +45,9 @@ const UpDownChart = () => {
       }
     }
   };
+
   const { labels } = ratio;
+
   const dataSet = {
     labels,
     datasets: [
@@ -72,7 +58,6 @@ const UpDownChart = () => {
         borderColor: '#245c4f',
         pointBackgroundColor: '#9984a6',
         pointBorderColor: '#245c4f'
-
       }, {
         fill: false,
         label: 'Downvotes',
@@ -80,10 +65,10 @@ const UpDownChart = () => {
         borderColor: '#71a89c',
         pointBackgroundColor: '#9984a6',
         pointBorderColor: '#71a89c'
-
       }
     ]
   };
+
   return (
     <div className='min-h-[75vh] grid place-items-center'>
       <Line width={'700px'} height="500px" options={options} data={dataSet} />

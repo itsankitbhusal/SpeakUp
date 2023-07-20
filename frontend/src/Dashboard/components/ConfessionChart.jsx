@@ -6,38 +6,39 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 import { getConfessionApprovalRatio } from '../../services/analytics'; 
 
-
 export default function ConfessionChart() {
   const [confessionRatio, setConfessionRatio] = useState({
     verified: null,
     notVerified: null
   });
+
+  // get confession approval ratio
+  const getData = async () => {
+    const response = await getConfessionApprovalRatio();
+    const { data: ratioData } = response;
+    if (ratioData[0].is_approved === 1) {
+      setConfessionRatio(prev => ({
+        ...prev,
+        verified: ratioData[0].count,
+        notVerified: ratioData[1].count
+      }));
+    } else {
+      setConfessionRatio(prev => ({
+        ...prev,
+        verified: ratioData[1].count,
+        notVerified: ratioData[0].count
+      }));
+    }
+  };
+
   useEffect(() => {
-    const getData = async () => {
-      const response = await getConfessionApprovalRatio();
-      const { data } = response;
-      if (data[0].is_approved === 1) {
-        setConfessionRatio(prev => ({
-          ...prev,
-          verified: data[0].count,
-          notVerified: data[1].count
-        }));
-      } else {
-        setConfessionRatio(prev => ({
-          ...prev,
-          verified: data[1].count,
-          notVerified: data[0].count
-        }));
-      }
-    };
     getData();
   }, []);
-    
+
   const totalConfessions = confessionRatio.verified + confessionRatio.notVerified;
   const verifiedPercentage = totalConfessions !== 0 ? ((confessionRatio.verified / totalConfessions) * 100).toFixed(2) : 0;
   const notVerifiedPercentage = totalConfessions !== 0 ? ((confessionRatio.notVerified / totalConfessions) * 100).toFixed(2) : 0;
-    
-    
+
   const data = {
     labels: [
       `verified (${ verifiedPercentage }%)`,
@@ -58,6 +59,7 @@ export default function ConfessionChart() {
       }
     ]
   };
+
   const options = {
     responsive: true,
     plugins: {
@@ -71,7 +73,7 @@ export default function ConfessionChart() {
       }
     }
   };
-      
+
   return(
     <div className='min-h-[75vh] grid place-items-center'>
       <Doughnut width={'700px'} height="500px" data={data} options={options} />

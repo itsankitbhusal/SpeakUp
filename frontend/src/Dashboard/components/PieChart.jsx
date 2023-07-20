@@ -9,24 +9,31 @@ const PieChart = () => {
     admin: null,
     user: null
   });
-  useEffect(() => {
-    const getData = async () => {
+
+  // get admin/user ratio
+  const getData = async () => {
+    try {
       const response = await getUserRatio();
-      const { data } = response;
-      if (data[0].role==='admin') {
+      const { data: ratioData } = response;
+      if (ratioData[0].role==='admin') {
         setUserRatio(prev => ({
           ...prev,
-          admin: data[0].count,
-          user: data[1].count
+          admin: ratioData[0].count,
+          user: ratioData[1].count
         }));
       } else {
         setUserRatio(prev => ({
           ...prev,
-          admin: data[1].count,
-          user: data[0].count
+          admin: ratioData[1].count,
+          user: ratioData[0].count
         }));
       }
-    };
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
+  useEffect(() => {
     getData();
   }, []);
 
@@ -35,7 +42,6 @@ const PieChart = () => {
   const totalUsers = userRatio.admin + userRatio.user;
   const adminPercentage = totalUsers !== 0 ? ((userRatio.admin / totalUsers) * 100).toFixed(2) : 0;
   const userPercentage = totalUsers !== 0 ? ((userRatio.user / totalUsers) * 100).toFixed(2) : 0;
-
 
   const data = {
     labels: [
@@ -57,6 +63,7 @@ const PieChart = () => {
       }
     ]
   };
+
   const options = {
     responsive: true,
     plugins: {
@@ -70,12 +77,12 @@ const PieChart = () => {
       }
     }
   };
-    
-  return <>
+
+  return (
     <div className='min-h-[75vh] grid place-items-center'>
       <Pie width={'700px'} height="500px" data={data} options={options} />
     </div>
-  </>;
+  );
 };
 
 export default PieChart;

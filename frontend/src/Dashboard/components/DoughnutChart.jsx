@@ -6,38 +6,39 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 import { getVerificationDistribution } from '../../services/analytics'; 
 
-
-export default function DougnutChart() {
+export default function DoughnutChart() {
   const [userRatio, setUserRatio] = useState({
     verified: null,
     notVerified: null
   });
+
+  // get user verified/not verified ratio
+  const getData = async () => {
+    const response = await getVerificationDistribution();
+    const { data: ratioData } = response;
+    if (ratioData[0].is_verified === 1) {
+      setUserRatio(prev => ({
+        ...prev,
+        verified: ratioData[0].count,
+        notVerified: ratioData[1].count
+      }));
+    } else {
+      setUserRatio(prev => ({
+        ...prev,
+        verified: ratioData[1].count,
+        notVerified: ratioData[0].count
+      }));
+    }
+  };
+
   useEffect(() => {
-    const getData = async () => {
-      const response = await getVerificationDistribution();
-      const { data } = response;
-      if (data[0].is_verified === 1) {
-        setUserRatio(prev => ({
-          ...prev,
-          verified: data[0].count,
-          notVerified: data[1].count
-        }));
-      } else {
-        setUserRatio(prev => ({
-          ...prev,
-          verified: data[1].count,
-          notVerified: data[0].count
-        }));
-      }
-    };
     getData();
   }, []);
-    
+
   const totalUsers = userRatio.verified + userRatio.notVerified;
   const verifiedPercentage = totalUsers !== 0 ? ((userRatio.verified / totalUsers) * 100).toFixed(2) : 0;
   const notVerifiedPercentage = totalUsers !== 0 ? ((userRatio.notVerified / totalUsers) * 100).toFixed(2) : 0;
-    
-    
+
   const data = {
     labels: [
       `verified (${ verifiedPercentage }%)`,
@@ -58,6 +59,7 @@ export default function DougnutChart() {
       }
     ]
   };
+
   const options = {
     responsive: true,
     plugins: {
@@ -71,7 +73,7 @@ export default function DougnutChart() {
       }
     }
   };
-      
+
   return (
     <div className='min-h-[75vh] grid place-items-center'>
       <Doughnut width={'700px'} height="500px" data={data} options={options} />

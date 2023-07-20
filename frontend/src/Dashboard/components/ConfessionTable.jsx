@@ -11,41 +11,55 @@ import { showToast } from '../../utils/toast';
 const ConfessionTable = () => {
   const [confessions, setConfessions] = useState([]);
   const [showConfessionModal, setShowConfessionModal] = useState(false);
-  const [selectedConfessionId, setSelectedConfessionId] = useState({});
-    
-  useEffect(() => {
-    const getConfessions = async () => {
+  const [selectedConfessionId, setSelectedConfessionId] = useState();
+
+  // get all pending confessions
+  const getConfessions = async () => {
+    try {
       const response = await getAllPendingConfessions();
       if (response.success) {
         setConfessions(response.data.confessions);
       }
-    };
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
     getConfessions();
   }, []);
   
   const handleDelete = async id => {
     const confirm = window.confirm(`Are you sure want to delete confession ${ id }`);
     if (confirm) {
-      const response = await deleteConfession(id);
-      if (response.success) {
-        const updatedConfessions = confessions.filter(confession => confession.id !== id);
-        setConfessions(updatedConfessions);
-        showToast('Confession deleted successfully', 'success');
-      } else {
-        showToast(response.message, 'error');
+      try {
+        const response = await deleteConfession(id);
+        if (response.success) {
+          const updatedConfessions = confessions.filter(confession => confession.id !== id);
+          setConfessions(updatedConfessions);
+          showToast('Confession deleted successfully', 'success');
+        } else {
+          showToast(response.message, 'error');
+        }
+      } catch (error) {
+        console.error(error);
       }
     }
   };
-  const handleApprove = async id => {
-    const response = await approveConfession(id);
-    if (response.success) {
-      const updatedConfessions = confessions.filter(confession => confession.id !== id);
-      setConfessions(updatedConfessions);
-      showToast('Confession approved successfully', 'success');
-    } else {
-      showToast(response.message, 'error');
-    }
 
+  const handleApprove = async id => {
+    try {
+      const response = await approveConfession(id);
+      if (response.success) {
+        const updatedConfessions = confessions.filter(confession => confession.id !== id);
+        setConfessions(updatedConfessions);
+        showToast('Confession approved successfully', 'success');
+      } else {
+        showToast(response.message, 'error');
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
   
   const handleShowConfession = async id => {
