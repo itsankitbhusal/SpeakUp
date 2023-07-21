@@ -10,16 +10,10 @@ class ViewController{
       return res.send(message.error('Confession id is required'));
     }
     try {  
-      const view = await models.views.findOne({ where: { user_id: userId, confession_id: confessionId } });
-      if (view) {
-        return res.send(message.error('View already exists'));
-      }
-      // create view
-      const newView = await models.views.create({ user_id: userId, confession_id: confessionId });
-      if (!newView) {
-        return res.send(message.error('View not created'));
-      }
-      return res.send(message.success(newView));
+      const view = await models.views.findOrCreate({
+        where: { user_id: userId, confession_id: confessionId }
+      });
+      return res.send(message.success(view));
     } catch (error) {
       res.send(message.error(error.message));
     }
