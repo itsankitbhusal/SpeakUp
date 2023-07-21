@@ -24,7 +24,7 @@ const ProfileHeader = () => {
     getUserData();
   }, []);
   return (
-    <div className="w-full flex flex-col items-center justify-center">
+    <div className="w-full flex flex-col items-center justify-center bg-cwhite">
       <div className="w-full flex flex-col items-center justify-center mt-4">
         <div className="absolute -top-0 sm:top-24 left-0 inline-block">
           <Link to="/">
