@@ -13,17 +13,23 @@ const ConfessionProvider = ({ children }) => {
   const getConfession = async () => {
     if (!hasMore) {return;}
     setIsLoading(true);
-    const response = await getApprovedConfessions(limit, page);
-    if (response.success) {
-      const { data } = response;
-      if (data.confessions.length < limit) {
-        setHasMore(false);
+    try {
+      const response = await getApprovedConfessions(limit, page);
+      if (response.success) {
+        const { data } = response;
+        if (data.confessions.length < limit) {
+          setHasMore(false);
+          console.log('has more no more confessions');
+        }
+        setConfessions(prevConfessions => [...prevConfessions, ...data.confessions]);
+      } else {
+        throw new Error(response.message);
       }
-      setConfessions(prevConfessions => [...prevConfessions, ...data.confessions]);
-    } else {
-      throw new Error(response.message);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
   // on change of page or limit, get the confessions
   useEffect(() => {
@@ -31,7 +37,7 @@ const ConfessionProvider = ({ children }) => {
   }, [page, limit]);
     
   return (
-    <ConfessionContext.Provider value={{ confessions, setPage, isLoading, hasMore, setConfessions }}>
+    <ConfessionContext.Provider value={{ confessions, page, setPage, isLoading, hasMore, setConfessions }}>
       {children}
     </ConfessionContext.Provider>
   );};

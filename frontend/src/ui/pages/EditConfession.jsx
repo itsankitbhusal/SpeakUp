@@ -27,33 +27,39 @@ const EditConfession = () => {
 
   const searchTagDatas = async (query, callback) => {
     if (!query) { return; }
-    
-    const response = await searchTags(query);
-    if (response.success) {
-      const suggestions = { id: query, display: query };
-      const tagArray = response.data.map(tag => ({
-        id: tag.id,
-        display: tag.name
-      }));
-      return callback([...tagArray, suggestions]);
-    } else {
-      callback([{ id: query, display: query }]);
+    try {
+      const response = await searchTags(query);
+      if (response.success) {
+        const suggestions = { id: query, display: query };
+        const tagArray = response.data.map(tag => ({
+          id: tag.id,
+          display: tag.name
+        }));
+        return callback([...tagArray, suggestions]);
+      } else {
+        callback([{ id: query, display: query }]);
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
   const getConfession = async () => {
-    const response = await getConfessionById(id);
-    if (response.success) {
-      setConfession(response.data);
-      setIsConfessionLoaded(true);
-      setInitialValues({
-        title: response?.data?.title,
-        body: response?.data?.body
-      });
-    } else {
-      showToast(response.message, 'error');
+    try {
+      const response = await getConfessionById(id);
+      if (response.success) {
+        setConfession(response.data);
+        setIsConfessionLoaded(true);
+        setInitialValues({
+          title: response?.data?.title,
+          body: response?.data?.body
+        });
+      } else {
+        showToast(response.message, 'error');
+      }
+    } catch (error) {
+      console.error(error);
     }
-    
   };
   useEffect(() => {
     getConfession();
@@ -85,12 +91,16 @@ const EditConfession = () => {
       showToast('Character limit of 3000 reached', 'error');
       return;
     }
-    const response = await updateConfessionById(id, values);
-    if (response.success) {
-      showToast('Confession updated successfully', 'success');
-      navigate('/');
-    } else {
-      showToast('Something went wrong', 'error');
+    try {
+      const response = await updateConfessionById(id, values);
+      if (response.success) {
+        showToast('Confession updated successfully', 'success');
+        navigate('/');
+      } else {
+        showToast('Something went wrong', 'error');
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 

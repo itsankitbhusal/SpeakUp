@@ -49,23 +49,31 @@ const SidebarLinks = () => {
       const access = localStorage.getItem('access');
       if (!access) { return; }
       const { id } = decode(access);
-      const response = await getNotificationsByUserId(id);
-      if (response.success) {
-        setNotifications(response.data);
+      try {
+        const response = await getNotificationsByUserId(id);
+        if (response.success) {
+          setNotifications(response.data);
+        }
+      } catch (error) {
+        console.error(error);
       }
     };
     getData();
   }, [isNotificationOpen]);
 
   const markAsRead = async id => {
-    const response = await updateNotificationStatus(id);
-    if (response.success) {
-      // filter out the notification
-      const newNotifications = notifications.filter(notification => notification.id !== id);
-      setNotifications(newNotifications);
-      showToast('Notification marked as read', 'success');
-    } else {
-      showToast('Something went wrong', 'error');
+    try {
+      const response = await updateNotificationStatus(id);
+      if (response.success) {
+        // filter out the notification
+        const newNotifications = notifications.filter(notification => notification.id !== id);
+        setNotifications(newNotifications);
+        showToast('Notification marked as read', 'success');
+      } else {
+        showToast('Something went wrong', 'error');
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
   

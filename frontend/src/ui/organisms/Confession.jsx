@@ -20,11 +20,15 @@ const Confession = ({ handle, date, views, title, body, confessionId, isApproved
   // set initial view count by fetching from backend
   useEffect(() => {
     async function getViews() {
-      const response = await getConfessionViewsByUserId(confessionId);
-      if (response.success) {
-        setIsAlreadyViewed(true);
-      } else {
-        setIsAlreadyViewed(false);
+      try {
+        const response = await getConfessionViewsByUserId(confessionId);
+        if (response.success) {
+          setIsAlreadyViewed(true);
+        } else {
+          setIsAlreadyViewed(false);
+        }
+      } catch (error) {
+        console.error(error);
       }
     }
     getViews();
@@ -32,17 +36,21 @@ const Confession = ({ handle, date, views, title, body, confessionId, isApproved
 
   // if the isVisible than create view in the backend
   useEffect(() => {
-    const createViewAfterDelay = () => {
-      setTimeout(() => {
-        if (isVisible && !isAlreadyViewed) {
+    let viewTimeout;
+    if (isVisible && !isAlreadyViewed) {
+      viewTimeout = setTimeout(() => {
+        try {
           createView(confessionId);
+          setIsAlreadyViewed(true);
+        } catch (error) {
+          console.error(error);
         }
       }, 2000);
-    };
+    }
     return () => {
-      createViewAfterDelay();
+      clearTimeout(viewTimeout);
     };
-  }, [isVisible, isAlreadyViewed]);
+  }, [isVisible, isAlreadyViewed, confessionId]);
 
   const options = {
     root: null,

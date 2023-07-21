@@ -6,12 +6,12 @@ import { NavbarProvider } from './context/NavbarContext';
 const App = () => {
   const routing = useRoutes(routes);
   return (
-    <>
+    <div className=' bg-cwhite'>
       <NavbarProvider>
         <ToastContainer />
         {routing}
       </NavbarProvider>
-    </>
+    </div>
   );
 };
 

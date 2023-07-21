@@ -63,8 +63,12 @@ const ConfessionPost = ({ handle, date, views, title, body, confessionId, isAppr
     </Link>
   );
 
+  const CustomPre = ({ children }) => (
+    <pre className="whitespace-pre-wrap bg-blue-50 my-4 overflow-x-auto">{children}</pre>
+  );
+
   return (
-    <div >
+    <div className='' >
       <UserDetail handle={handle} date={date} views={views} isApproved={isApproved} isProfile={isProfile} confessionId={confessionId} />
       <Heading heading="h4" className="text-black text-base text-justify mt-1">
         {title}
@@ -80,13 +84,13 @@ const ConfessionPost = ({ handle, date, views, title, body, confessionId, isAppr
         <div className="w-11/12">
 
           <ReactMarkdown
-            components={{ a: CustomLink }}
+            components={{ a: CustomLink, pre: CustomPre }}
           >
             {showFullConfession ? (confessionBody) : (trimmedBody)}
           </ReactMarkdown>
           {!showFullConfession && trimmedBody.endsWith('...') && (
             <span onClick={toggleContent} className="ml-2 w-full flex justify-end -mt-6 font-semibold cursor-pointer ">
-              <span className='px-2 bg-cwhite'>See more</span>
+              <span className='px-2 rounded-sm bg-cwhite'>See more</span>
             </span>
           )}
           <CommentProvider>

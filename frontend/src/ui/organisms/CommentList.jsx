@@ -10,8 +10,8 @@ const CommentList = ({ confessionId, showComments }) => {
   const { comments, setComments, commentCount, setCommentCount, size } = useContext(CommentContext);
   const [showMore, setShowMore] = useState(false);
 
-  useEffect(() => {
-    const fetchComments = async () => {
+  const fetchComments = async () => {
+    try {
       const response = await getCommentsByConfessionId(confessionId, 1, size);
       if (response.success) {
         const { data } = response;
@@ -20,9 +20,13 @@ const CommentList = ({ confessionId, showComments }) => {
         setShowMore(data.count > size);
       } else {
         console.error(response.message);
-      }
-    };
+      } 
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
+  useEffect(() => {
     fetchComments();
   }, [confessionId, setComments, setCommentCount, size]);
 

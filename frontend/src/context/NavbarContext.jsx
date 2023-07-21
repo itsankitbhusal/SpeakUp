@@ -5,7 +5,8 @@ const NavbarContext = createContext();
 
 const NavbarProvider = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isVerifiedUser, setIsVerifiedUser] = useState(false);
+  const [isVerifiedUser, setIsVerifiedUser] = useState(null);
+  const [checkVerifiedUser, setCheckVerifiedUser] = useState(false);
 
   const handleSidebar = () => {
     setIsSidebarOpen(prevState => !prevState);
@@ -27,16 +28,17 @@ const NavbarProvider = ({ children }) => {
     if (token) {
       const decodedToken = decode(token);
       const { is_verified } = decodedToken;
-
       if (is_verified === true) {
         setIsVerifiedUser(true);
+      } else {
+        setIsVerifiedUser(false);
       }
     }
-  }, []);
+  }, [checkVerifiedUser]);
 
   return (
     <NavbarContext.Provider
-      value={{ isSidebarOpen, handleSidebar, isVerifiedUser }}
+      value={{ isSidebarOpen, handleSidebar, isVerifiedUser, setCheckVerifiedUser }}
     >
       {children}
     </NavbarContext.Provider>

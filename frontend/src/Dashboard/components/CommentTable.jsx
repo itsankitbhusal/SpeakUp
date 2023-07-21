@@ -9,38 +9,53 @@ import { showToast } from '../../utils/toast';
 
 const CommentTable = () => {
   const [comments, setComments] = useState([]);
-    
-  useEffect(() => {
-    const getComments = async () => {
+
+  // get reported comments
+  const getComments = async () => {
+    try {
       const response = await getReportByType('comment');
       if (response.success) {
         setComments(response.data);
       }
-    };
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
     getComments();
   }, []);
-  
+
   const handleDelete = async id => {
     const confirm = window.confirm(`Are you sure want to delete comment ${ id }`);
     if (confirm) {
-      const response = await deleteCommentById(id);
-      if (response.success) {
-        const updatedComments = comments.filter(comment => comment.id !== id);
-        setComments(updatedComments);
-        showToast('Comment deleted successfully', 'success');
-      } else {
-        showToast(response.message, 'error');
+      try {
+        const response = await deleteCommentById(id);
+        if (response.success) {
+          const updatedComments = comments.filter(comment => comment.id !== id);
+          setComments(updatedComments);
+          showToast('Comment deleted successfully', 'success');
+        } else {
+          showToast(response.message, 'error');
+        }
+      } catch (error) {
+        console.error(error);
       }
     }
   };
+
   const handleResolve = async id => {
-    const response = await resolveCommentReport(id);
-    if (response.success) {
-      const updatedComments = comments.filter(comment => comment.id !== id);
-      setComments(updatedComments);
-      showToast('Comment resolved', 'success');
-    } else {
-      showToast(response.message, 'error');
+    try {
+      const response = await resolveCommentReport(id);
+      if (response.success) {
+        const updatedComments = comments.filter(comment => comment.id !== id);
+        setComments(updatedComments);
+        showToast('Comment resolved', 'success');
+      } else {
+        showToast(response.message, 'error');
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
   

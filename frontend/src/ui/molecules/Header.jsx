@@ -34,12 +34,16 @@ const Header = () => {
   };
 
   const getSearchResults = async title => {
-    const response = await searchConfessionByTitle(title, 10, 0);
-    const { data } = await response;
-    if (response.success) {
-      if (data.confessions.length > 0) {
-        setSearchedConfession(data.confessions);
+    try {
+      const response = await searchConfessionByTitle(title, 10, 0);
+      const { data } = await response;
+      if (response.success) {
+        if (data.confessions.length > 0) {
+          setSearchedConfession(data.confessions);
+        }
       }
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -89,9 +93,9 @@ const Header = () => {
   }, [search]);
 
   return (
-    <>
-      <header className="grid place-items-center">
-        <div className="flex w-[95vw] sm:w-[80vw] lg:w-[60vw] justify-between gap-0 md:gap-4 outline rounded-sm outline-primary outline-[1.5px] my-4">
+    <div className='max-w-screen sm:w-full'>
+      <header className="grid w-full place-items-center gap-0">
+        <div className="flex w-full sm:w-[80vw] lg:w-[60vw] justify-between gap-0 md:gap-4 outline rounded-sm outline-primary outline-[1.5px] my-4">
           <div className="flex items-center ">
             <div className="max-w-[100px] sm:max-w-[150px] sm:max-h-[48px] ml-2 flex gap-2 justify-center items-center">
               <Logo />
@@ -102,7 +106,7 @@ const Header = () => {
             onChange={handleSearchChange}
             placeholder="Search..."
             className={
-              'bg-inherit outline-none border-none w-[28vw] sm:w-[32vw] '
+              'bg-inherit outline-none border-none w-[42vw] sm:w-[32vw] '
             }
           />
           <Button
@@ -160,7 +164,7 @@ const Header = () => {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 };
 
