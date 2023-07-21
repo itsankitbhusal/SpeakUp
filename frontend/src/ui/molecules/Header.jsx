@@ -1,3 +1,4 @@
+import { debounce } from 'lodash';
 import Logo from '../atoms/Logo';
 import Input from '../atoms/Input';
 import Button from '../atoms/Button';
@@ -9,6 +10,7 @@ import { NavbarContext } from '../../context/NavbarContext';
 import { searchConfessionByTitle } from '../../services/confessions';
 import { ConfessionContext } from '../../context/ConfessionContext';
 import { showToast } from '../../utils/toast';
+
 
 const Header = () => {
   const [search, setSearch] = useState('');
@@ -29,11 +31,12 @@ const Header = () => {
     }
     if (e.target.value.length > 3) {
       setSearchModal(true);
-      await getSearchResults(e.target.value);
+      await debounceSearch(e.target.value);
     }
   };
 
-  const getSearchResults = async title => {
+  // debounce search
+  const debounceSearch = debounce(async title => {
     try {
       const response = await searchConfessionByTitle(title, 10, 0);
       const { data } = await response;
@@ -45,7 +48,7 @@ const Header = () => {
     } catch (error) {
       console.error(error);
     }
-  };
+  }, 500);
 
   // trim confession body to 300 chars
   const trimBody = body => {
@@ -66,7 +69,7 @@ const Header = () => {
       showToast('Please enter atleast 3 characters', 'error');
       return;
     }
-    await getSearchResults(search);
+    await debounceSearch(search);
 
   };
 
