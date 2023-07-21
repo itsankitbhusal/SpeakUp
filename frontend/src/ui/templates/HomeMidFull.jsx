@@ -12,8 +12,7 @@ const HomeMidFull = () => {
   const bottom = useRef(null);
   const confessionRef = useRef(null);
   const { confessions, setPage, isLoading, hasMore } = useContext(ConfessionContext);
-  const { isVerifiedUser } = useContext(NavbarContext);
-  
+  const { isVerifiedUser, setCheckVerifiedUser } = useContext(NavbarContext);
   // handle observer
   const handleObserver = entries => {
     const target = entries[0];
@@ -31,12 +30,17 @@ const HomeMidFull = () => {
       rootMargin: '20px',
       threshold: 1 // Change threshold to detect partial visibility
     };
-  
     const observer = new IntersectionObserver(handleObserver, options);
     if (bottom.current) {
       observer.observe(bottom.current);
     }
-  }, [ bottom ]);
+  }, [bottom, isVerifiedUser]);
+
+  useEffect(() => {
+    if (isVerifiedUser === null) {
+      setCheckVerifiedUser(true);
+    }
+  }, []);
 
   return (
     <div className={'grid place-items-center max-w-[95vw] sm:max-w-[80vw] md:max-w-[60vw] lg:max-w-[40vw] '}>
@@ -45,7 +49,7 @@ const HomeMidFull = () => {
           <WriteConfession />
         </ModalProvider>
       </div>
-      <div ref={confessionRef} className='w-full'>
+      <div ref={confessionRef} className='w-full overflow-hidden sm:overflow-visible'>
         {confessions?.map(confession => (
           <Confession
             key={confession.id}
@@ -57,12 +61,11 @@ const HomeMidFull = () => {
             body={confession.body}
           />
         ))}
-        {!isVerifiedUser && 
-          (
-            <div className='grid place-items-center'>
-              <Text className="text-center text-gray-400 font-bold text-base">You need to verify your email to view more confession</Text>
-            </div>
-          )
+        {!isVerifiedUser ? 
+          (<div className='grid place-items-center'>
+            <Text className="text-center text-gray-400 font-bold text-base">You need to verify your email to view more confession</Text>
+          </div>
+          ): null
         }
         
         {isLoading && (

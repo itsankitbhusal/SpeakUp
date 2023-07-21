@@ -20,17 +20,20 @@ const CreateConfessionModal = ({ preserveData, setPreserveData }) => {
 
   const searchTagDatas = async (query, callback) => {
     if (!query) { return; }
-    
-    const response = await searchTags(query);
-    if (response.success) {
-      const suggestions = { id: query, display: query };
-      const tagArray = response.data.map(tag => ({
-        id: tag.id,
-        display: tag.name
-      }));
-      return callback([...tagArray, suggestions]);
-    } else {
-      callback([{ id: query, display: query }]);
+    try {
+      const response = await searchTags(query);
+      if (response.success) {
+        const suggestions = { id: query, display: query };
+        const tagArray = response.data.map(tag => ({
+          id: tag.id,
+          display: tag.name
+        }));
+        return callback([...tagArray, suggestions]);
+      } else {
+        callback([{ id: query, display: query }]);
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -50,14 +53,18 @@ const CreateConfessionModal = ({ preserveData, setPreserveData }) => {
       CloseModal();
       return;
     }
-    const response = await createConfession(values);
-    if (response.success) {
-      resetForm({ values: initialValues });
-      setPreserveData(null);
-      showToast('Confession created successfully', 'success');
-      CloseModal();
-    } else {
-      showToast('Something went wrong', 'error');
+    try {
+      const response = await createConfession(values);
+      if (response.success) {
+        resetForm({ values: initialValues });
+        setPreserveData(null);
+        showToast('Confession created successfully', 'success');
+        CloseModal();
+      } else {
+        showToast('Something went wrong', 'error');
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 

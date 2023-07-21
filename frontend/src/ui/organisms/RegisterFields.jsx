@@ -21,19 +21,18 @@ const RegisterFields = () => {
     },
     validationSchema: registerValidationSchema,
     onSubmit: async values => {
-      const response = await register(values);
-      if (response.success) {
-        // set the refresh in local storage
-        localStorage.setItem('refresh', response.data.refreshToken);
-
-        // show toast
-        showToast('Registered successfully', 'success');
-
-        // redirect
-        navigate('/');
-      }
-      if (!response.success) {
-        showToast(response.message, 'error');
+      try {
+        const response = await register(values);
+        if (response.success) {
+          localStorage.setItem('refresh', response.data.refreshToken);
+          showToast('Registered successfully', 'success');
+          navigate('/');
+        }
+        if (!response.success) {
+          showToast(response.message, 'error');
+        }
+      } catch (error) {
+        console.error(error);
       }
     }
   });
@@ -90,13 +89,14 @@ const RegisterFields = () => {
           />
         </div>
         <div className="mt-4 mb-8 w-full flex justify-end">
-          <div className='w-full flex flex-col items-end'>
+          <div className="w-full flex flex-col items-end">
             <Button type="submit" variant="primary" className="w-full py-3">
-            Register
+              Register
             </Button>
             <div className="w-full flex text-md justify-end mt-3">
               <Link to="/login" className="text-primary hover:underline">
-        Already have an account? <span className=' font-semibold'>Login here</span>
+                Already have an account?{' '}
+                <span className=" font-semibold">Login here</span>
               </Link>
             </div>
           </div>

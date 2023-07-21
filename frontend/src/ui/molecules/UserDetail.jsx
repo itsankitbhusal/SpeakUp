@@ -54,12 +54,16 @@ const UserDetail = ({ handle, date, views, isApproved, isProfile, confessionId, 
         'description': reportMessage
       };
       if (reportData.description) {
-        const response = await createReport(reportData );
-        if (response.success) {
-          showToast('Report submitted successfully', 'success');
-          setIsModalOpen(false);
-        } else {
-          showToast(response.message, 'error');
+        try {
+          const response = await createReport(reportData );
+          if (response.success) {
+            showToast('Report submitted successfully', 'success');
+            setIsModalOpen(false);
+          } else {
+            showToast(response.message, 'error');
+          }
+        } catch (error) {
+          console.error(error);
         }
       }
     } else  {
@@ -69,12 +73,16 @@ const UserDetail = ({ handle, date, views, isApproved, isProfile, confessionId, 
         'description': reportMessage
       };
       if (reportData.description) {
-        const response = await createReport(reportData );
-        if (response.success) {
-          showToast('Report submitted successfully', 'success');
-          setIsModalOpen(false);
-        } else {
-          showToast(response.message, 'error');
+        try {
+          const response = await createReport(reportData );
+          if (response.success) {
+            showToast('Report submitted successfully', 'success');
+            setIsModalOpen(false);
+          } else {
+            showToast(response.message, 'error');
+          }
+        } catch (error) {
+          console.error(error);
         }
       }
     }
@@ -84,23 +92,30 @@ const UserDetail = ({ handle, date, views, isApproved, isProfile, confessionId, 
     const confirm = window.confirm('Are you sure you want to delete this confession?');
     if (isComment) {
       if (confirm) {
-        const response = await deleteCommentById(commentId);
-        if (response.success) {
-          showToast('Comment deleted successfully', 'success');
-          navigate('/');
-        } else {
-          showToast(response.message, 'error');
+        try {
+          const response = await deleteCommentById(commentId);
+          if (response.success) {
+            showToast('Comment deleted successfully', 'success');
+            navigate('/');
+          } else {
+            showToast(response.message, 'error');
+          }
+        } catch (error) {
+          console.error(error);
         }
       }
     } else {
       if (confirm) {
-        // delete confession
-        const response = await deleteConfession(confessionId);
-        if (response.success) {
-          showToast('Confession deleted successfully', 'success');
-          navigate('/');
-        } else {
-          showToast(response.message, 'error');
+        try {
+          const response = await deleteConfession(confessionId);
+          if (response.success) {
+            showToast('Confession deleted successfully', 'success');
+            navigate('/');
+          } else {
+            showToast(response.message, 'error');
+          }
+        } catch (error) {
+          console.error(error);
         }
       }
     }

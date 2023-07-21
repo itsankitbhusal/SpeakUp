@@ -19,32 +19,42 @@ const ProfileProvider = ({ children }) => {
 
   const getUserData = async handle => {
     setUserDataLoading(true);
-    const response = await getUserByHandle(handle);
-    if (response.success) {
-      const { data } = response;
-      setProfileAvatar(`https://ui-avatars.com/api/?background=348371&name=${ data?.handle }&bold=true&color=fff&uppercase=false&length=1`);
-      setUser(data);
-    } else {
-      throw new Error(response.message);
+    try {
+      const response = await getUserByHandle(handle);
+      if (response.success) {
+        const { data } = response;
+        setProfileAvatar(`https://ui-avatars.com/api/?background=348371&name=${ data?.handle }&bold=true&color=fff&uppercase=false&length=1`);
+        setUser(data);
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setUserDataLoading(false);
     }
-    setUserDataLoading(false);
   };
 
 
   const getConfession = async () => {
     if (!hasMore) {return;}
     setIsLoading(true);
-    const response = await  getAllConfessionsByHandle(limit, page, profileHandle);
-    if (response.success) {
-      const { data } = response;
-      if (data.confessions.length < limit) {
-        setHasMore(false);
+    try {
+      const response = await  getAllConfessionsByHandle(limit, page, profileHandle);
+      if (response.success) {
+        const { data } = response;
+        if (data.confessions.length < limit) {
+          setHasMore(false);
+        }
+        setConfessions(prevConfessions => [...prevConfessions, ...data.confessions]);
+      } else {
+        throw new Error(response.message);
       }
-      setConfessions(prevConfessions => [...prevConfessions, ...data.confessions]);
-    } else {
-      throw new Error(response.message);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
     // on change of page or limit, get the confessions
   useEffect(() => {

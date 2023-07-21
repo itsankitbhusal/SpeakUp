@@ -19,12 +19,16 @@ const ForgetPasswordModal = ({ setForgetPassword }) => {
   const handleForgetSubmit = async e => {
     e.preventDefault();
     // make api call to send email if handle and email are valid
-    const response = await sendResetPasswordEmail(formData);
-    if (response?.success) {
-      showToast('Password rest email sent successfully', 'success');
-      setForgetPassword(false);
-    } else {
-      showToast('Enter the email that was used to create this account', 'error');
+    try {
+      const response = await sendResetPasswordEmail(formData);
+      if (response?.success) {
+        showToast('Password rest email sent successfully', 'success');
+        setForgetPassword(false);
+      } else {
+        showToast('Enter the email that was used to create this account', 'error');
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
   return(

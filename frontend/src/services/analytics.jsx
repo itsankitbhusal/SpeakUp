@@ -26,7 +26,6 @@ export const getConfessionApprovalRatio = async () => {
 };
 
 // get confession votes ratio
-
 export const getConfessionVotesRatio = async () => {
   const response = await api.get(`${ route }/up-down`);
   return await response.data;

@@ -19,27 +19,27 @@ const LoginFields = () => {
     },
     validationSchema: loginValidationSchema,
     onSubmit: async values => {
-      const response = await login(values);
-      if (response.success) {
-        // set the refresh in local storage
-        localStorage.setItem('refresh', response.data.refreshToken);
-        // set access token in local storage
-        localStorage.setItem('access', response.data.accessToken);
-        
-        // show toast
-        showToast('Logged in successfully', 'success');
-
-        const { role } = response.data.user;
-        if (role === 'admin') {
-          navigate('/dashboard');
-          return;
-        } else {
-          // navigate to home page
-          navigate('/');
+      try {
+        const response = await login(values);
+        if (response.success) {
+          localStorage.setItem('refresh', response.data.refreshToken);
+          localStorage.setItem('access', response.data.accessToken);
+          showToast('Logged in successfully', 'success');
+  
+          const { role } = response.data.user;
+          if (role === 'admin') {
+            navigate('/dashboard');
+            return;
+          } else {
+            // navigate to home page
+            navigate('/');
+          }
         }
-      }
-      if (!response.success) {
-        showToast(response.message, 'error');
+        if (!response.success) {
+          showToast(response.message, 'error');
+        }
+      } catch (error) {
+        console.error(error);
       }
     }
   });

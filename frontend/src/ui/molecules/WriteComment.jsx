@@ -29,13 +29,17 @@ const WriteComment = ({ confessionId }) => {
       }
       // make api request to create comment
       if (values) {
-        const response = await createComment(values, confessionId);
-        if (response.success) {
-          showToast('Comment created successfully', 'success');
-          addComment(values);
-          formik.resetForm();
-        } else {
-          showToast(response.message, 'error');
+        try {
+          const response = await createComment(values, confessionId);
+          if (response.success) {
+            showToast('Comment created successfully', 'success');
+            addComment(values);
+            formik.resetForm();
+          } else {
+            showToast(response.message, 'error');
+          }
+        } catch (error) {
+          console.error(error);
         }
       }
     }
