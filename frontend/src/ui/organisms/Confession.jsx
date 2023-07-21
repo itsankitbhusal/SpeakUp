@@ -1,13 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
 import ConfessionPost from '../molecules/ConfessionPost';
-import { createView, getConfessionViewsByUserId } from '../../services/ConfessionView';
+import { createView } from '../../services/ConfessionView';
 
 const Confession = ({ handle, date, views, title, body, confessionId, isApproved, isProfile }) => {
   const confessionRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false); 
-  const [isAlreadyViewed, setIsAlreadyViewed] = useState(false);
-
   // framer motion hook
   const isInView = useInView(confessionRef, { once: true });
 
@@ -17,31 +15,14 @@ const Confession = ({ handle, date, views, title, body, confessionId, isApproved
       setIsVisible(true);
     }
   };
-  // set initial view count by fetching from backend
-  useEffect(() => {
-    async function getViews() {
-      try {
-        const response = await getConfessionViewsByUserId(confessionId);
-        if (response.success) {
-          setIsAlreadyViewed(true);
-        } else {
-          setIsAlreadyViewed(false);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    getViews();
-  }, []);
 
   // if the isVisible than create view in the backend
   useEffect(() => {
     let viewTimeout;
-    if (isVisible && !isAlreadyViewed) {
-      viewTimeout = setTimeout(() => {
+    if (isVisible ) {
+      viewTimeout = setTimeout(async() => {
         try {
-          createView(confessionId);
-          setIsAlreadyViewed(true);
+          await createView(confessionId);
         } catch (error) {
           console.error(error);
         }
@@ -50,7 +31,7 @@ const Confession = ({ handle, date, views, title, body, confessionId, isApproved
     return () => {
       clearTimeout(viewTimeout);
     };
-  }, [isVisible, isAlreadyViewed, confessionId]);
+  }, [isVisible]);
 
   const options = {
     root: null,
