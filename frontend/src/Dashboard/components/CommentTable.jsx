@@ -45,13 +45,17 @@ const CommentTable = () => {
   };
 
   const handleResolve = async id => {
-    const response = await resolveCommentReport(id);
-    if (response.success) {
-      const updatedComments = comments.filter(comment => comment.id !== id);
-      setComments(updatedComments);
-      showToast('Comment resolved', 'success');
-    } else {
-      showToast(response.message, 'error');
+    try {
+      const response = await resolveCommentReport(id);
+      if (response.success) {
+        const updatedComments = comments.filter(comment => comment.id !== id);
+        setComments(updatedComments);
+        showToast('Comment resolved', 'success');
+      } else {
+        showToast(response.message, 'error');
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
   

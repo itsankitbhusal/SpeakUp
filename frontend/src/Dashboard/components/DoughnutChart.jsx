@@ -14,20 +14,24 @@ export default function DoughnutChart() {
 
   // get user verified/not verified ratio
   const getData = async () => {
-    const response = await getVerificationDistribution();
-    const { data: ratioData } = response;
-    if (ratioData[0].is_verified === 1) {
-      setUserRatio(prev => ({
-        ...prev,
-        verified: ratioData[0].count,
-        notVerified: ratioData[1].count
-      }));
-    } else {
-      setUserRatio(prev => ({
-        ...prev,
-        verified: ratioData[1].count,
-        notVerified: ratioData[0].count
-      }));
+    try {
+      const response = await getVerificationDistribution();
+      const { data: ratioData } = response;
+      if (ratioData[0].is_verified === 1) {
+        setUserRatio(prev => ({
+          ...prev,
+          verified: ratioData[0].count,
+          notVerified: ratioData[1].count
+        }));
+      } else {
+        setUserRatio(prev => ({
+          ...prev,
+          verified: ratioData[1].count,
+          notVerified: ratioData[0].count
+        }));
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 

@@ -14,20 +14,24 @@ export default function ConfessionChart() {
 
   // get confession approval ratio
   const getData = async () => {
-    const response = await getConfessionApprovalRatio();
-    const { data: ratioData } = response;
-    if (ratioData[0].is_approved === 1) {
-      setConfessionRatio(prev => ({
-        ...prev,
-        verified: ratioData[0].count,
-        notVerified: ratioData[1].count
-      }));
-    } else {
-      setConfessionRatio(prev => ({
-        ...prev,
-        verified: ratioData[1].count,
-        notVerified: ratioData[0].count
-      }));
+    try {
+      const response = await getConfessionApprovalRatio();
+      const { data: ratioData } = response;
+      if (ratioData[0].is_approved === 1) {
+        setConfessionRatio(prev => ({
+          ...prev,
+          verified: ratioData[0].count,
+          notVerified: ratioData[1].count
+        }));
+      } else {
+        setConfessionRatio(prev => ({
+          ...prev,
+          verified: ratioData[1].count,
+          notVerified: ratioData[0].count
+        }));
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
