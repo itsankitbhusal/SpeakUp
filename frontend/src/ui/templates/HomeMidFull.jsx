@@ -12,7 +12,7 @@ const HomeMidFull = () => {
   const bottom = useRef(null);
   const confessionRef = useRef(null);
   const { confessions, setPage, isLoading, hasMore } = useContext(ConfessionContext);
-  const { isVerifiedUser, setCheckVerifiedUser } = useContext(NavbarContext);
+  const { isVerifiedUser } = useContext(NavbarContext);
   // handle observer
   const handleObserver = entries => {
     const target = entries[0];
@@ -35,12 +35,6 @@ const HomeMidFull = () => {
       observer.observe(bottom.current);
     }
   }, [bottom, isVerifiedUser]);
-
-  useEffect(() => {
-    if (isVerifiedUser === null) {
-      setCheckVerifiedUser(true);
-    }
-  }, []);
 
   return (
     <div className={'grid place-items-center max-w-[95vw] sm:max-w-[80vw] md:max-w-[60vw] lg:max-w-[40vw] '}>

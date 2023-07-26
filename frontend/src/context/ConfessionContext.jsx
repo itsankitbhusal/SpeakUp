@@ -19,7 +19,6 @@ const ConfessionProvider = ({ children }) => {
         const { data } = response;
         if (data.confessions.length < limit) {
           setHasMore(false);
-          console.log('has more no more confessions');
         }
         setConfessions(prevConfessions => [...prevConfessions, ...data.confessions]);
       } else {
