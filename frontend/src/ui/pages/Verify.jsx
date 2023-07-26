@@ -23,6 +23,7 @@ const Verify = () => {
         const response = await verifyUser(tokenValue);
         if (response.success) {
           showToast('User verification success', 'success');
+          localStorage.clear();
           navigate('/login');
         } else {
           showToast('User verification failed', 'error');
