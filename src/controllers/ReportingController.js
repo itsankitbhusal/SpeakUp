@@ -221,7 +221,6 @@ class ReportingController {
         return res.send(message.error('Invalid reported object type'));
       }
       const resolvedComment = await models.reportings.update({ is_resolved: true, updated_at: new Date() }, { where: { id } });
-      console.log('resolbed comment', resolvedComment);
       return res.send(message.success(resolvedComment));
     } catch (error) {
       return res.send(message.error(error.message));
