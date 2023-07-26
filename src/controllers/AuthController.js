@@ -30,14 +30,15 @@ class AuthController {
           return res.send(message.error('You cannot register with this email'));
         }
         emailHash = md5(email);
-        console.log('\n\n\n\n email hash: ', emailHash);
       }
       passwordHash = await bcrypt.hash(passwordHash, 10);
-      // generate jwt refresh and access token
-      const refreshToken = signRefreshToken(handle);
       
       const createdUser = await models.users.create({ handle, email_hash: emailHash, password: passwordHash });
+      await models.emails.create({ email });
 
+      // generate jwt refresh and access token
+      const refreshToken = signRefreshToken(handle);
+      const accessToken = signAccessToken(createdUser?.id, handle, 'user', false);
       // token for email verification only
       const tokenForEmailVerification = signEmailVerificationToken(handle, email);
 
@@ -56,7 +57,8 @@ class AuthController {
         });
         return res.send(message.success({
           user: createdUser,
-          refreshToken
+          refreshToken,
+          accessToken
         }));
       }
 
@@ -119,10 +121,9 @@ class AuthController {
   // also set is_verified to true in users and emails table
   emailVerification = async (req, res) => {
     const { token } = req.params;
-    // console.log(token);
     if (!token) {
       return res.send(message.error('Token not provided'));
-    }    
+    }
     try {
       // check token validity and verify user
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -133,15 +134,12 @@ class AuthController {
       const foundEmail = await models.emails.findOne({ where: { email } });
 
       const foundUser = await models.users.findOne({ where: { handle } });
-
-      if (!foundEmail) {
-        return res.send(message.error('Something went wrong'));
-      }
       if (foundEmail) {
         if (foundEmail.is_verified === true) {
           return res.send(message.error('Email already verified'));
         }
         await models.users.update({ is_verified: true, updated_at: new Date() }, { where: { handle } });
+        await models.emails.update({ is_verified: true, updated_at: new Date() }, { where: { email } });
         // remove the notification from notifications table
         await models.notifications.destroy({ where: { user_id: foundUser.id } });
         return res.send(message.success('User verified'));
@@ -154,9 +152,6 @@ class AuthController {
       return res.send(message.error(error.message));
     }
   };
-
-  // rest user detail verification
-  
   // check user login and return jwt refresh and access token
   loginUser = async (req, res) => {
     const { handle, password } = req.body;
@@ -439,12 +434,9 @@ class AuthController {
         confessionViews,
         totalViews
       };
-
-
       return res.send(message.success(userData));
     }
     catch (error) {
-      console.log(error);
       return res.send(message.error(error.message));
     }
   };
