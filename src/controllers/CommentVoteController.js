@@ -337,7 +337,6 @@ class CommentVoteController{
         downvoteCount,
         totalVoteCount
       };
-      console.log(result);
       return res.send(message.success({ result }));
     }
     catch (error) {

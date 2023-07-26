@@ -354,7 +354,6 @@ class ConfessionVoteController{
           vote_type: 'up'
         }
       });
-      console.log('upvoteCount', upvoteCount);
       
       const downvoteCount = await models.confessionVotes.count({
         where: {

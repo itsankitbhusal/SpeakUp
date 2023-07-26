@@ -14,7 +14,7 @@ import { getNotificationsByUserId, updateNotificationStatus } from '../../servic
 import Text from '../atoms/Text';
 
 const SidebarLinks = () => {
-  const [userHandle, setUserHandle] = useState('username');
+  const [userHandle, setUserHandle] = useState('');
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -37,8 +37,34 @@ const SidebarLinks = () => {
         setIsAdmin(true);
       }
       setUserHandle(decodedUser.handle);
+    }else {
+      setIsAdmin(false);
+      setUserHandle('');
     }
-  }, [localStorage.getItem('access')]);
+  }, []);
+
+  // when user gets its first access token when on home page, than set the userHandle
+  useEffect(() => {
+    const handleTokenChange = () => {
+      const access = localStorage.getItem('access');
+      if (access) {
+        const decodedUser = decode(access);
+        if (decodedUser.role === 'admin') {
+          setIsAdmin(true);
+        }
+        setUserHandle(decodedUser.handle);
+      } else {
+        setIsAdmin(false);
+        setUserHandle('');
+      }
+    };
+    window.addEventListener('storage', handleTokenChange);
+
+    // when component unmounts
+    return () => {
+      window.removeEventListener('storage', handleTokenChange);
+    };
+  }, []);
 
   const handleNotificationClick = () => {
     setIsNotificationOpen(!isNotificationOpen);

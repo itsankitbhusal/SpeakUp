@@ -25,6 +25,7 @@ const RegisterFields = () => {
         const response = await register(values);
         if (response.success) {
           localStorage.setItem('refresh', response.data.refreshToken);
+          localStorage.setItem('access', response.data.accessToken);
           showToast('Registered successfully', 'success');
           navigate('/');
         }

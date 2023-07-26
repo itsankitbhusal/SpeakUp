@@ -6,7 +6,6 @@ const NavbarContext = createContext();
 const NavbarProvider = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isVerifiedUser, setIsVerifiedUser] = useState(null);
-  const [checkVerifiedUser, setCheckVerifiedUser] = useState(false);
 
   const handleSidebar = () => {
     setIsSidebarOpen(prevState => !prevState);
@@ -34,11 +33,29 @@ const NavbarProvider = ({ children }) => {
         setIsVerifiedUser(false);
       }
     }
-  }, [checkVerifiedUser]);
+  }, []);
+
+  // listen for changes in access token
+  useEffect(() => {
+    const handleTokenChange = () => {
+      const token = localStorage.getItem('access');
+      if (token) {
+        const decodedToken = decode(token);
+        const { is_verified } = decodedToken;
+        setIsVerifiedUser(is_verified);
+      }
+    };
+    window.addEventListener('storage', handleTokenChange);
+
+    // when component unmounts
+    return () => {
+      window.removeEventListener('storage', handleTokenChange);
+    };
+  }, []);
 
   return (
     <NavbarContext.Provider
-      value={{ isSidebarOpen, handleSidebar, isVerifiedUser, setCheckVerifiedUser }}
+      value={{ isSidebarOpen, handleSidebar, isVerifiedUser }}
     >
       {children}
     </NavbarContext.Provider>
