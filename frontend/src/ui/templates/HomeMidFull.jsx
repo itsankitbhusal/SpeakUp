@@ -7,6 +7,8 @@ import Confession from '../organisms/Confession';
 import WriteConfession from '../organisms/WriteConfession';
 import { dateConverter } from '../../utils/dateConverter';
 import Loading from '../atoms/Loading';
+import { FaHotjar } from 'react-icons/fa';
+import Line from '../atoms/Line';
 
 const HomeMidFull = () => {
   const lastConfessionRef = useRef();
@@ -46,6 +48,17 @@ const HomeMidFull = () => {
         <ModalProvider>
           <WriteConfession />
         </ModalProvider>
+      </div>
+      <div className=' w-full'>
+        <Line className=' hidden sm:block sm:w-full border-gray-400' />
+        <div className=' flex justify-center sm:justify-end items-center gap-2 mr-0 sm:-mt-8 '>
+          <div className=' text-sm bg-white hover:cursor-pointer hover:bg-cwhite hover:shadow-xl transition-all flex justify-center items-center gap-2 px-5 py-2 rounded-full'>
+            <FaHotjar className='text-red-500 ' />
+            <Text className="text-gray-400 font-semibold text-sm">
+            Trending
+            </Text>
+          </div>
+        </div>
       </div>
       <div className="w-full overflow-hidden sm:overflow-visible">
         {confessions?.map((confession, index) => {
