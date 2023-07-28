@@ -35,21 +35,25 @@ const ProfileProvider = ({ children }) => {
     }
   };
 
-
   const getConfession = async () => {
     if (!hasMore) {return;}
     setIsLoading(true);
     try {
-      const response = await  getAllConfessionsByHandle(limit, page, profileHandle);
+      const response = await getAllConfessionsByHandle(limit, page, profileHandle);
       if (response.success) {
-        const { data } = response;
-        if (data.confessions.length < limit) {
+        const data = await response.data;
+        const { length } = data.confessions;
+        if (length === 0) {
+          return;
+        }
+        if (length < limit) {
           setHasMore(false);
         }
         setConfessions(prevConfessions => [...prevConfessions, ...data.confessions]);
       } else {
         throw new Error(response.message);
       }
+      
     } catch (error) {
       console.error(error);
     } finally {
@@ -62,6 +66,7 @@ const ProfileProvider = ({ children }) => {
   }
   , [page, limit, profileHandle]);
   
+
   // for user data
   useEffect(() => {
     getUserData(profileHandle);

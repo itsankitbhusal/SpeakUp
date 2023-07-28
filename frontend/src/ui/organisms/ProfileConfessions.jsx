@@ -7,7 +7,6 @@ import { ProfileContext } from '../../context/ProfileContext';
 
 const ProfileConfessions = ({ className }) => {
   const bottom = useRef(null);
-  const confessionRef = useRef(null);
   const { confessions, setPage, isLoading, hasMore } = useContext(ProfileContext);
 
   // handle observer
@@ -22,39 +21,62 @@ const ProfileConfessions = ({ className }) => {
     const options = {
       root: null,
       rootMargin: '20px',
-      threshold: 1 // Change threshold to detect partial visibility
+      threshold: 1
     };
   
     const observer = new IntersectionObserver(handleObserver, options);
     if (bottom.current) {
       observer.observe(bottom.current);
     }
-  }, [ bottom ]);
+  }, [bottom, hasMore, confessions]);
+  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  },[]);
 
   return (
     <div className={`grid z-5 place-items-center my-20 w-full sm:max-w-[80vw] md:max-w-[60vw] lg:max-w-[58vw] ${ className }`}>
-      <div ref={confessionRef}>
-        {confessions?.map(confession => (
-          <Confession
-            key={confession.id}
-            confessionId={confession.id}
-            handle={confession.user.handle}
-            date={dateConverter(confession.created_at)}
-            views={confession.views_count}
-            title={confession.title}
-            body={confession.body}
-            isApproved={confession.is_approved}
-            isProfile={true}
-          />
-        ))}
+      <div >
+        {confessions?.map((confession, index) => {
+          if (confessions.length === index + 1) {
+            return (
+              <div ref={bottom} key={confession.id}>
+                <Confession
+                  key={confession.id}
+                  confessionId={confession.id}
+                  handle={confession.user.handle}
+                  date={dateConverter(confession.created_at)}
+                  views={confession.views_count}
+                  title={confession.title}
+                  body={confession.body}
+                  isApproved={confession.is_approved}
+                  isProfile={true}
+                />
+              </div>
+            );
+          }
+          else {
+            return (
+              <Confession
+                key={confession.id}
+                confessionId={confession.id}
+                handle={confession.user.handle}
+                date={dateConverter(confession.created_at)}
+                views={confession.views_count}
+                title={confession.title}
+                body={confession.body}
+                isApproved={confession.is_approved}
+                isProfile={true}
+              />
+            );
+          }
+        })}
         {isLoading && (
           <div className="flex justify-center w-full">
             <Loading />
           </div>
         )}
-        <div ref={bottom} className='my-8' >
-          <Text className="text-center text-gray-400">{ !isLoading && 'End of page'}</Text>
-        </div>
+        <Text className="text-center text-gray-400">{ !isLoading && 'End of page'}</Text>
       </div>
     </div>
   );
