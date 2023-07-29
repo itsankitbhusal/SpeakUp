@@ -9,6 +9,7 @@ import notificationRoutes from './notificationRoutes.js';
 import viewRoutes from './viewRoutes.js';
 import reportingRoutes from './reportingRoutes.js';
 import analyticsRoutes from './analyticsRoutes.js';
+import recommendationRoutes from './recommendationRoutes.js';
 
 export default {
   authRoutes,
@@ -21,5 +22,6 @@ export default {
   notificationRoutes,
   viewRoutes,
   reportingRoutes,
-  analyticsRoutes
+  analyticsRoutes,
+  recommendationRoutes
 };

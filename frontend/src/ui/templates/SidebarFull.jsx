@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { GrClose } from 'react-icons/gr';
 import SidebarLinks from '../molecules/SidebarLinks';
 import Button from '../atoms/Button';
