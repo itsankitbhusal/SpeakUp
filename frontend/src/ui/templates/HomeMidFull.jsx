@@ -1,10 +1,11 @@
-import { useContext, useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import Text from '../atoms/Text';
 import { ModalProvider } from '../../context/ModalContext';
 import { ConfessionContext } from '../../context/ConfessionContext';
 import { NavbarContext } from '../../context/NavbarContext';
 import Confession from '../organisms/Confession';
 import WriteConfession from '../organisms/WriteConfession';
+import TrendingConfessions from '../organisms/TrendingConfessions';
 import { dateConverter } from '../../utils/dateConverter';
 import Loading from '../atoms/Loading';
 import { FaHotjar } from 'react-icons/fa';
@@ -14,6 +15,7 @@ const HomeMidFull = () => {
   const lastConfessionRef = useRef();
   const { confessions, setPage, isLoading, hasMore } = useContext(ConfessionContext);
   const { isVerifiedUser } = useContext(NavbarContext);
+  const [showTrendingConfessions, setShowTrendingConfessions] = useState(false);
   // handle observer
   const handleObserver = entries => {
     const target = entries[0];
@@ -38,6 +40,10 @@ const HomeMidFull = () => {
     }
   }, [lastConfessionRef, isVerifiedUser, hasMore, confessions]);
 
+  const handleTrendingClick = () => {
+    setShowTrendingConfessions(!showTrendingConfessions);
+  };
+
   return (
     <div
       className={
@@ -52,7 +58,7 @@ const HomeMidFull = () => {
       <div className=' w-full'>
         <Line className=' hidden sm:block sm:w-full border-gray-400' />
         <div className=' flex justify-center sm:justify-end items-center gap-2 mr-0 sm:-mt-8 '>
-          <div className=' text-sm bg-white hover:cursor-pointer hover:bg-cwhite hover:shadow-xl transition-all flex justify-center items-center gap-2 px-5 py-2 rounded-full'>
+          <div onClick={handleTrendingClick} className=' text-sm bg-white hover:cursor-pointer hover:bg-cwhite hover:shadow-xl transition-all flex justify-center items-center gap-2 px-5 py-2 rounded-full'>
             <FaHotjar className='text-red-500 ' />
             <Text className="text-gray-400 font-semibold text-sm">
             Trending
@@ -60,7 +66,10 @@ const HomeMidFull = () => {
           </div>
         </div>
       </div>
-      <div className="w-full overflow-hidden sm:overflow-visible">
+      <div className='w-full overflow-hidden sm:overflow-visible'>
+        {showTrendingConfessions && <TrendingConfessions />}
+      </div>
+      <div className="w-full overflow-hidden sm:overflow-visible ">
         {confessions?.map((confession, index) => {
           if (confessions.length === index + 1) {
             return (
