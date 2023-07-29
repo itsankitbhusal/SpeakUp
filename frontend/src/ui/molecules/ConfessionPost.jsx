@@ -12,7 +12,7 @@ import { CommentProvider } from '../../context/CommentContext';
 import { NavbarContext } from '../../context/NavbarContext';
 import { showToast } from '../../utils/toast';
 
-const ConfessionPost = ({ handle, date, views, title, body, confessionId, isApproved, isProfile }) => {
+const ConfessionPost = ({ handle, date, views, title, body, confessionId, isApproved, isProfile, trending }) => {
   const url = 'http://localhost:5173';
   const { isVerifiedUser } = useContext(NavbarContext);
 
@@ -90,7 +90,7 @@ const ConfessionPost = ({ handle, date, views, title, body, confessionId, isAppr
           </ReactMarkdown>
           {!showFullConfession && trimmedBody.endsWith('...') && (
             <span onClick={toggleContent} className="ml-2 w-full flex justify-end -mt-6 font-semibold cursor-pointer ">
-              <span className='px-2 rounded-sm bg-cwhite'>See more</span>
+              <span className={`px-2 rounded-full  ${ trending ? 'bg-white': 'bg-cwhite' }`}>See more</span>
             </span>
           )}
           <CommentProvider>
