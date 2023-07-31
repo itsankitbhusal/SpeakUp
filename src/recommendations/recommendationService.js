@@ -2,7 +2,7 @@ import models from '../models/index.js';
 import { Op, literal } from 'sequelize';
 import { message } from '../utils/index.js';
 
-const getMostViewedConfessions = async (req, res) => {
+const getTrendingConfessions = async (req, res) => {
   const currentDate = new Date();
   const oneMonthAgo = new Date();
   oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
@@ -128,4 +128,4 @@ const sortArray = array => {
   }
   return new Set(array.sort((a, b) => result[b] - result[a]));
 };
-export { getMostViewedConfessions };
+export { getTrendingConfessions };
