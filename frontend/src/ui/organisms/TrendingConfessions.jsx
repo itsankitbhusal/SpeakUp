@@ -5,14 +5,17 @@ import { dateConverter } from '../../utils/dateConverter';
 import Heading from '../atoms/Heading';
 import Confession from './Confession';
 import Line from '../atoms/Line';
+import Loading from '../atoms/Loading';
 
 const TrendingConfessions = () => {
   const [confessions, setConfessions] = useState([]);
+  const [loading, setLoading] = useState(true);
   const getConfessionData = async() => {
     try {
       const response = await getTrendingConfessions();
       const data = await response.data;
       setConfessions(data);
+      setLoading(false);
     } catch (error) {
       console.error(error);
     }
@@ -39,6 +42,7 @@ const TrendingConfessions = () => {
           </div>
         </div>
         <div >
+          {loading &&<Loading />}
           {confessions?.map(confession => (
             <Confession
               key={confession.id}
