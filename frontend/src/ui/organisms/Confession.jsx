@@ -50,7 +50,7 @@ const Confession = ({ handle, date, views, title, body, confessionId, isApproved
   return (
     <motion.div
       ref={confessionRef}
-      className={`my-8 outline outline-1 px-4 py-2 rounded-sm  outline-gray-200 ${ trending && 'bg-white' }  transition-shadow`}
+      className={`my-8 pt-16 sm:pt-2 outline outline-1 px-4 py-2 rounded-sm  outline-gray-200 ${ trending && 'bg-white' }  transition-shadow`}
       initial={{ scale: trending ? .9: 0 }}
       animate={{ scale: isInView ? 1 : .5 }}
       transition={{ type: 'spring', stiffness: 260, damping: 20, duration: 0.3 }}
