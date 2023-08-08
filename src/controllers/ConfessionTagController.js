@@ -53,7 +53,7 @@ class ConfessionTagController{
           confession_id: confessionId
         },
         attributes: {
-          exclude: ['confession_id', 'tag_id']
+          exclude: ['confession_id', 'tag_id', 'created_at', 'updated_at']
         },
         include: {
           model: models.tags,
