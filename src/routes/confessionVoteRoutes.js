@@ -15,7 +15,7 @@ router.delete('/down/:id', middlewares.verifyAccessToken, middlewares.verifyRefr
 // get all confession votes
 router.get('/', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionVoteController.getAllConfessionVotes);
 // get confession by user id logged one
-router.get('/user/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionVoteController.getConfessionVoteByUserId);
+router.get('/user/:id?', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionVoteController.getConfessionVoteByUserId);
 // get getConfessionVoteByConfessionId
 router.get('/confession/:id', middlewares.verifyAccessToken, middlewares.verifyRefreshToken, confessionVoteController.getConfessionVoteByConfessionId);
 // get vote count by confession id
