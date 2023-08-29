@@ -7,5 +7,12 @@ import pluginRewriteAll from 'vite-plugin-rewrite-all'; // <= import the plugin
 export default defineConfig({
   plugins: [react(),
     pluginRewriteAll()
-  ]
+  ],
+  server: {
+    host: true,
+    port: 5173,
+    watch: {
+      usePolling: true
+    }
+  }
 });
