@@ -1,17 +1,14 @@
 # use nodejs 18 as a base image
-FROM node:18.0.0 AS builder
+FROM node:alpine
 
 # set work directory inside the container
 WORKDIR /app/frontend
 
-# copy package.json and package-lock.json to the container
-COPY package*.json .
-
-# install the dependencies
-RUN npm install
-
-# copy rest of code to the container
+#copy all the files from current directory
 COPY . .
+
+# install dependencies
+RUN npm install
 
 # environment variable
 ENV VITE_BASE_URL=http://localhost:5001
