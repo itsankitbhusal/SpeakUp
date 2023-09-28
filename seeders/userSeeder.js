@@ -39,6 +39,7 @@ const bulkCreateFakeUsers = async num => {
       handle: 'guest',
       password: '$2a$10$nV/qXAHBO4o8Mgd40VcJJ.zjeaz4JTgA8mZQbIRxTnnOyWNAHeAsy',
       role: 'user',
+      email_hash: 'bbbcb0da140f42d4295ea65117d6f52c',
       is_verified: true,
       created_at: faker.date.anytime()
     });
