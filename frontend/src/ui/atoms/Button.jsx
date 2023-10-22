@@ -1,4 +1,4 @@
-const Button = ({ children, onClick, className, variant, type, handleSubmit }) => {
+const Button = ({ children, onClick, className, variant, type, handleSubmit, disabled }) => {
   const buttonType = variant || 'primary';
   let buttonClassName = 'px-5 py-2 rounded-sm font-bold transition-all duration-150 ease-in-out flex justify-center items-center gap-2 ';
   
@@ -42,7 +42,7 @@ const Button = ({ children, onClick, className, variant, type, handleSubmit }) =
   }
   
   return (
-    <button type={type} className={` ${ buttonClassName }  ${ className }`} onClick={onClick} onSubmit={handleSubmit}>
+    <button disabled={disabled} type={type} className={` ${ buttonClassName }  ${ className }`} onClick={onClick} onSubmit={handleSubmit}>
       {children}
     </button>
   );
