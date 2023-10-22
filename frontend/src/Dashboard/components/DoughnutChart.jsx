@@ -17,17 +17,19 @@ export default function DoughnutChart() {
     try {
       const response = await getVerificationDistribution();
       const { data: ratioData } = response;
-      if (ratioData[0].is_verified === 1) {
+      if (ratioData.length) {
+        const verifiedData = ratioData[0];
+        const unverifiedData = ratioData[1];
         setUserRatio(prev => ({
           ...prev,
-          verified: ratioData[0].count,
-          notVerified: ratioData[1].count
+          verified: verifiedData?.count,
+          notVerified: unverifiedData?.count
         }));
       } else {
         setUserRatio(prev => ({
           ...prev,
-          verified: ratioData[1].count,
-          notVerified: ratioData[0].count
+          verified: ratioData[1]?.count,
+          notVerified: ratioData[0]?.count
         }));
       }
     } catch (error) {
