@@ -10,9 +10,6 @@ COPY . .
 # install dependencies
 RUN npm install
 
-# environment variable
-ENV VITE_BASE_URL=http://localhost:5001
-
 # port to expose
 EXPOSE 5173
 
