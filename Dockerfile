@@ -1,18 +1,14 @@
-#use nodejs 18 as a base image
-FROM node:18.0.0 AS builder
+#use alpine as a base image
+FROM node:alpine
 
 # set work directory inside the container
 WORKDIR /app
 
-# copy package and package-lock to the container
-COPY package*.json .
+# copy all the files
+COPY . .
 
 # install the dependencies
 RUN npm install
-
-# copy rest of code to the container
-COPY . .
-
 
 # expose the port for backend
 EXPOSE 5001
