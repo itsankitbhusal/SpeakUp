@@ -1,3 +1,21 @@
-# TODO: write docker compose
+version: '3'
 
-
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    working_dir: /app
+    command: [ "npm", "start" ]
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    working_dir: /app/frontend
+    environment:
+      - VITE_BASE_URL=http://localhost:5001
+    command: [ "npm", "run", "dev" ]
