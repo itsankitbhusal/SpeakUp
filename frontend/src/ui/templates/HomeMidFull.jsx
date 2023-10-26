@@ -107,7 +107,9 @@ const HomeMidFull = () => {
         ) : null}
 
         {isLoading && (
-          <div className="flex justify-center w-full">
+          <div className="grid place-items-center w-full lg:w-[40vw] min-h-screen">
+            <Loading />
+            <Loading />
             <Loading />
           </div>
         )}
