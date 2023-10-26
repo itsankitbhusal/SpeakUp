@@ -5,12 +5,22 @@ import { NavbarProvider } from './context/NavbarContext';
 
 const App = () => {
   const routing = useRoutes(routes);
+
+  // check for `/login` or `/register` routes
+  const isLoginOrRegister = window.location.pathname === '/login' || window.location.pathname === '/register';
   return (
     <div className=' bg-cwhite'>
-      <NavbarProvider>
-        <ToastContainer />
-        {routing}
-      </NavbarProvider>
+      {isLoginOrRegister ? (
+        <>
+          <ToastContainer />
+          {routing}
+        </>
+      ): 
+        <NavbarProvider>
+          <ToastContainer />
+          {routing}
+        </NavbarProvider>
+      }
     </div>
   );
 };
