@@ -1,10 +1,10 @@
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-import { getConfessionApprovalRatio } from '../../services/analytics'; 
+import { getConfessionApprovalRatio } from '../../services/analytics';
 
 export default function ConfessionChart() {
   const [confessionRatio, setConfessionRatio] = useState({
@@ -17,19 +17,23 @@ export default function ConfessionChart() {
     try {
       const response = await getConfessionApprovalRatio();
       const { data: ratioData } = response;
-      if (ratioData[0].is_approved === 1) {
-        setConfessionRatio(prev => ({
-          ...prev,
-          verified: ratioData[0].count,
-          notVerified: ratioData[1].count
-        }));
-      } else {
-        setConfessionRatio(prev => ({
-          ...prev,
-          verified: ratioData[1].count,
-          notVerified: ratioData[0].count
-        }));
+
+      let notApprovedConfessionCount;
+      let approvedConfessionCount;
+
+      for (const ratio of ratioData) {
+        if (ratio.is_approved === 1) {
+          approvedConfessionCount = ratio.count;
+        } else {
+          notApprovedConfessionCount = ratio.count;
+        }
       }
+
+      setConfessionRatio(prev => ({
+        ...prev,
+        verified: approvedConfessionCount,
+        notVerified: notApprovedConfessionCount || 0
+      }));
     } catch (error) {
       console.error(error);
     }
@@ -39,9 +43,16 @@ export default function ConfessionChart() {
     getData();
   }, []);
 
-  const totalConfessions = confessionRatio.verified + confessionRatio.notVerified;
-  const verifiedPercentage = totalConfessions !== 0 ? ((confessionRatio.verified / totalConfessions) * 100).toFixed(2) : 0;
-  const notVerifiedPercentage = totalConfessions !== 0 ? ((confessionRatio.notVerified / totalConfessions) * 100).toFixed(2) : 0;
+  const totalConfessions =
+    confessionRatio.verified + confessionRatio.notVerified;
+  const verifiedPercentage =
+    totalConfessions !== 0
+      ? ((confessionRatio.verified / totalConfessions) * 100).toFixed(2)
+      : 0;
+  const notVerifiedPercentage =
+    totalConfessions !== 0
+      ? ((confessionRatio.notVerified / totalConfessions) * 100).toFixed(2)
+      : 0;
 
   const data = {
     labels: [
@@ -51,14 +62,9 @@ export default function ConfessionChart() {
     datasets: [
       {
         label: 'confessions',
-        data: [confessionRatio?.verified,confessionRatio?.notVerified],
-        backgroundColor: [
-          '#245c4f',
-          '#71a89c'
-        ],
-        borderColor: [
-          'white'
-        ],
+        data: [confessionRatio?.verified, confessionRatio?.notVerified],
+        backgroundColor: ['#245c4f', '#71a89c'],
+        borderColor: ['white'],
         borderWidth: 3
       }
     ]
@@ -78,8 +84,8 @@ export default function ConfessionChart() {
     }
   };
 
-  return(
-    <div className='min-h-[75vh] grid place-items-center'>
+  return (
+    <div className="min-h-[75vh] grid place-items-center">
       <Doughnut width={'700px'} height="500px" data={data} options={options} />
     </div>
   );
